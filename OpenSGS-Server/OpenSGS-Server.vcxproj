@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BattleSystem.h" />
     <ClInclude Include="src\libs\Encoding.h" />
     <ClInclude Include="src\libs\lua-5.2.0\lapi.h" />
     <ClInclude Include="src\libs\lua-5.2.0\lauxlib.h" />
@@ -47,8 +48,11 @@
     <ClInclude Include="src\libs\lua-5.2.0\lzio.h" />
     <ClInclude Include="src\libs\sqlite3\sqlite3.h" />
     <ClInclude Include="src\libs\sqlite3\sqlite3ext.h" />
+    <ClInclude Include="src\LogHandler.h" />
+    <ClInclude Include="src\Player.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BattleSystem.cpp" />
     <ClCompile Include="src\libs\Encoding.cpp" />
     <ClCompile Include="src\libs\lua-5.2.0\lapi.c" />
     <ClCompile Include="src\libs\lua-5.2.0\lauxlib.c" />
@@ -79,17 +83,13 @@
     <ClCompile Include="src\libs\lua-5.2.0\ltable.c" />
     <ClCompile Include="src\libs\lua-5.2.0\ltablib.c" />
     <ClCompile Include="src\libs\lua-5.2.0\ltm.c" />
-    <ClCompile Include="src\libs\lua-5.2.0\lua.c" />
-    <ClCompile Include="src\libs\lua-5.2.0\luac.c" />
     <ClCompile Include="src\libs\lua-5.2.0\lundump.c" />
     <ClCompile Include="src\libs\lua-5.2.0\lvm.c" />
     <ClCompile Include="src\libs\lua-5.2.0\lzio.c" />
-    <ClCompile Include="src\libs\sqlite3\sqlite3-1.c" />
-    <ClCompile Include="src\libs\sqlite3\sqlite3-2.c" />
-    <ClCompile Include="src\libs\sqlite3\sqlite3-3.c" />
-    <ClCompile Include="src\libs\sqlite3\sqlite3-4.c" />
-    <ClCompile Include="src\libs\sqlite3\sqlite3-5.c" />
     <ClCompile Include="src\libs\sqlite3\sqlite3-all.c" />
+    <ClCompile Include="src\LogHandler.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\libs\lua-5.2.0\Makefile" />
@@ -149,7 +149,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

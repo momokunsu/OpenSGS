@@ -99,25 +99,19 @@
     <ClInclude Include="src\libs\lua-5.2.0\lzio.h">
       <Filter>src\libs\lua-5.2.0</Filter>
     </ClInclude>
+    <ClInclude Include="src\BattleSystem.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LogHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\libs\Encoding.cpp">
       <Filter>src\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\libs\sqlite3\sqlite3-1.c">
-      <Filter>src\libs\sqlite3</Filter>
-    </ClCompile>
-    <ClCompile Include="src\libs\sqlite3\sqlite3-2.c">
-      <Filter>src\libs\sqlite3</Filter>
-    </ClCompile>
-    <ClCompile Include="src\libs\sqlite3\sqlite3-3.c">
-      <Filter>src\libs\sqlite3</Filter>
-    </ClCompile>
-    <ClCompile Include="src\libs\sqlite3\sqlite3-4.c">
-      <Filter>src\libs\sqlite3</Filter>
-    </ClCompile>
-    <ClCompile Include="src\libs\sqlite3\sqlite3-5.c">
-      <Filter>src\libs\sqlite3</Filter>
     </ClCompile>
     <ClCompile Include="src\libs\sqlite3\sqlite3-all.c">
       <Filter>src\libs\sqlite3</Filter>
@@ -209,12 +203,6 @@
     <ClCompile Include="src\libs\lua-5.2.0\ltm.c">
       <Filter>src\libs\lua-5.2.0</Filter>
     </ClCompile>
-    <ClCompile Include="src\libs\lua-5.2.0\lua.c">
-      <Filter>src\libs\lua-5.2.0</Filter>
-    </ClCompile>
-    <ClCompile Include="src\libs\lua-5.2.0\luac.c">
-      <Filter>src\libs\lua-5.2.0</Filter>
-    </ClCompile>
     <ClCompile Include="src\libs\lua-5.2.0\lundump.c">
       <Filter>src\libs\lua-5.2.0</Filter>
     </ClCompile>
@@ -223,6 +211,18 @@
     </ClCompile>
     <ClCompile Include="src\libs\lua-5.2.0\lzio.c">
       <Filter>src\libs\lua-5.2.0</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BattleSystem.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LogHandler.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

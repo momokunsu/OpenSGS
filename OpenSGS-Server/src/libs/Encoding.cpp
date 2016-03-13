@@ -1,4 +1,5 @@
-#include "Encoding.h"
+﻿#include "Encoding.h"
+#include <string.h>
 
 char* UnicodeToUtf8(const wchar_t *str)
 {
