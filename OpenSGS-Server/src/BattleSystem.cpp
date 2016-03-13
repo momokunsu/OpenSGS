@@ -86,7 +86,33 @@ bool BattleSystem::startGame()
 	if (m_players.size() > 9)
 		m_statusgroup.push_back(ePlayerStatusType::Rebel);
 
+	std::random_shuffle(m_statusgroup.begin(), m_statusgroup.end());
+	std::random_shuffle(m_statusgroup.begin(), m_statusgroup.end());
 
+	//游戏开始
+	LogHandler::setLog("BattleSystem::startGame", ("game start!!! player count is" + std::to_string(m_players.size())).c_str());
+	for (auto player : m_players)
+	{
+		player->dispatchEvent(ePlayerEvent::GameStart, nullptr);
+	}
+
+	//分发身份
+	LogHandler::setLog("BattleSystem::startGame", "dispatch player status");
+	for (int i = 0; i < (int)m_players.size(); i++)
+	{
+		m_players[i]->dispatchEvent(ePlayerEvent::GetPlayerStatus, &m_statusgroup[i]);
+	}
+
+	//确定主公位置
+	LogHandler::setLog("BattleSystem::startGame", ("confirm the ruler location is pos: " + std::to_string(m_players.size())).c_str());
+	for (int i = 0; i < (int)m_statusgroup.size(); i++)
+	{
+		if (m_statusgroup[i] == ePlayerStatusType::Ruler)
+		{
+			m_cur_player = i;
+			LogHandler::setLog("BattleSystem::startGame", ("confirm the ruler location is pos: " + std::to_string(i)).c_str());
+		}
+	}
 
 	return true;
 }

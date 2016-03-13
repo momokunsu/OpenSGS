@@ -13,7 +13,7 @@ class BattleSystem
 		bool setPlayerLocal(Player* player, int pos);
 		void sufflePlayersLocal();
 		bool startGame();
-
+		
 	private:
 		std::vector<ePlayerStatusType> m_statusgroup;
 

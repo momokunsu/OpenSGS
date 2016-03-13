@@ -27,8 +27,9 @@ enum class eEquipsIndex
 enum class ePlayerEvent
 {
 	None = 0,
+	GameStart,
+	GetPlayerStatus,
 	BattleStart,
-	GetPalyerStatus,
 	GetCards
 };
 

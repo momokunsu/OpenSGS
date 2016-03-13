@@ -2,6 +2,9 @@
 
 #define __Open_Log__
 
+std::string LogHandler::m_tag_buffer = "";
+std::string LogHandler::m_log_buffer = "";
+std::function<void*(std::string, std::string)> LogHandler::mc_log_callback = nullptr;
 
 void LogHandler::setLog(const char *tag, const char *log)
 {
