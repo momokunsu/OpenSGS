@@ -114,5 +114,7 @@ bool BattleSystem::startGame()
 		}
 	}
 
+	//
+
 	return true;
 }
