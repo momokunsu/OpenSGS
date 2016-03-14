@@ -110,7 +110,7 @@ bool BattleSystem::startGame()
 		if (m_statusgroup[i] == ePlayerStatusType::Ruler)
 		{
 			m_cur_player = i;
-			LogHandler::setLog("BattleSystem::startGame", ("confirm the ruler location is pos: " + std::to_string(i)).c_str());
+			break;
 		}
 	}
 
