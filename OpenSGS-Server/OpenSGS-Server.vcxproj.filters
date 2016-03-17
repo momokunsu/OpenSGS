@@ -114,6 +114,9 @@
     <ClInclude Include="src\def.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameEvent.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\libs\Encoding.cpp">
@@ -234,6 +237,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\def.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEvent.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

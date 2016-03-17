@@ -42,7 +42,7 @@ class Player
 		unsigned char getID() { return m_id; }
 		unsigned char setID(unsigned char id) { m_id = id; }
 
-		int getHandCardsCount() { return m_handcards.size(); }
+		int getHandCardsCount() { return (int)m_handcards.size(); }
 		unsigned long getHandCard(int index) { return m_handcards[index]; }
 		void suffle();
 

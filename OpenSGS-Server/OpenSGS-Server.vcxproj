@@ -22,6 +22,7 @@
     <ClInclude Include="src\BattleSystem.h" />
     <ClInclude Include="src\CmdBuffer.h" />
     <ClInclude Include="src\def.h" />
+    <ClInclude Include="src\GameEvent.h" />
     <ClInclude Include="src\libs\Encoding.h" />
     <ClInclude Include="src\libs\lua-5.2.0\lapi.h" />
     <ClInclude Include="src\libs\lua-5.2.0\lauxlib.h" />
@@ -57,6 +58,7 @@
     <ClCompile Include="src\BattleSystem.cpp" />
     <ClCompile Include="src\CmdBuffer.cpp" />
     <ClCompile Include="src\def.cpp" />
+    <ClCompile Include="src\GameEvent.cpp" />
     <ClCompile Include="src\libs\Encoding.cpp" />
     <ClCompile Include="src\libs\lua-5.2.0\lapi.c" />
     <ClCompile Include="src\libs\lua-5.2.0\lauxlib.c" />
@@ -161,7 +163,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
