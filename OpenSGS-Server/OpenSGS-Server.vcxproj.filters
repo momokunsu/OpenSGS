@@ -114,6 +114,9 @@
     <ClInclude Include="src\GameEvent.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\libs\String.h">
+      <Filter>src\libs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\libs\Encoding.cpp">
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="src\GameEvent.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\libs\String.cpp">
+      <Filter>src\libs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

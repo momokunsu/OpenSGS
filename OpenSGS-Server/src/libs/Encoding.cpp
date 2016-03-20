@@ -1,7 +1,8 @@
 ﻿#include "Encoding.h"
 #include <string.h>
+#include <string>
 
-char* UnicodeToUtf8(const wchar_t *str)
+const char* UnicodeToUtf8(const wchar_t *str)
 {
 	char buf[256];
 	wchar_t code;
@@ -33,13 +34,11 @@ char* UnicodeToUtf8(const wchar_t *str)
 		i++, j += 2;
 		continue;
 	}
-	buf[j] = '\0';
-	char *ref = new char[j+1];
-	memcpy(ref, buf, (j+1)*sizeof(char));
-	return ref;
+	buf[j] = 0;
+	return std::string(buf).c_str();
 }
 
-wchar_t* Utf8ToUnicode(const char *str)
+const wchar_t* Utf8ToUnicode(const char *str)
 {
 	wchar_t buf[256];
 	int i = 0, j = 0;
@@ -72,7 +71,5 @@ wchar_t* Utf8ToUnicode(const char *str)
 		}
 	}
 	buf[i] = 0;
-	wchar_t *ref = new wchar_t[i+1];
-	memcpy(ref, buf, (i+1)*sizeof(wchar_t));
-	return ref;
+	return std::wstring(buf).c_str();
 }

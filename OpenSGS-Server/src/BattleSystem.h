@@ -17,7 +17,7 @@ class BattleSystem
 		bool setPlayerLocal(Player* player, int pos);
 		void sufflePlayersLocal();
 
-		bool initBattleInfo();
+		bool initGame();
 
 		void startGame();
 		void distributeStatus();
@@ -35,7 +35,7 @@ class BattleSystem
 		int m_cur_player;
 		ePhraseType m_cur_phrase;
 
-		std::vector<ulong> m_cardgroup;
+		std::vector<ulong> m_card_deck;
 		std::vector<ulong> m_card_recycle_bin;
 
 		int m_global_drawcount;

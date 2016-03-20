@@ -1,9 +1,12 @@
 ﻿#include "BattleSystem.h"
 #include "LogHandler.h"
+#include "libs\StringManager.h"
+
 #include <string>
 #include <time.h>
 #include <algorithm>
 
+typedef StringManager STR;
 
 
 BattleSystem::BattleSystem()
@@ -35,7 +38,7 @@ bool BattleSystem::setPlayerLocal(Player *player, int pos)
 {
 	if (pos < 0 || pos >(int)m_players.size() - 1)
 	{
-		LogHandler::setLog("BattleSystem::setPlayerLocal", ("invaild player local!!! index: " + std::to_string(pos)).c_str());
+		LogHandler::setLog("BattleSystem::setPlayerLocal", STR::format("invaild player local!!! index: %d", pos));
 		return false;
 	}
 
@@ -57,7 +60,7 @@ void BattleSystem::sufflePlayersLocal()
 	return;
 }
 
-bool BattleSystem::initBattleInfo()
+bool BattleSystem::initGame()
 {
 	if (m_players.size() < 4)
 	{
@@ -101,7 +104,7 @@ bool BattleSystem::initBattleInfo()
 		if (m_statusgroup[i] == ePlayerStatusType::Ruler)
 		{
 			m_cur_player = i;
-			LogHandler::setLog("BattleSystem::initBattleInfo", ("confirm the ruler location is pos: " + std::to_string(m_cur_player)).c_str());
+			LogHandler::setLog("BattleSystem::initBattleInfo", STR::format("confirm the ruler location is pos: %d", m_cur_player));
 			break;
 		}
 	}
@@ -116,7 +119,7 @@ bool BattleSystem::initBattleInfo()
 void BattleSystem::startGame()
 {
 	//游戏开始
-	LogHandler::setLog("BattleSystem::startGame", ("game start!!! player count is" + std::to_string(m_players.size())).c_str());
+	LogHandler::setLog("BattleSystem::startGame", STR::format("game start!!! player count is %d", m_players.size()));
 	auto ev = new EventGameStart();
 	for (auto player : m_players)
 	{
@@ -198,9 +201,7 @@ void BattleSystem::handlePhrase(Player * player, ePhraseType ptype)
 		case ePhraseType::Judge:
 			break;
 		case ePhraseType::Draw:
-			char str[256] = { 0 };
-			sprintf(str, "player %d get %d cards", (int)player->getID(), m_drawcount);
-			LogHandler::setLog("BattleSystem::handlePhrase", str);
+			LogHandler::setLog("BattleSystem::handlePhrase", STR::format("player %d get %d cards", (int)player->getID(), m_drawcount));
 			break;
 		case ePhraseType::Battle:
 			break;

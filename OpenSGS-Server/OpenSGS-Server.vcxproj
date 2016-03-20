@@ -50,6 +50,7 @@
     <ClInclude Include="src\libs\lua-5.2.0\lzio.h" />
     <ClInclude Include="src\libs\sqlite3\sqlite3.h" />
     <ClInclude Include="src\libs\sqlite3\sqlite3ext.h" />
+    <ClInclude Include="src\libs\String.h" />
     <ClInclude Include="src\LogHandler.h" />
     <ClInclude Include="src\Player.h" />
   </ItemGroup>
@@ -90,6 +91,7 @@
     <ClCompile Include="src\libs\lua-5.2.0\lvm.c" />
     <ClCompile Include="src\libs\lua-5.2.0\lzio.c" />
     <ClCompile Include="src\libs\sqlite3\sqlite3-all.c" />
+    <ClCompile Include="src\libs\String.cpp" />
     <ClCompile Include="src\LogHandler.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
