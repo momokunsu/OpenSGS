@@ -114,8 +114,11 @@
     <ClInclude Include="src\GameEvent.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\libs\String.h">
+    <ClInclude Include="src\libs\StringManager.h">
       <Filter>src\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CardsManager.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -236,8 +239,11 @@
     <ClCompile Include="src\GameEvent.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\libs\String.cpp">
+    <ClCompile Include="src\libs\StringManager.cpp">
       <Filter>src\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CardsManager.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

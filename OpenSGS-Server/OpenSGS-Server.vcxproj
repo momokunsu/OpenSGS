@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BattleSystem.h" />
+    <ClInclude Include="src\CardsManager.h" />
     <ClInclude Include="src\def.h" />
     <ClInclude Include="src\GameEvent.h" />
     <ClInclude Include="src\libs\Encoding.h" />
@@ -50,12 +51,13 @@
     <ClInclude Include="src\libs\lua-5.2.0\lzio.h" />
     <ClInclude Include="src\libs\sqlite3\sqlite3.h" />
     <ClInclude Include="src\libs\sqlite3\sqlite3ext.h" />
-    <ClInclude Include="src\libs\String.h" />
+    <ClInclude Include="src\libs\StringManager.h" />
     <ClInclude Include="src\LogHandler.h" />
     <ClInclude Include="src\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BattleSystem.cpp" />
+    <ClCompile Include="src\CardsManager.cpp" />
     <ClCompile Include="src\GameEvent.cpp" />
     <ClCompile Include="src\libs\Encoding.cpp" />
     <ClCompile Include="src\libs\lua-5.2.0\lapi.c" />
@@ -91,7 +93,7 @@
     <ClCompile Include="src\libs\lua-5.2.0\lvm.c" />
     <ClCompile Include="src\libs\lua-5.2.0\lzio.c" />
     <ClCompile Include="src\libs\sqlite3\sqlite3-all.c" />
-    <ClCompile Include="src\libs\String.cpp" />
+    <ClCompile Include="src\libs\StringManager.cpp" />
     <ClCompile Include="src\LogHandler.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
