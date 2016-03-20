@@ -1,6 +1,7 @@
  #pragma once
 
-#include <functional>
+#include <vector>
+#include <algorithm>
 
 typedef unsigned char uchar;
 typedef unsigned short ushort;
@@ -26,19 +27,9 @@ typedef union
 
 #pragma pack(pop)
 
-
-//卡片类型
-enum eCardType
+template<class Tclass>
+void SuffleVector(std::vector<Tclass> vec)
 {
-	General = 0, 
-	Base = 1,
-	Scheme = 2,
-	Equip = 3,
-	Treasure = 4
-};
-
-//网络与主机字节顺序转换
-//extern std::function<void (TYPEUNION &u, int size)> _ntoh;
-//extern std::function<void (TYPEUNION &u, int size)> _hton;
-
-void initEndianChage();
+	std::random_shuffle(vec.begin(), vec.end());
+	std::random_shuffle(vec.begin(), vec.end());
+}

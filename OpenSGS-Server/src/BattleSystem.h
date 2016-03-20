@@ -1,7 +1,11 @@
 ﻿#pragma once
-#include <vector>
 #include "Player.h"
 
+
+struct BattleInfo
+{
+
+};
 
 class BattleSystem
 {
@@ -13,7 +17,9 @@ class BattleSystem
 		bool setPlayerLocal(Player* player, int pos);
 		void sufflePlayersLocal();
 
-		bool startGame();
+		bool initBattleInfo();
+
+		void startGame();
 		void distributeStatus();
 		void startBattle();
 		void phraseStep();
@@ -24,14 +30,15 @@ class BattleSystem
 		void handlePhrase(Player *player, ePhraseType ptype);
 
 		std::vector<ePlayerStatusType> m_statusgroup;
+		std::vector<Player*> m_players;
 
 		int m_cur_player;
-		std::vector<Player*> m_players;
-		std::vector<uchar> m_players_local;
+		ePhraseType m_cur_phrase;
 
 		std::vector<ulong> m_cardgroup;
 		std::vector<ulong> m_card_recycle_bin;
 
-		ePhraseType m_cur_phrase;
+		int m_global_drawcount;
+		int m_drawcount;
 };
 

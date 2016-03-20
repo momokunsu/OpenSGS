@@ -53,16 +53,15 @@ bool BattleSystem::setPlayerLocal(Player *player, int pos)
 
 void BattleSystem::sufflePlayersLocal()
 {
-	std::random_shuffle(m_players.begin(), m_players.end());
-	std::random_shuffle(m_players.begin(), m_players.end());
+	SuffleVector(m_players);
 	return;
 }
 
-bool BattleSystem::startGame()
+bool BattleSystem::initBattleInfo()
 {
 	if (m_players.size() < 4)
 	{
-		LogHandler::setLog("BattleSystem::startGame", "player min count is 4!!!");
+		LogHandler::setLog("BattleSystem::initBattleInfo", "player min count is 4!!!");
 		return false;
 	}
 
@@ -93,20 +92,36 @@ bool BattleSystem::startGame()
 		m_statusgroup.push_back(ePlayerStatusType::Subject);
 	if (m_players.size() > 9)
 		m_statusgroup.push_back(ePlayerStatusType::Rebel);
+	SuffleVector(m_statusgroup);
 
-	std::random_shuffle(m_statusgroup.begin(), m_statusgroup.end());
-	std::random_shuffle(m_statusgroup.begin(), m_statusgroup.end());
 
-	//游戏开始
+	//确定主公位置
+	for (int i = 0; i < (int)m_statusgroup.size(); i++)
 	{
-		LogHandler::setLog("BattleSystem::startGame", ("game start!!! player count is" + std::to_string(m_players.size())).c_str());
-		auto ev = new EventGameStart();
-		for (auto player : m_players)
+		if (m_statusgroup[i] == ePlayerStatusType::Ruler)
 		{
-			player->dispatchEvent(ev);
+			m_cur_player = i;
+			LogHandler::setLog("BattleSystem::initBattleInfo", ("confirm the ruler location is pos: " + std::to_string(m_cur_player)).c_str());
+			break;
 		}
 	}
+
+	m_cur_phrase = ePhraseType::Begin;
+	m_drawcount = m_global_drawcount = 2;
+	m_card_recycle_bin.clear();
+
 	return true;
+}
+
+void BattleSystem::startGame()
+{
+	//游戏开始
+	LogHandler::setLog("BattleSystem::startGame", ("game start!!! player count is" + std::to_string(m_players.size())).c_str());
+	auto ev = new EventGameStart();
+	for (auto player : m_players)
+	{
+		player->dispatchEvent(ev);
+	}
 }
 
 void BattleSystem::distributeStatus()
@@ -122,17 +137,6 @@ void BattleSystem::distributeStatus()
 	{
 		player->dispatchEvent(ev);
 	}
-
-	//确定主公位置
-	for (int i = 0; i < (int)m_statusgroup.size(); i++)
-	{
-		if (m_statusgroup[i] == ePlayerStatusType::Ruler)
-		{
-			m_cur_player = i;
-			LogHandler::setLog("BattleSystem::distributeStatus", ("confirm the ruler location is pos: " + std::to_string(m_cur_player)).c_str());
-			break;
-		}
-	}
 }
 
 void BattleSystem::startBattle()
@@ -144,37 +148,38 @@ void BattleSystem::startBattle()
 	{
 		player->dispatchEvent(ev);
 	}
-
-	//初始化流程
-	m_cur_phrase = ePhraseType::Begin;
 }
 
 void BattleSystem::phraseStep()
 {
-	//流程开始
 	//已死亡则跳过流程
+	if (m_players[m_cur_player]->isDead())
+	{
+		skipThisRound();
+		return;
+	}
+
+	//流程开始
 	auto ev_phrase = new EventPhrase();
-	ev_phrase->type = ePhraseType::Begin;
+	ev_phrase->type = m_cur_phrase;
 	ev_phrase->playerID = m_players[m_cur_player]->getID();
 	while (true)
 	{
+		//处理事件
 		for (auto player : m_players)
 		{
 			player->dispatchEvent(ev_phrase);
 		}
 
-		ev_phrase->type = (ePhraseType)(((int)ev_phrase->type) + 1);
-		for (auto player : m_players)
-		{
-			player->dispatchEvent(ev_phrase);
-		}
+		//执行流程
+		handlePhrase(m_players[m_cur_player], m_cur_phrase);
 
 		//指向下一阶段
 		if (ev_phrase->type != ePhraseType::End)
 			ev_phrase->type = (ePhraseType)(((int)ev_phrase->type) + 1);
 		else
 		{
-			skipThisRound()
+			skipThisRound();
 		}
 	}
 }
@@ -183,6 +188,7 @@ void BattleSystem::skipThisRound()
 {
 	m_cur_phrase = ePhraseType::Begin;
 	m_cur_player = (m_cur_player + 1) % m_players.size();
+	m_drawcount = m_global_drawcount;
 }
 
 void BattleSystem::handlePhrase(Player * player, ePhraseType ptype)
@@ -193,7 +199,7 @@ void BattleSystem::handlePhrase(Player * player, ePhraseType ptype)
 			break;
 		case ePhraseType::Draw:
 			char str[256] = { 0 };
-			sprintf(str, "player %d get %d cards", (int)m_players[m_cur_player]->getID(), 2);
+			sprintf(str, "player %d get %d cards", (int)player->getID(), m_drawcount);
 			LogHandler::setLog("BattleSystem::handlePhrase", str);
 			break;
 		case ePhraseType::Battle:
