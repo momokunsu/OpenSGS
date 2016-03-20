@@ -3,15 +3,7 @@
 #include <vector>
 #include <functional>
 
-//玩家身份
-enum class ePlayerStatusType
-{
-	None = 0,
-	Ruler,
-	Subject,
-	Rebel,
-	Spy
-};
+#include "GameEvent.h"
 
 //玩家装备牌索引
 enum class eEquipsIndex
@@ -23,38 +15,31 @@ enum class eEquipsIndex
 	Treasure
 };
 
-//玩家事件回调
-enum class ePlayerEvent
-{
-	None = 0,
-	GameStart,
-	GetPlayerStatus,
-	BattleStart,
-	GetCards
-};
-
 class Player
 {
 	public:
 		Player();
 		virtual ~Player();
 
-		unsigned char getID() { return m_id; }
-		unsigned char setID(unsigned char id) { m_id = id; }
+		uchar getID() { return m_id; }
+		uchar setID(uchar id) { m_id = id; }
 
 		int getHandCardsCount() { return (int)m_handcards.size(); }
-		unsigned long getHandCard(int index) { return m_handcards[index]; }
+		ulong getHandCard(int index) { return m_handcards[index]; }
 		void suffle();
 
-		void setEventCallback(std::function<void(ePlayerEvent, void *)> event) { mc_event_callback = event; }
-		void dispatchEvent(ePlayerEvent etype, void *data) { mc_event_callback(etype, data); }
+		bool isDead() { return m_is_dead; }
+
+		void setEventCallback(std::function<void(const GameEvent*)> event) { mc_event_callback = event; }
+		void dispatchEvent(const GameEvent *etype) { mc_event_callback(etype); }
 
 	private:
-		unsigned char m_id;
+		uchar m_id;
 		ePlayerStatusType *m_status;
-		unsigned long m_equips[5];
-		std::vector<unsigned long> m_handcards;
-		std::vector<unsigned long> m_judges;
-		std::vector<unsigned long> m_ext_cards;
-		std::function<void(ePlayerEvent, void *)> mc_event_callback;
+		bool m_is_dead;
+		ulong m_equips[5];
+		std::vector<ulong> m_handcards;
+		std::vector<ulong> m_judges;
+		std::vector<ulong> m_ext_cards;
+		std::function<void(const GameEvent*)> mc_event_callback;
 };

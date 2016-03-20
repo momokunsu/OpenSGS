@@ -108,9 +108,6 @@
     <ClInclude Include="src\LogHandler.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\CmdBuffer.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\def.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -231,12 +228,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\LogHandler.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CmdBuffer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\def.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEvent.cpp">

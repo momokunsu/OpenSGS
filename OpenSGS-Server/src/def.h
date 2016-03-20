@@ -19,7 +19,7 @@ typedef union
 	ushort shortVal[4];
 	ulong longVal[2];
 	float floatVal[2];
-	void* ptrVal;
+	void* ptrVal[2];
 	uint64 int64Val;
 	double doubleVal;
 } uTypeUnion;
