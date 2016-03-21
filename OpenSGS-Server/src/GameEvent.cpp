@@ -1,8 +1,6 @@
 #include "GameEvent.h"
 #include <functional>
 
-std::function<void (uTypeUnion &u, int size)> _endianhandler = nullptr;
-
 void endianChage(uTypeUnion &u, int size)
 {
 	int dsize = size / 2;
@@ -18,7 +16,7 @@ void endianNotChage(uTypeUnion &u, int size)
 {
 }
 
-uchar GameEvent::m_seribuffer[65536];
+std::function<void(uTypeUnion &u, int size)> _endianhandler = endianNotChage;
 
 GameEvent::GameEvent(eGameEvent ev)
 {
@@ -32,7 +30,7 @@ GameEvent::~GameEvent()
 void GameEvent::initEndian()
 {
 	uTypeUnion u;
-	u.longVal[0] = 0xFF0000FF;
+	u.intVal[0] = 0xFF0000FF;
 	if(u.shortVal[0] == 0x00FF && u.shortVal[1] == 0xFF00)
 		_endianhandler = endianNotChage;
 	else
@@ -41,7 +39,7 @@ void GameEvent::initEndian()
 
 int GameEvent::getBufferSize(const void * data)
 {
-	return *((ushort*)m_seribuffer);
+	return *((int*)GlobalBuffer);
 }
 
 void GameEvent::writeVal8(uTypeUnion val)
@@ -62,7 +60,7 @@ void GameEvent::writeVal16(uTypeUnion val)
 void GameEvent::writeVal32(uTypeUnion val)
 {
 	_endianhandler(val, 4);
-	*((ulong*)m_cur_ptr) = val.longVal[0];
+	*((uint*)m_cur_ptr) = val.intVal[0];
 	m_cur_size += 4;
 	m_cur_ptr += 4;
 }
@@ -97,7 +95,7 @@ uTypeUnion GameEvent::readVal16()
 uTypeUnion GameEvent::readVal32()
 {
 	uTypeUnion val;
-	val.longVal[0] = *((ulong*)m_cur_ptr);
+	val.intVal[0] = *((uint*)m_cur_ptr);
 	_endianhandler(val, 4);
 	m_cur_size += 4;
 	m_cur_ptr += 4;
@@ -107,7 +105,7 @@ uTypeUnion GameEvent::readVal32()
 uTypeUnion GameEvent::readVal64()
 {
 	uTypeUnion val;
-	val.int64Val = *((int64*)m_cur_ptr);
+	val.int64Val = *((uint64*)m_cur_ptr);
 	_endianhandler(val, 8);
 	m_cur_size += 8;
 	m_cur_ptr += 8;
@@ -116,40 +114,40 @@ uTypeUnion GameEvent::readVal64()
 
 void GameEvent::reSize()
 {
-	*((ushort*)m_seribuffer) = m_cur_size;
+	*((int*)GlobalBuffer) = m_cur_size;
 }
 
 
 void * GameEvent::serialize()
 {
 	m_cur_size = 0;
-	m_cur_ptr = m_seribuffer;
+	m_cur_ptr = GlobalBuffer;
 
 	uTypeUnion val;
 
-	val.shortVal[0] = 0;
-	writeVal16(val);
+	val.intVal[0] = 0;
+	writeVal32(val);
 
-	val.longVal[0] = (ulong)m_event_id;
+	val.intVal[0] = (ulong)m_event_id;
 	writeVal32(val);
 
 	reSize();
-	return m_seribuffer;
+	return GlobalBuffer;
 }
 
 void GameEvent::unserialize(const void * data)
 {
 	m_cur_size = 0;
-	m_cur_ptr = m_seribuffer;
+	m_cur_ptr = GlobalBuffer;
 
-	memcpy(m_seribuffer, data, getBufferSize(data));
+	memcpy(GlobalBuffer, data, getBufferSize(data));
 
 	uTypeUnion val;
 
-	readVal16();//size
+	readVal32();//size
 
 	val = readVal32();
-	m_event_id = (eGameEvent)val.longVal[0];
+	m_event_id = (eGameEvent)val.intVal[0];
 }
 
 void * EventGetPlayerStatus::serialize()
@@ -169,7 +167,7 @@ void * EventGetPlayerStatus::serialize()
 	}
 
 	reSize();
-	return m_seribuffer;
+	return GlobalBuffer;
 }
 
 void EventGetPlayerStatus::unserialize(const void * data)
@@ -202,12 +200,12 @@ void * EventGetCards::serialize()
 	writeVal16(val);
 	for (auto it : cards)
 	{
-		val.longVal[0] = it;
+		val.intVal[0] = it;
 		writeVal32(val);
 	}
 
 	reSize();
-	return m_seribuffer;
+	return GlobalBuffer;
 }
 
 void EventGetCards::unserialize(const void * data)
@@ -224,7 +222,7 @@ void EventGetCards::unserialize(const void * data)
 	for (int i = 0, size = val.shortVal[0]; i < size; i++)
 	{
 		val = readVal32();
-		cards.push_back(val.longVal[0]);
+		cards.push_back(val.intVal[0]);
 	}
 }
 
@@ -241,7 +239,7 @@ void * EventPhrase::serialize()
 	writeVal8(val);
 
 	reSize();
-	return m_seribuffer;
+	return GlobalBuffer;
 }
 
 void EventPhrase::unserialize(const void * data)

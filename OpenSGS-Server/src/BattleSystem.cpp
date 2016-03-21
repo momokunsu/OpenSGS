@@ -158,7 +158,7 @@ void BattleSystem::phraseStep()
 	//已死亡则跳过流程
 	if (m_players[m_cur_player]->isDead())
 	{
-		skipThisRound();
+		skipThisTurn();
 		return;
 	}
 
@@ -182,12 +182,12 @@ void BattleSystem::phraseStep()
 			ev_phrase->type = (ePhraseType)(((int)ev_phrase->type) + 1);
 		else
 		{
-			skipThisRound();
+			skipThisTurn();
 		}
 	}
 }
 
-void BattleSystem::skipThisRound()
+void BattleSystem::skipThisTurn()
 {
 	m_cur_phrase = ePhraseType::Begin;
 	m_cur_player = (m_cur_player + 1) % m_players.size();

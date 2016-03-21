@@ -18,7 +18,7 @@ typedef union
 {
 	uchar charVal[8];
 	ushort shortVal[4];
-	ulong longVal[2];
+	uint intVal[2];
 	float floatVal[2];
 	void* ptrVal[2];
 	uint64 int64Val;

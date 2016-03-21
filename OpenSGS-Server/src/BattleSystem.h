@@ -24,7 +24,7 @@ class BattleSystem
 		void startBattle();
 		void phraseStep();
 
-		void skipThisRound();
+		void skipThisTurn();
 		
 	private:
 		void handlePhrase(Player *player, ePhraseType ptype);
@@ -35,8 +35,8 @@ class BattleSystem
 		int m_cur_player;
 		ePhraseType m_cur_phrase;
 
-		std::vector<ulong> m_card_deck;
-		std::vector<ulong> m_card_recycle_bin;
+		std::vector<uint> m_card_deck;
+		std::vector<uint> m_card_recycle_bin;
 
 		int m_global_drawcount;
 		int m_drawcount;

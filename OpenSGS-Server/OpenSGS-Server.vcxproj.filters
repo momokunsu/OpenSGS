@@ -120,6 +120,9 @@
     <ClInclude Include="src\CardsManager.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\libs\GlobalBuffer.h">
+      <Filter>src\libs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\libs\Encoding.cpp">
@@ -244,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="src\CardsManager.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\libs\GlobalBuffer.cpp">
+      <Filter>src\libs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

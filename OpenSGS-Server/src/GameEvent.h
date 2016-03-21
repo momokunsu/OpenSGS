@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "def.h"
+#include "libs/GlobalBuffer.h"
 #include <map>
 
 //ÕÊº“…Ì∑›
@@ -71,8 +72,7 @@ class GameEvent
 
 		void reSize();
 
-		static uchar m_seribuffer[65536];
-		uchar *m_cur_ptr;
+		char *m_cur_ptr;
 		int m_cur_size;
 		eGameEvent m_event_id;
 };
@@ -106,7 +106,7 @@ class EventGetCards :public GameEvent
 		EventGetCards() :GameEvent(eGameEvent::GetCards) {}
 
 		uchar playerID;
-		std::vector<int> cards;
+		std::vector<uint> cards;
 
 		void* serialize() override;
 		void unserialize(const void* data) override;

@@ -1,65 +1,33 @@
 #include "StringManager.h"
 #include <stdarg.h>
-
-#define BUFFER_SIZE (1024 * 1024)
-
-std::string StringManager::formatString(const char* str, ...)
-{
-	va_list ap;
-	va_start(ap, str);
-
-	std::string ret = "";
-	char *buf = (char*)malloc(BUFFER_SIZE);
-	if (buf)
-	{
-		vsnprintf(buf, BUFFER_SIZE, str, ap);
-		ret = std::string(buf);
-		free(buf);
-	}
-	va_end(ap);
-
-	return ret;
-}
+#include "GlobalBuffer.h"
 
 const char* StringManager::format(const char* str, ...)
 {
 	va_list ap;
 	va_start(ap, str);
-
-	const char* ret = nullptr;
-	char *buf = (char*)malloc(BUFFER_SIZE);
-	if(buf)
-	{
-		vsnprintf(buf, BUFFER_SIZE, str, ap);
-		{
-			auto s = std::string(buf);
-			ret = s.c_str();
-		}
-		//ret = std::string(buf).c_str();
-		free(buf);
-	}
-	else
-	{
-		ret = nullptr;
-	}
+	vsnprintf(GlobalBuffer, sizeof(GlobalBuffer), str, ap);
 	va_end(ap);
 
-	return ret;
+	return GlobalBuffer;
 }
 
-std::string StringManager::stringFromInt(long long n)
+const char* StringManager::fromInt(long long n)
 {
-	return std::to_string(n);
+	snprintf(GlobalBuffer, sizeof(GlobalBuffer), "%lld", n);
+	return GlobalBuffer;
 }
 
-std::string StringManager::stringFromUint(unsigned long long n)
+const char* StringManager::fromUint(unsigned long long n)
 {
-	return std::to_string(n);
+	snprintf(GlobalBuffer, sizeof(GlobalBuffer), "%llu", n);
+	return GlobalBuffer;
 }
 
-std::string StringManager::stringFromFloat(double n)
+const char* StringManager::fromFloat(double n)
 {
-	return std::to_string(n);
+	snprintf(GlobalBuffer, sizeof(GlobalBuffer), "%lf", n);
+	return GlobalBuffer;
 }
 
 long long StringManager::toInt(const char* str)
