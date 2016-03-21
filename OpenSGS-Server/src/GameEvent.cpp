@@ -1,4 +1,5 @@
 #include "GameEvent.h"
+#include <functional>
 
 std::function<void (uTypeUnion &u, int size)> _endianhandler = nullptr;
 
@@ -141,7 +142,7 @@ void GameEvent::unserialize(const void * data)
 	m_cur_size = 0;
 	m_cur_ptr = m_seribuffer;
 
-	memcpy(m_seribuffer, data, getBufferSize());
+	memcpy(m_seribuffer, data, getBufferSize(data));
 
 	uTypeUnion val;
 

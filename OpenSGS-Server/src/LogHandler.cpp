@@ -4,7 +4,7 @@
 
 std::string LogHandler::m_tag_buffer = "";
 std::string LogHandler::m_log_buffer = "";
-std::function<void*(std::string, std::string)> LogHandler::mc_log_callback = nullptr;
+std::function<void*(const std::string&, const std::string&)> LogHandler::mc_log_callback = nullptr;
 
 void LogHandler::setLog(const char *tag, const char *log)
 {
@@ -16,7 +16,7 @@ void LogHandler::setLog(const char *tag, const char *log)
 #endif 
 }
 
-const char * LogHandler::getCurTag()
+const std::string& LogHandler::getCurTag()
 {
 #ifdef __Open_Log__
 	return m_tag_buffer.c_str();
@@ -25,7 +25,7 @@ const char * LogHandler::getCurTag()
 #endif 
 }
 
-const char * LogHandler::getCurLog()
+const std::string& LogHandler::getCurLog()
 {
 #ifdef __Open_Log__
 	return m_log_buffer.c_str();
@@ -34,7 +34,7 @@ const char * LogHandler::getCurLog()
 #endif
 }
 
-void LogHandler::setLogEventCallback(std::function<void*(std::string, std::string)> event)
+void LogHandler::setLogEventCallback(std::function<void*(const std::string&, const std::string&)> event)
 {
 	mc_log_callback = event;
 }

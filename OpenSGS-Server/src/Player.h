@@ -22,7 +22,7 @@ class Player
 		virtual ~Player();
 
 		uchar getID() { return m_id; }
-		uchar setID(uchar id) { m_id = id; }
+		void setID(uchar id) { m_id = id; }
 
 		int getHandCardsCount() { return (int)m_handcards.size(); }
 		ulong getHandCard(int index) { return m_handcards[index]; }

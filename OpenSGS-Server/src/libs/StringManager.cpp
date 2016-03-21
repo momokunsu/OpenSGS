@@ -31,8 +31,16 @@ const char* StringManager::format(const char* str, ...)
 	if(buf)
 	{
 		vsnprintf(buf, BUFFER_SIZE, str, ap);
-		ret = std::string(buf).c_str();
+		{
+			auto s = std::string(buf);
+			ret = s.c_str();
+		}
+		//ret = std::string(buf).c_str();
 		free(buf);
+	}
+	else
+	{
+		ret = nullptr;
 	}
 	va_end(ap);
 
