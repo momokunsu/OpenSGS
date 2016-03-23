@@ -52,6 +52,7 @@ bool BattleSystem::setPlayerLocal(Player *player, int pos)
 			m_players[pos] = n;
 		}
 	}
+	return true;
 }
 
 void BattleSystem::sufflePlayersLocal()
@@ -69,7 +70,7 @@ bool BattleSystem::initGame()
 	}
 
 	//分配玩家ID
-	for (int i = 0; i < m_players.size(); i++)
+	for (int i = 0; i < (int)m_players.size(); i++)
 	{
 		m_players[i]->setID(i + 1);
 	}

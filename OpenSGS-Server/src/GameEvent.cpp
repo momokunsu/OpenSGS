@@ -39,7 +39,7 @@ void GameEvent::initEndian()
 
 int GameEvent::getBufferSize(const void * data)
 {
-	return *((int*)GlobalBuffer);
+	return *((int*)data);
 }
 
 void GameEvent::writeVal8(uTypeUnion val)
@@ -114,14 +114,25 @@ uTypeUnion GameEvent::readVal64()
 
 void GameEvent::reSize()
 {
-	*((int*)GlobalBuffer) = m_cur_size;
+	reSize(GlobalBuffer);
+}
+
+void GameEvent::reSize(const void * data)
+{
+	*((int*)data) = m_cur_size;
 }
 
 
-void * GameEvent::serialize()
+const void* GameEvent::serialize()
+{
+	serialize(GlobalBuffer);
+	return GlobalBuffer;
+}
+
+void GameEvent::serialize(void * data)
 {
 	m_cur_size = 0;
-	m_cur_ptr = GlobalBuffer;
+	m_cur_ptr = (char*)data;
 
 	uTypeUnion val;
 
@@ -132,15 +143,12 @@ void * GameEvent::serialize()
 	writeVal32(val);
 
 	reSize();
-	return GlobalBuffer;
 }
 
 void GameEvent::unserialize(const void * data)
 {
 	m_cur_size = 0;
-	m_cur_ptr = GlobalBuffer;
-
-	memcpy(GlobalBuffer, data, getBufferSize(data));
+	m_cur_ptr = (char*)data;
 
 	uTypeUnion val;
 
@@ -150,9 +158,9 @@ void GameEvent::unserialize(const void * data)
 	m_event_id = (eGameEvent)val.intVal[0];
 }
 
-void * EventGetPlayerStatus::serialize()
+void EventGetPlayerStatus::serialize(void* data)
 {
-	GameEvent::serialize();
+	GameEvent::serialize(data);
 
 	uTypeUnion val;
 
@@ -167,7 +175,6 @@ void * EventGetPlayerStatus::serialize()
 	}
 
 	reSize();
-	return GlobalBuffer;
 }
 
 void EventGetPlayerStatus::unserialize(const void * data)
@@ -187,7 +194,7 @@ void EventGetPlayerStatus::unserialize(const void * data)
 	}
 }
 
-void * EventGetCards::serialize()
+void EventGetCards::serialize(void* data)
 {
 	GameEvent::serialize();
 
@@ -205,7 +212,6 @@ void * EventGetCards::serialize()
 	}
 
 	reSize();
-	return GlobalBuffer;
 }
 
 void EventGetCards::unserialize(const void * data)
@@ -226,9 +232,9 @@ void EventGetCards::unserialize(const void * data)
 	}
 }
 
-void * EventPhrase::serialize()
+void EventPhrase::serialize(void* data)
 {
-	GameEvent::serialize();
+	GameEvent::serialize(data);
 
 	uTypeUnion val;
 
@@ -239,7 +245,6 @@ void * EventPhrase::serialize()
 	writeVal8(val);
 
 	reSize();
-	return GlobalBuffer;
 }
 
 void EventPhrase::unserialize(const void * data)

@@ -53,7 +53,8 @@ class GameEvent
 		void setEvent(eGameEvent ev){ m_event_id = ev; }
 		eGameEvent getEvent() { return m_event_id; }
 
-		virtual void* serialize();
+		const void* serialize();
+		virtual void serialize(void* data);
 		virtual void unserialize(const void* data);
 
 		static void initEndian();
@@ -71,6 +72,7 @@ class GameEvent
 		uTypeUnion readVal64();
 
 		void reSize();
+		void reSize(const void* data);
 
 		char *m_cur_ptr;
 		int m_cur_size;
@@ -96,7 +98,7 @@ class EventGetPlayerStatus :public GameEvent
 
 		std::map<uchar, ePlayerStatusType> statusMap;
 
-		void* serialize() override; 
+		void serialize(void* data) override;
 		void unserialize(const void* data) override;
 };
 
@@ -108,7 +110,7 @@ class EventGetCards :public GameEvent
 		uchar playerID;
 		std::vector<uint> cards;
 
-		void* serialize() override;
+		void serialize(void* data) override;
 		void unserialize(const void* data) override;
 };
 
@@ -120,6 +122,6 @@ class EventPhrase :public GameEvent
 		uchar playerID;
 		ePhraseType type;
 
-		void* serialize() override;
+		void serialize(void* data) override;
 		void unserialize(const void* data) override;
 };
