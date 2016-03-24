@@ -41,7 +41,8 @@ enum class eGameEvent
 	BattleStart,
 	GetPlayerStatus,
 	GetCards,
-	Phrase
+	Phrase,
+	EventsPack
 };
 
 class GameEvent
@@ -54,7 +55,7 @@ class GameEvent
 		eGameEvent getEvent() { return m_event_id; }
 
 		const void* serialize();
-		virtual void serialize(void* data);
+		virtual void serializeTo(void* data);
 		virtual void unserialize(const void* data);
 
 		static void initEndian();
@@ -79,6 +80,17 @@ class GameEvent
 		eGameEvent m_event_id;
 };
 
+class EventsPack :public GameEvent
+{
+	public:
+		EventsPack() :GameEvent(eGameEvent::EventsPack) {}
+
+		std::vector<GameEvent*> events;
+
+		void serializeTo(void* data) override;
+		void unserialize(const void* data) override;
+};
+
 class EventGameStart :public GameEvent
 {
 	public:
@@ -98,7 +110,7 @@ class EventGetPlayerStatus :public GameEvent
 
 		std::map<uchar, ePlayerStatusType> statusMap;
 
-		void serialize(void* data) override;
+		void serializeTo(void* data) override;
 		void unserialize(const void* data) override;
 };
 
@@ -110,7 +122,7 @@ class EventGetCards :public GameEvent
 		uchar playerID;
 		std::vector<uint> cards;
 
-		void serialize(void* data) override;
+		void serializeTo(void* data) override;
 		void unserialize(const void* data) override;
 };
 
@@ -122,6 +134,6 @@ class EventPhrase :public GameEvent
 		uchar playerID;
 		ePhraseType type;
 
-		void serialize(void* data) override;
+		void serializeTo(void* data) override;
 		void unserialize(const void* data) override;
 };

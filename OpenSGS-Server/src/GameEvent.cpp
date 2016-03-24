@@ -125,11 +125,11 @@ void GameEvent::reSize(const void * data)
 
 const void* GameEvent::serialize()
 {
-	serialize(GlobalBuffer);
+	serializeTo(GlobalBuffer);
 	return GlobalBuffer;
 }
 
-void GameEvent::serialize(void * data)
+void GameEvent::serializeTo(void * data)
 {
 	m_cur_size = 0;
 	m_cur_ptr = (char*)data;
@@ -158,9 +158,37 @@ void GameEvent::unserialize(const void * data)
 	m_event_id = (eGameEvent)val.intVal[0];
 }
 
-void EventGetPlayerStatus::serialize(void* data)
+void EventsPack::serializeTo(void * data)
 {
-	GameEvent::serialize(data);
+	GameEvent::serializeTo(data);
+
+	uTypeUnion val;
+
+	val.charVal[0] = events.size();
+	writeVal8(val);
+	for (auto it : events)
+	{
+		it->serializeTo(m_cur_ptr);
+	}
+
+	reSize();
+}
+
+void EventsPack::unserialize(const void * data)
+{
+	GameEvent::unserialize(data);
+
+	uTypeUnion val;
+
+	val = readVal8();
+	for (int i = 0, size = val.charVal[0]; i < size; i++)
+	{
+	}
+}
+
+void EventGetPlayerStatus::serializeTo(void* data)
+{
+	GameEvent::serializeTo(data);
 
 	uTypeUnion val;
 
@@ -194,9 +222,9 @@ void EventGetPlayerStatus::unserialize(const void * data)
 	}
 }
 
-void EventGetCards::serialize(void* data)
+void EventGetCards::serializeTo(void* data)
 {
-	GameEvent::serialize();
+	GameEvent::serializeTo(data);
 
 	uTypeUnion val;
 
@@ -232,9 +260,9 @@ void EventGetCards::unserialize(const void * data)
 	}
 }
 
-void EventPhrase::serialize(void* data)
+void EventPhrase::serializeTo(void* data)
 {
-	GameEvent::serialize(data);
+	GameEvent::serializeTo(data);
 
 	uTypeUnion val;
 
