@@ -18,6 +18,9 @@ void endianNotChage(uTypeUnion &u, int size)
 
 std::function<void(uTypeUnion &u, int size)> _endianhandler = endianNotChage;
 
+
+std::map<eGameEvent, std::function<GameEvent *()>> GameEvent::m_event_creators;
+
 GameEvent::GameEvent(eGameEvent ev)
 {
 	m_event_id = ev;
@@ -37,9 +40,17 @@ void GameEvent::initEndian()
 		_endianhandler = endianChage;
 }
 
-int GameEvent::getBufferSize(const void * data)
+GameEvent * GameEvent::create(eGameEvent ev)
 {
-	return *((int*)data);
+	if (m_event_creators.size() == 0)
+	{
+		m_event_creators[eGameEvent::GameStart] = []() -> GameEvent * { return new EventGameStart(); };
+		m_event_creators[eGameEvent::BattleStart] = []() -> GameEvent * { return new EventBattleStart(); };
+		m_event_creators[eGameEvent::GetPlayerStatus] = []() -> GameEvent * { return new EventGetPlayerStatus(); };
+		m_event_creators[eGameEvent::GetCards] = []() -> GameEvent * { return new EventGetCards(); };
+		m_event_creators[eGameEvent::Phrase] = []() -> GameEvent * { return new EventPhrase(); };
+	}
+	return m_event_creators[ev]();
 }
 
 void GameEvent::writeVal8(uTypeUnion val)
@@ -147,12 +158,12 @@ void GameEvent::serializeTo(void * data)
 
 void GameEvent::unserialize(const void * data)
 {
-	m_cur_size = 0;
 	m_cur_ptr = (char*)data;
 
 	uTypeUnion val;
 
-	readVal32();//size
+	val = readVal32();
+	m_cur_size = val.intVal[0];
 
 	val = readVal32();
 	m_event_id = (eGameEvent)val.intVal[0];
@@ -169,6 +180,8 @@ void EventsPack::serializeTo(void * data)
 	for (auto it : events)
 	{
 		it->serializeTo(m_cur_ptr);
+		m_cur_size += it->getBufferSize();
+		m_cur_ptr += it->getBufferSize();
 	}
 
 	reSize();
@@ -180,9 +193,18 @@ void EventsPack::unserialize(const void * data)
 
 	uTypeUnion val;
 
+	events.clear();
 	val = readVal8();
 	for (int i = 0, size = val.charVal[0]; i < size; i++)
 	{
+		auto ev = GameEvent();
+		ev.unserialize(m_cur_ptr);
+
+		auto pev = GameEvent::create(ev.getEvent());
+		pev->unserialize(m_cur_ptr);
+
+		events.push_back(pev);
+		m_cur_ptr += pev->getBufferSize();
 	}
 }
 
@@ -211,6 +233,7 @@ void EventGetPlayerStatus::unserialize(const void * data)
 
 	uTypeUnion val;
 
+	statusMap.clear();
 	val = readVal16();
 	for (int i = 0, size = val.shortVal[0]; i < size; i++)
 	{
@@ -251,8 +274,8 @@ void EventGetCards::unserialize(const void * data)
 	val = readVal8();
 	playerID = val.charVal[0];
 
-	val = readVal16();
 	cards.clear();
+	val = readVal16();
 	for (int i = 0, size = val.shortVal[0]; i < size; i++)
 	{
 		val = readVal32();

@@ -5,6 +5,7 @@
 #include "def.h"
 #include "libs/GlobalBuffer.h"
 #include <map>
+#include <functional>
 
 //ÕÊº“…Ì∑›
 enum class ePlayerStatusType
@@ -48,18 +49,18 @@ enum class eGameEvent
 class GameEvent
 {
 	public:
-		GameEvent(eGameEvent ev);
+		GameEvent(eGameEvent ev = eGameEvent::None);
 		virtual ~GameEvent();
 
-		void setEvent(eGameEvent ev){ m_event_id = ev; }
 		eGameEvent getEvent() { return m_event_id; }
+		int getBufferSize() { return m_cur_size; }
 
 		const void* serialize();
 		virtual void serializeTo(void* data);
 		virtual void unserialize(const void* data);
 
 		static void initEndian();
-		static int getBufferSize(const void* data);
+		static GameEvent* create(eGameEvent ev);
 
 	protected:
 		void writeVal8(uTypeUnion val);
@@ -71,6 +72,8 @@ class GameEvent
 		uTypeUnion readVal16();
 		uTypeUnion readVal32();
 		uTypeUnion readVal64();
+
+		static std::map<eGameEvent, std::function<GameEvent *()>> m_event_creators;
 
 		void reSize();
 		void reSize(const void* data);
