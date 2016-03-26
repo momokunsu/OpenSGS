@@ -158,12 +158,12 @@ void GameEvent::serializeTo(void * data)
 
 void GameEvent::unserialize(const void * data)
 {
+	m_cur_size = 0;
 	m_cur_ptr = (char*)data;
 
 	uTypeUnion val;
 
-	val = readVal32();
-	m_cur_size = val.intVal[0];
+	val = readVal32();	//size
 
 	val = readVal32();
 	m_event_id = (eGameEvent)val.intVal[0];
