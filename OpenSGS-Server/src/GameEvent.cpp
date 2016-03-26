@@ -153,7 +153,7 @@ void GameEvent::serializeTo(void * data)
 	val.intVal[0] = (ulong)m_event_id;
 	writeVal32(val);
 
-	reSize();
+	reSize(data);
 }
 
 void GameEvent::unserialize(const void * data)
@@ -184,7 +184,7 @@ void EventsPack::serializeTo(void * data)
 		m_cur_ptr += it->getBufferSize();
 	}
 
-	reSize();
+	reSize(data);
 }
 
 void EventsPack::unserialize(const void * data)
@@ -197,9 +197,10 @@ void EventsPack::unserialize(const void * data)
 	val = readVal8();
 	for (int i = 0, size = val.charVal[0]; i < size; i++)
 	{
-		auto ev = GameEvent();
+		GameEvent ev;
 		ev.unserialize(m_cur_ptr);
 
+		auto id = ev.getEvent();
 		auto pev = GameEvent::create(ev.getEvent());
 		pev->unserialize(m_cur_ptr);
 
@@ -224,7 +225,7 @@ void EventGetPlayerStatus::serializeTo(void* data)
 		writeVal8(val);
 	}
 
-	reSize();
+	reSize(data);
 }
 
 void EventGetPlayerStatus::unserialize(const void * data)
@@ -262,7 +263,7 @@ void EventGetCards::serializeTo(void* data)
 		writeVal32(val);
 	}
 
-	reSize();
+	reSize(data);
 }
 
 void EventGetCards::unserialize(const void * data)
@@ -295,7 +296,7 @@ void EventPhrase::serializeTo(void* data)
 	val.charVal[0] = (uchar)type;
 	writeVal8(val);
 
-	reSize();
+	reSize(data);
 }
 
 void EventPhrase::unserialize(const void * data)
