@@ -1,5 +1,5 @@
 ﻿//#include "Encoding.h"
-//#include "sqlite3\sqlite3.h"
+//#include "libs/sqlite3/sqlite3.h"
 //#include "CardsManager.h"
 //#include "BaseCard.h"
 //
@@ -42,7 +42,7 @@
 //{
 //#ifdef WIN32
 //	WIN32_FIND_DATAA filedata;
-//	GamePackInfo info;
+//	PackInfo info;
 //	std::string path;
 //	HANDLE h;
 //
@@ -210,7 +210,7 @@
 //	return cg;
 //}
 //
-//void CardsManager::_readGamePackInfo(const char* name, GamePackInfo &info)
+//void CardsManager::_readGamePackInfo(const char* name, PackInfo &info)
 //{
 //	sqlite3 *sql;
 //	if(sqlite3_open(name, &sql) != SQLITE_OK)

@@ -1,0 +1,4 @@
+*.obj
+*.tlog
+/OpenSGS.sdf
+/OpenSGS.VC.opendb

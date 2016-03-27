@@ -7,7 +7,7 @@
 
 #include "def.h"
 
-struct GamePackInfo
+struct PackInfo
 {
 	std::string packType;
 	std::string packName;
@@ -21,13 +21,11 @@ struct GamePackInfo
 	int schemeAmount;
 	int equipAmount;
 
-	GamePackInfo()
+	PackInfo()
 	{
-		memset(this, 0, sizeof(GamePackInfo));
+		memset(this, 0, sizeof(PackInfo));
 	}
 };
-
-typedef std::vector<GamePackInfo> GamePackInfoVec;
 
 class CardsManager
 {
@@ -46,7 +44,7 @@ class CardsManager
 		virtual ~CardsManager(void);
 		static CardsManager *self;
 
-		void _readGamePackInfo(const char* name, GamePackInfo &info);
+		void _readGamePackInfo(const char* name, PackInfo &info);
 		std::map<std::string, std::string> _gamepackpath, _generalpackpath;
 		std::list<std::string> _cardgroupfile, _generalgroupfile;
 		std::map<std::string, std::string *> _gamescript, _skillscript;

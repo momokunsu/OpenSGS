@@ -3,9 +3,17 @@
 
 #include "def.h"
 #include "GameEvent.h"
+#include "GamePackFile.h"
+#include "LogHandler.h"
+
+void Log(const std::string& tag, const std::string& log)
+{
+	printf("%s:  %s\n", tag.c_str(), log.c_str());
+}
 
 int main()
 {
+	LogHandler::setLogEventCallback(Log);
 	auto ev = new EventGetPlayerStatus();
 	ev->statusMap[1] = ePlayerStatusType::Rebel;
 	ev->statusMap[2] = ePlayerStatusType::Rebel;
@@ -32,5 +40,12 @@ int main()
 
 	auto pack1 = new EventsPack();
 	pack1->unserialize(pack->serialize());
+
+	auto file = new GamePackFile("standard.dpk");
+	file->open();
+	file->loadInfo();
+
+	auto info = file->getPackInfo();
+	system("pause");
 	return 0;
 }
