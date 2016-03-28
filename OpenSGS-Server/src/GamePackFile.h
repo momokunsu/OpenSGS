@@ -54,6 +54,7 @@ class GamePackFile
 
 	private:
 		bool loadPackInfo();
+		bool loadBaseInfo();
 
 		sqlite3 *m_db;
 		std::string m_filename;

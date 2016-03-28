@@ -41,7 +41,7 @@ int main()
 	auto pack1 = new EventsPack();
 	pack1->unserialize(pack->serialize());
 
-	auto file = new GamePackFile("standard.dpk");
+	auto file = new GamePackFile("standard.gpk");
 	file->open();
 	file->loadInfo();
 
