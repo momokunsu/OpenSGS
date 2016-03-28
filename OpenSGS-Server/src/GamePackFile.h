@@ -53,6 +53,12 @@ class GamePackFile
 		const PackInfo& getPackInfo() { return m_packinfo; }
 
 	private:
+		sqlite3_stmt* sqlQuery(const char* script);
+		int sqlGetFirstInt(const char* table, const char* col);
+		bool sqlStep(sqlite3_stmt *psqlstate);
+		void sqlEnd(sqlite3_stmt *psqlstate);
+		void sqlReset(sqlite3_stmt *psqlstate);
+
 		bool loadPackInfo();
 		bool loadBaseInfo();
 
