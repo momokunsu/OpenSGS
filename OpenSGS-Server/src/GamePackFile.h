@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <map>
 
 #include "libs/sqlite3/sqlite3.h"
 #include "Cards.h"
@@ -27,9 +27,21 @@ struct PackInfo
 	}
 };
 
+struct CardInfo
+{
+	uint id;
+	uchar number;
+	uchar pattern;
+
+	CardInfo()
+	{
+		memset(this, 0, sizeof(CardInfo));
+	}
+};
+
 struct BaseCardInfo
 {
-	int id;
+	uint id;
 	std::string name;
 	std::string script;
 
@@ -49,8 +61,10 @@ class GamePackFile
 		void close();
 
 		bool loadInfo();
+		void loadCards(std::vector<CardInfo> &vec);
 
 		const PackInfo& getPackInfo() { return m_packinfo; }
+		const std::map<uint, BaseCardInfo>& getBaseCardInfo() { return m_base; }
 
 	private:
 		sqlite3_stmt* sqlQuery(const char* script);
@@ -66,5 +80,5 @@ class GamePackFile
 		std::string m_filename;
 
 		PackInfo m_packinfo;
-		std::vector<BaseCardInfo> m_base;
+		std::map<uint, BaseCardInfo> m_base;
 };

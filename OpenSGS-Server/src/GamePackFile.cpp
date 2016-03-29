@@ -3,6 +3,9 @@
 #include "GamePackFile.h"
 #include "LogHandler.h"
 
+#pragma pack(push)
+#pragma pack(1)
+
 typedef StringManager STR;
 
 enum class ePackInfoIndex
@@ -67,23 +70,6 @@ void GamePackFile::close()
 	}
 }
 
-bool GamePackFile::loadInfo()
-{
-	if (!m_db)
-	{
-		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("not open the data file!"));
-		return false;
-	}
-
-	if (!loadPackInfo())
-		return false;
-
-	if (!loadBaseInfo())
-		return false;
-
-	return true;
-}
-
 sqlite3_stmt* GamePackFile::sqlQuery(const char * script)
 {
 	sqlite3_stmt *sqlstate = nullptr;
@@ -136,6 +122,24 @@ void GamePackFile::sqlReset(sqlite3_stmt * psqlstate)
 	}
 }
 
+
+bool GamePackFile::loadInfo()
+{
+	if (!m_db)
+	{
+		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("not open the data file!"));
+		return false;
+	}
+
+	if (!loadPackInfo())
+		return false;
+
+	if (!loadBaseInfo())
+		return false;
+
+	return true;
+}
+
 bool GamePackFile::loadPackInfo()
 {
 	LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("begin load pack info! \"%s\"", m_filename.c_str()));
@@ -177,6 +181,7 @@ bool GamePackFile::loadBaseInfo()
 	if (!sqlstate)
 		return false;
 
+	m_base.clear();
 	while (sqlStep(sqlstate))
 	{
 		const char *str_res = nullptr;
@@ -194,10 +199,14 @@ bool GamePackFile::loadBaseInfo()
 		}
 		sqlEnd(sqlstate1);
 
-		m_base.push_back(info);
+		m_base[info.id] = info;
 	}
 
 	sqlEnd(sqlstate);
 	LogHandler::setLog("GamePackFile::loadBaseInfo", STR::format("end load base info! \"%s\"", m_filename.c_str()));
 	return true;
+}
+
+void GamePackFile::loadCards(std::vector<CardInfo>& vec)
+{
 }
