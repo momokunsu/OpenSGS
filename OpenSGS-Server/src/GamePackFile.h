@@ -27,21 +27,9 @@ struct PackInfo
 	}
 };
 
-struct CardInfo
-{
-	uint id;
-	uchar number;
-	uchar pattern;
-
-	CardInfo()
-	{
-		memset(this, 0, sizeof(CardInfo));
-	}
-};
-
 struct BaseCardInfo
 {
-	uint id;
+	ushort id;
 	std::string name;
 	std::string script;
 
@@ -60,11 +48,14 @@ class GamePackFile
 		bool open();
 		void close();
 
+		short setIdoffset() { return m_idoffset; }
+		void setIdoffset(short offset) { m_idoffset = offset; }
+
 		bool loadInfo();
-		void loadCards(std::vector<CardInfo> &vec);
+		void loadDeckList(std::vector<uint> &vec);
 
 		const PackInfo& getPackInfo() { return m_packinfo; }
-		const std::map<uint, BaseCardInfo>& getBaseCardInfo() { return m_base; }
+		const std::map<ushort, BaseCardInfo>& getBaseCardInfo() { return m_base; }
 
 	private:
 		sqlite3_stmt* sqlQuery(const char* script);
@@ -78,7 +69,8 @@ class GamePackFile
 
 		sqlite3 *m_db;
 		std::string m_filename;
+		short m_idoffset;
 
 		PackInfo m_packinfo;
-		std::map<uint, BaseCardInfo> m_base;
+		std::map<ushort, BaseCardInfo> m_base;
 };

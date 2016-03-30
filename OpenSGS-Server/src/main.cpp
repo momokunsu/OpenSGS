@@ -46,6 +46,9 @@ int main()
 	file->loadInfo();
 
 	auto info = file->getPackInfo();
+
+	std::vector<uint> vec;
+	file->loadDeckList(vec);
 	system("pause");
 	return 0;
 }

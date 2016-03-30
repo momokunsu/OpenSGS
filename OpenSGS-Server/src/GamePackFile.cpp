@@ -30,7 +30,7 @@ enum class ePackCardsIndex
 	Name,
 	Type,
 	Depend
-};
+}; 
 
 enum class ePackBaseIndex
 {
@@ -38,9 +38,17 @@ enum class ePackBaseIndex
 	Script
 };
 
+enum class ePackDeckListIndex
+{
+	Id = 0,
+	Pattern,
+	Number
+};
+
 GamePackFile::GamePackFile(const char * filename)
 {
 	m_db = nullptr;
+	m_idoffset = 0;
 	m_filename = filename;
 }
 
@@ -122,7 +130,6 @@ void GamePackFile::sqlReset(sqlite3_stmt * psqlstate)
 	}
 }
 
-
 bool GamePackFile::loadInfo()
 {
 	if (!m_db)
@@ -187,7 +194,7 @@ bool GamePackFile::loadBaseInfo()
 		const char *str_res = nullptr;
 
 		BaseCardInfo info;
-		info.id = sqlite3_column_int(sqlstate, (int)ePackBaseIndex::Id);
+		info.id = sqlite3_column_int(sqlstate, (int)ePackBaseIndex::Id) + m_idoffset;
 		if (str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackBaseIndex::Script))
 			info.script = str_res;
 
@@ -207,6 +214,20 @@ bool GamePackFile::loadBaseInfo()
 	return true;
 }
 
-void GamePackFile::loadCards(std::vector<CardInfo>& vec)
+void GamePackFile::loadDeckList(std::vector<uint>& vec)
 {
+	LogHandler::setLog("GamePackFile::loadDeckList", STR::format("begin load decklist! \"%s\"", m_filename.c_str()));
+
+	auto sqlstate = sqlQuery("select * from decklist");
+	while (sqlStep(sqlstate))
+	{
+		uTypeUnion val;
+		val.shortVal[0] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Id) + m_idoffset;
+		val.charVal[2] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Pattern);
+		val.charVal[3] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Number);
+		vec.push_back(val.intVal[0]);
+	}
+
+	sqlEnd(sqlstate);
+	LogHandler::setLog("GamePackFile::loadDeckList", STR::format("end load decklist! \"%s\"", m_filename.c_str()));
 }
