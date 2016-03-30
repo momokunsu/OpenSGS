@@ -13,7 +13,7 @@ enum class ePackInfoIndex
 	Name = 0,
 	Author,
 	Image,
-	icon,
+	Icon,
 	CreateDate,
 	Version,
 	CardNum,
@@ -45,6 +45,19 @@ enum class ePackDeckListIndex
 	Depend
 };
 
+short GamePackFile::m_cur_offset = 0;
+std::map<std::string, GamePackFile*> GamePackFile::m_file_cache;
+
+
+void GamePackFile::releaseFileCache()
+{
+	for (auto it : m_file_cache)
+	{
+		it.second->release();
+	}
+	m_file_cache.clear();
+}
+
 GamePackFile::GamePackFile(const char * filename)
 {
 	m_db = nullptr;
@@ -55,6 +68,25 @@ GamePackFile::GamePackFile(const char * filename)
 GamePackFile::~GamePackFile()
 {
 	close();
+	m_file_cache.erase(m_file_cache.find(m_filename));
+}
+
+GamePackFile * GamePackFile::create(const char * filename)
+{
+	auto self = m_file_cache[filename];
+	if(self)
+		return self;
+
+	self = new GamePackFile(filename);
+	if (!self->open() || !self->loadPackInfo())
+		return nullptr;
+	self->close();
+	self->m_idoffset = m_cur_offset;
+	m_cur_offset += self->m_packinfo.cardNum;
+
+	self->retain();
+	m_file_cache[filename] = self;
+	return self;
 }
 
 bool GamePackFile::open()
@@ -138,9 +170,6 @@ bool GamePackFile::loadInfo()
 		return false;
 	}
 
-	if (!loadPackInfo())
-		return false;
-
 	if (!loadBaseInfo())
 		return false;
 
@@ -222,7 +251,17 @@ void GamePackFile::loadDeckList(std::vector<uint>& vec)
 	while (sqlStep(sqlstate))
 	{
 		uTypeUnion val;
-		val.shortVal[0] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Id) + m_idoffset;
+
+		auto str = (const char*)sqlite3_column_text(sqlstate, (int)ePackDeckListIndex::Depend);
+		if (str)
+		{
+			if (auto depend = create(str))
+				val.shortVal[0] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Id) + depend->getIdoffset();
+			else
+				val.shortVal[0] = 0;
+		}
+		else
+			val.shortVal[0] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Id) + m_idoffset;
 		val.charVal[2] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Pattern);
 		val.charVal[3] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Number);
 		vec.push_back(val.intVal[0]);

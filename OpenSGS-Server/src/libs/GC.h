@@ -1,13 +1,9 @@
 #pragma once
-#include <queue>
 #include <list>
 
 class GC
 {
 	public:
-		GC();
-		virtual ~GC();
-		
 		void retain() { m_ref_count++; }
 		void release();
 
@@ -18,10 +14,16 @@ class GC
 		void removeAllRef();
 
 		static void recycle();
-		static char* getGlobalBuffer() { return m_global_buffer; }
-	private:
+
+		static void* getGlobalBuffer() { return m_global_buffer; }
+		static int getGlobalBufSize();
+		static bool isRangeOfGlobalBuf(const void *buf);
+	protected:
+		GC();
+		virtual ~GC();
+
 		static char *m_global_buffer;
-		static std::queue<GC*> m_garbage_que;
+		static std::list<GC*> m_garbage_que;
 
 		int m_ref_count;
 		std::list<GC*> m_ref_pool;

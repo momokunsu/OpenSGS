@@ -43,14 +43,12 @@ struct BaseCardInfo
 class GamePackFile : public GC
 {
 	public:
-		GamePackFile(const char *filename);
-		virtual ~GamePackFile();
+		static GamePackFile* create(const char *filename);
 
 		bool open();
 		void close();
 
-		short setIdoffset() { return m_idoffset; }
-		void setIdoffset(short offset) { m_idoffset = offset; }
+		short getIdoffset() { return m_idoffset; }
 
 		bool loadInfo();
 		void loadDeckList(std::vector<uint> &vec);
@@ -58,7 +56,13 @@ class GamePackFile : public GC
 		const PackInfo& getPackInfo() { return m_packinfo; }
 		const std::map<ushort, BaseCardInfo>& getBaseCardInfo() { return m_base; }
 
+		const std::map<std::string, GamePackFile*>& getFileCache() { return m_file_cache; }
+		void releaseFileCache();
+
 	private:
+		GamePackFile(const char *filename);
+		virtual ~GamePackFile();
+
 		sqlite3_stmt* sqlQuery(const char* script);
 		int sqlGetFirstInt(const char* table, const char* col);
 		bool sqlStep(sqlite3_stmt *psqlstate);
@@ -67,6 +71,9 @@ class GamePackFile : public GC
 
 		bool loadPackInfo();
 		bool loadBaseInfo();
+
+		static short m_cur_offset;
+		static std::map<std::string, GamePackFile*> m_file_cache;
 
 		sqlite3 *m_db;
 		std::string m_filename;

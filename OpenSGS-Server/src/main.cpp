@@ -13,6 +13,8 @@ void Log(const std::string& tag, const std::string& log)
 
 int main()
 {
+	StringManager::format("%d + %d = %d %s", 1, 1, 2, "hahaha!");
+
 	LogHandler::setLogEventCallback(Log);
 	auto ev = new EventGetPlayerStatus();
 	ev->statusMap[1] = ePlayerStatusType::Rebel;
@@ -41,7 +43,7 @@ int main()
 	auto pack1 = new EventsPack();
 	pack1->unserialize(pack->serialize());
 
-	auto file = new GamePackFile("standard.gpk");
+	auto file = GamePackFile::create("standard.gpk");
 	file->open();
 	file->loadInfo();
 
@@ -49,6 +51,7 @@ int main()
 
 	std::vector<uint> vec;
 	file->loadDeckList(vec);
+
 	system("pause");
 	return 0;
 }

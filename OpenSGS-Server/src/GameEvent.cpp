@@ -125,7 +125,7 @@ uTypeUnion GameEvent::readVal64()
 
 void GameEvent::reSize()
 {
-	reSize(GlobalBuffer);
+	reSize(GC::getGlobalBuffer());
 }
 
 void GameEvent::reSize(const void * data)
@@ -136,8 +136,9 @@ void GameEvent::reSize(const void * data)
 
 const void* GameEvent::serialize()
 {
-	serializeTo(GlobalBuffer);
-	return GlobalBuffer;
+	auto pbuf = GC::getGlobalBuffer();
+	serializeTo(pbuf);
+	return pbuf;
 }
 
 void GameEvent::serializeTo(void * data)

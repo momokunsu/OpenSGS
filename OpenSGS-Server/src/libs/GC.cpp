@@ -2,8 +2,11 @@
 
 #include <algorithm>
 
-char *GC::m_global_buffer = new char[4 * 1024 * 1024];
-std::queue<GC*> GC::m_garbage_que;
+
+const int _buffer_size = 4 * 1024 * 1024;
+
+char *GC::m_global_buffer = new char[_buffer_size];
+std::list<GC*> GC::m_garbage_que;
 
 GC::GC()
 {
@@ -19,8 +22,13 @@ GC::~GC()
 void GC::release()
 {
 	m_ref_count--;
+	for (auto it : m_garbage_que)
+	{
+		if (it == this)
+			return;
+	}
 	if (m_ref_count < 1)
-		m_garbage_que.push(this);
+		m_garbage_que.push_back(this);
 }
 
 void GC::addRef(GC * gc)
@@ -51,6 +59,18 @@ void GC::recycle()
 		auto obj = m_garbage_que.front();
 		if (obj->m_ref_count < 1)
 			delete obj;
-		m_garbage_que.pop();
+		m_garbage_que.pop_front();
 	}
+}
+
+int GC::getGlobalBufSize()
+{
+	return _buffer_size;
+}
+
+bool GC::isRangeOfGlobalBuf(const void *buf)
+{
+	if (buf >= &m_global_buffer[0] && buf <= &m_global_buffer[_buffer_size - 1])
+		return true;
+	return false;
 }

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <vector>
-
 #include "def.h"
-#include "libs/GlobalBuffer.h"
+#include "libs/GC.h"
+
 #include <map>
 #include <functional>
+#include <vector>
 
 //ÕÊº“…Ì∑›
 enum class ePlayerStatusType
