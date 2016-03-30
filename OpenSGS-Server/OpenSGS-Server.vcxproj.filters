@@ -132,6 +132,9 @@
     <ClInclude Include="src\GamePackFile.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\libs\GC.h">
+      <Filter>src\libs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\libs\Encoding.cpp">
@@ -268,6 +271,9 @@
     </ClCompile>
     <ClCompile Include="src\GamePackFile.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\libs\GC.cpp">
+      <Filter>src\libs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

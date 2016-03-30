@@ -3,6 +3,7 @@
 #include <map>
 
 #include "libs/sqlite3/sqlite3.h"
+#include "libs/GC.h"
 #include "Cards.h"
 
 
@@ -39,7 +40,7 @@ struct BaseCardInfo
 	}
 };
 
-class GamePackFile
+class GamePackFile : public GC
 {
 	public:
 		GamePackFile(const char *filename);

@@ -28,8 +28,7 @@ enum class ePackCardsIndex
 {
 	Id = 0,
 	Name,
-	Type,
-	Depend
+	Type
 }; 
 
 enum class ePackBaseIndex
@@ -42,7 +41,8 @@ enum class ePackDeckListIndex
 {
 	Id = 0,
 	Pattern,
-	Number
+	Number,
+	Depend
 };
 
 GamePackFile::GamePackFile(const char * filename)
