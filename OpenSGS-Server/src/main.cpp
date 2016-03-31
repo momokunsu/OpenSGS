@@ -13,7 +13,8 @@ void Log(const std::string& tag, const std::string& log)
 
 int main()
 {
-	StringManager::format("%d + %d = %d %s", 1, 1, 2, "hahaha!");
+	auto str1 = StringManager::trimBegin("11123456", '1', '2', 0);
+	str1 = StringManager::trimEnd(str1, '6', 0);
 
 	LogHandler::setLogEventCallback(Log);
 	auto ev = new EventGetPlayerStatus();
