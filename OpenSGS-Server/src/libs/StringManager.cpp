@@ -14,12 +14,84 @@ const char* StringManager::format(const char* str, ...)
 		strobj = str;
 		str = strobj.c_str();
 	}
+
 	va_list ap;
 	va_start(ap, str);
 	vsnprintf(pbuf, GC::getGlobalBufSize(), str, ap);
 	va_end(ap);
 
 	return pbuf;
+}
+
+const char* StringManager::trimBegin(const char* str, ...)
+{
+	va_list ap;
+	va_start(ap, str);
+	char val = va_arg(ap, char);
+	vector<char> vec;
+	while (val)
+		vec.push_back(val);
+	const char* pbuf = trimBegin(str, vec);
+	va_end(ap);
+
+	return pbuf;
+}
+
+const char* StringManager::trimBegin(const char* str, const std::vector<char> &vec)
+{
+	char* pbuf = (char*)GC::getGlobalBuffer();
+	string strobj;
+	if (GC::isRangeOfGlobalBuf(str))
+	{
+		strobj = str;
+		str = strobj.c_str();
+	}
+}
+
+const char* StringManager::trimEnd(const char* str, ...)
+{
+	char* pbuf = (char*)GC::getGlobalBuffer();
+	string strobj;
+	if (GC::isRangeOfGlobalBuf(str))
+	{
+		strobj = str;
+		str = strobj.c_str();
+	}
+
+	va_list ap;
+	va_start(ap, str);
+	vsnprintf(pbuf, GC::getGlobalBufSize(), str, ap);
+	va_end(ap);
+
+	return pbuf;
+}
+
+const char* StringManager::trimEnd(const char* str, const std::vector<char> &vec)
+{
+
+}
+
+bool StringManager::isContainChar(const char* str, ...)
+{
+	va_list ap;
+	va_start(ap, str);
+	char val = va_arg(ap, char);
+	while (val)
+	{
+		int i = 0;
+		while (str[i])
+		{
+			if (str[i] == val)
+			{
+				va_end(ap);
+				return true;
+			}
+			i++;
+		}
+		val = va_arg(ap, char);
+	}
+	va_end(ap);
+	return false;
 }
 
 const char* StringManager::fromInt(long long n)

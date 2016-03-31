@@ -56,6 +56,7 @@ void GamePackFile::releaseFileCache()
 		it.second->release();
 	}
 	m_file_cache.clear();
+	m_cur_offset = 0;
 }
 
 GamePackFile::GamePackFile(const char * filename)
