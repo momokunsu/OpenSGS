@@ -13,7 +13,9 @@ void Log(const std::string& tag, const std::string& log)
 
 int main()
 {
-	StringManager::format("%d + %d = %d %s", 1, 1, 2, "hahaha!");
+	int i = StringManager::indexOf("83d9e66e632619a2c31753cfec2f52b3", "");
+	auto str1 = StringManager::replace("83d9e66e632619a2c31753cfec2f52b3", "3cf", "%#");
+	str1 = StringManager::trimEnd(str1, '6', 0);
 
 	LogHandler::setLogEventCallback(Log);
 	auto ev = new EventGetPlayerStatus();

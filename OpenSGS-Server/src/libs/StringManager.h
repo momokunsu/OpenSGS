@@ -6,12 +6,19 @@ class StringManager
 {
 	public:
 		static const char* format(const char* str, ...);
+		static const char* trimBegin(const char* str, va_list ap);
 		static const char* trimBegin(const char* str, ...);
-		static const char* trimBegin(const char* str, const std::vector<char> &vec);
+		static const char* trimEnd(const char* str, va_list ap);
 		static const char* trimEnd(const char* str, ...);
-		static const char* trimEnd(const char* str, const std::vector<char> &vec);
+		static const char* replace(const char* str, const char* src, const char* dst);
 
-		static bool isContainChar(const char* str, ...);
+		static int indexOf(const char* str, const char* dst);
+		static int indexOf(const char* str, char dst);
+
+		static bool isContainsChar(const char* str, va_list ap);
+		static bool isContainsChar(const char* str, ...);
+		static bool isContainsChar(char cvar, va_list ap);
+		static bool isContainsChar(char cvar, ...);
 
 		static const char* fromInt(long long n);
 		static const char* fromUint(unsigned long long n);
