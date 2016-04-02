@@ -34,6 +34,16 @@ enum class ePhraseType
 	End,
 };
 
+//获取卡牌类型
+enum class eGetCardType
+{
+	None = 0,
+	Draw,
+	FromPlayer,
+	FromThrow,
+	FromGarbage
+};
+
 //玩家事件回调
 enum class eGameEvent
 {
@@ -123,6 +133,7 @@ class EventGetCards :public GameEvent
 		EventGetCards() :GameEvent(eGameEvent::GetCards) {}
 
 		uchar playerID;
+		eGetCardType getType;
 		std::vector<uint> cards;
 
 		void serializeTo(void* data) override;

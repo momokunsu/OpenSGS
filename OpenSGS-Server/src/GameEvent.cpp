@@ -256,6 +256,9 @@ void EventGetCards::serializeTo(void* data)
 	val.charVal[0] = playerID;
 	writeVal8(val);
 
+	val.charVal[0] = (uchar)getType;
+	writeVal8(val);
+
 	val.shortVal[0] = cards.size();
 	writeVal16(val);
 	for (auto it : cards)
@@ -275,6 +278,9 @@ void EventGetCards::unserialize(const void * data)
 
 	val = readVal8();
 	playerID = val.charVal[0];
+
+	val = readVal8();
+	getType = (eGetCardType)val.charVal[0];
 
 	cards.clear();
 	val = readVal16();

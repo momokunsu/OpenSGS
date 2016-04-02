@@ -43,7 +43,10 @@ struct BaseCardInfo
 class GamePackFile : public GC
 {
 	public:
-		static GamePackFile* create(const char *filename);
+		static GamePackFile* create(const char *filename, short idoffset = -1);
+
+		static void addSerchPath(const char *path);
+		static void removeAllSerchPath() { m_serch_path.clear(); }
 
 		bool open();
 		void close();
@@ -51,7 +54,7 @@ class GamePackFile : public GC
 		short getIdoffset() { return m_idoffset; }
 
 		bool loadInfo();
-		void loadDeckList(std::vector<uint> &vec);
+		void loadDeckList(std::list<uint> &vec);
 
 		const PackInfo& getPackInfo() { return m_packinfo; }
 		const std::map<ushort, BaseCardInfo>& getBaseCardInfo() { return m_base; }
@@ -71,6 +74,8 @@ class GamePackFile : public GC
 
 		bool loadPackInfo();
 		bool loadBaseInfo();
+
+		static std::vector<std::string> m_serch_path;
 
 		static short m_cur_offset;
 		static std::map<std::string, GamePackFile*> m_file_cache;

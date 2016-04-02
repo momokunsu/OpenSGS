@@ -5,6 +5,8 @@
 #include "GameEvent.h"
 #include "GamePackFile.h"
 #include "LogHandler.h"
+#include "BattleSystem.h"
+
 
 void Log(const std::string& tag, const std::string& log)
 {
@@ -13,46 +15,20 @@ void Log(const std::string& tag, const std::string& log)
 
 int main()
 {
-	int i = StringManager::indexOf("83d9e66e632619a2c31753cfec2f52b3", "");
-	auto str1 = StringManager::replace("83d9e66e632619a2c31753cfec2f52b3", "3cf", "%#");
-	str1 = StringManager::trimEnd(str1, '6', 0);
+	auto sys = new BattleSystem();
 
-	LogHandler::setLogEventCallback(Log);
-	auto ev = new EventGetPlayerStatus();
-	ev->statusMap[1] = ePlayerStatusType::Rebel;
-	ev->statusMap[2] = ePlayerStatusType::Rebel;
-	ev->statusMap[3] = ePlayerStatusType::Spy;
-	ev->statusMap[4] = ePlayerStatusType::Subject;
-	ev->statusMap[5] = ePlayerStatusType::Ruler;
-
-	auto ev1 = new EventGetCards();
-	ev1->playerID = 10;
-	ev1->cards.push_back(1);
-	ev1->cards.push_back(0);
-	ev1->cards.push_back(0);
-	ev1->cards.push_back(8);
-	ev1->cards.push_back(6);
-
-	auto ev2 = new EventPhrase();
-	ev2->playerID = 10;
-	ev2->type = ePhraseType::Battle;
-
-	auto pack = new EventsPack();
-	pack->events.push_back(ev);
-	pack->events.push_back(ev1);
-	pack->events.push_back(ev2);
-
-	auto pack1 = new EventsPack();
-	pack1->unserialize(pack->serialize());
-
+	GamePackFile::addSerchPath(".");
 	auto file = GamePackFile::create("standard.gpk");
-	file->open();
-	file->loadInfo();
+	if (file)
+	{
+		file->open();
+		file->loadInfo();
 
-	auto info = file->getPackInfo();
+		auto info = file->getPackInfo();
 
-	std::vector<uint> vec;
-	file->loadDeckList(vec);
+		file->loadDeckList(sys->cardsDeck());
+		sys->shuffleCardsDeck();
+	}
 
 	system("pause");
 	return 0;

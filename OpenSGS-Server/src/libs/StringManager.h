@@ -10,7 +10,10 @@ class StringManager
 		static const char* trimBegin(const char* str, ...);
 		static const char* trimEnd(const char* str, va_list ap);
 		static const char* trimEnd(const char* str, ...);
+		static const char* replace(const char* str, char src, char dst);
 		static const char* replace(const char* str, const char* src, const char* dst);
+		static const void split(const char* str, std::vector<std::string>& arr, va_list ap);
+		static const void split(const char* str, std::vector<std::string>& arr, ...);
 
 		static int indexOf(const char* str, const char* dst);
 		static int indexOf(const char* str, char dst);
@@ -27,6 +30,7 @@ class StringManager
 		static long long toInt(const char* str);
 		static unsigned long long toUint(const char* str);
 		static double toFloat(const char* str);
+		static void toFormatValue(const char* str, const char* fmt, void *value);
 	
 	private:
 };

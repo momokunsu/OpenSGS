@@ -1,6 +1,7 @@
  #pragma once
 
 #include <vector>
+#include <list>
 #include <algorithm>
 
 typedef unsigned char uchar;
@@ -32,4 +33,32 @@ void SuffleVector(std::vector<Tclass> vec)
 {
 	std::random_shuffle(vec.begin(), vec.end());
 	std::random_shuffle(vec.begin(), vec.end());
+}
+
+template<class Tclass>
+void SuffleList(std::list<Tclass> &vec)
+{
+	int count = vec.size() / 2;
+
+	for (int j = 0; j < count; j++)
+	{
+		auto p = vec.front();
+		vec.pop_front();
+
+		auto it = vec.begin();
+		for (int i = 0, n = rand() % vec.size(); i < n; i++)
+			it++;
+		vec.insert(it, p);
+	}
+
+	for (int j = 0; j < count; j++)
+	{
+		auto p = vec.back();
+		vec.pop_back();
+
+		auto it = vec.end();
+		for (int i = 0, n = rand() % vec.size(); i < n; i++)
+			it--;
+		vec.insert(it, p);
+	}
 }

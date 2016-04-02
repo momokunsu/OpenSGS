@@ -61,11 +61,16 @@ void BattleSystem::sufflePlayersLocal()
 	return;
 }
 
+void BattleSystem::shuffleCardsDeck()
+{
+	SuffleList(m_card_deck);
+}
+
 bool BattleSystem::initGame()
 {
 	if (m_players.size() < 4)
 	{
-		LogHandler::setLog("BattleSystem::initBattleInfo", "player min count is 4!!!");
+		LogHandler::setLog("BattleSystem::initGame", "player min count is 4!!!");
 		return false;
 	}
 
@@ -73,6 +78,7 @@ bool BattleSystem::initGame()
 	for (int i = 0; i < (int)m_players.size(); i++)
 	{
 		m_players[i]->setID(i + 1);
+		m_id_players[m_players[i]->getID()] = m_players[i];
 	}
 
 	//根据人数匹配身份
@@ -105,7 +111,7 @@ bool BattleSystem::initGame()
 		if (m_statusgroup[i] == ePlayerStatusType::Ruler)
 		{
 			m_cur_player = i;
-			LogHandler::setLog("BattleSystem::initBattleInfo", STR::format("confirm the ruler location is pos: %d", m_cur_player));
+			LogHandler::setLog("BattleSystem::initGame", STR::format("confirm the ruler location is pos: %d", m_cur_player));
 			break;
 		}
 	}
@@ -121,11 +127,7 @@ void BattleSystem::startGame()
 {
 	//游戏开始
 	LogHandler::setLog("BattleSystem::startGame", STR::format("game start!!! player count is %d", m_players.size()));
-	auto ev = new EventGameStart();
-	for (auto player : m_players)
-	{
-		player->dispatchEvent(ev);
-	}
+	broadcastEvent(new EventGameStart());
 }
 
 void BattleSystem::distributeStatus()
@@ -137,21 +139,14 @@ void BattleSystem::distributeStatus()
 	{
 		ev->statusMap[m_players[i]->getID()] = m_statusgroup[i];
 	}
-	for (auto player : m_players)
-	{
-		player->dispatchEvent(ev);
-	}
+	broadcastEvent(ev);
 }
 
 void BattleSystem::startBattle()
 {
 	//战斗开始
 	LogHandler::setLog("BattleSystem::startBattle", "battle start!!!");
-	auto ev = new EventBattleStart();
-	for (auto player : m_players)
-	{
-		player->dispatchEvent(ev);
-	}
+	broadcastEvent(new EventBattleStart());
 }
 
 void BattleSystem::phraseStep()
@@ -170,10 +165,7 @@ void BattleSystem::phraseStep()
 	while (true)
 	{
 		//处理事件
-		for (auto player : m_players)
-		{
-			player->dispatchEvent(ev_phrase);
-		}
+		broadcastEvent(ev_phrase);
 
 		//执行流程
 		handlePhrase(m_players[m_cur_player], m_cur_phrase);
@@ -188,11 +180,38 @@ void BattleSystem::phraseStep()
 	}
 }
 
+void BattleSystem::drawCards(uchar playerid, int count, int index)
+{
+	auto player = m_id_players[playerid];
+	if (!player)
+	{
+		LogHandler::setLog("BattleSystem::drawCards", STR::format("player %d not exist!!", playerid));
+		return;
+	}
+
+	auto ev = new EventGetCards();
+	ev->getType = eGetCardType::Draw;
+	ev->playerID = playerid;
+	for (int i = 0; i < count; i++)
+		ev->cards.push_back(drawCard());
+
+	LogHandler::setLog("BattleSystem::drawCards", STR::format("player %d draw %d cards", playerid, m_drawcount));
+	broadcastEvent(ev);
+}
+
 void BattleSystem::skipThisTurn()
 {
 	m_cur_phrase = ePhraseType::Begin;
 	m_cur_player = (m_cur_player + 1) % m_players.size();
 	m_drawcount = m_global_drawcount;
+}
+
+void BattleSystem::broadcastEvent(GameEvent * ev)
+{
+	for (auto player : m_players)
+	{
+		player->dispatchEvent(ev);
+	}
 }
 
 void BattleSystem::handlePhrase(Player * player, ePhraseType ptype)
@@ -202,7 +221,7 @@ void BattleSystem::handlePhrase(Player * player, ePhraseType ptype)
 		case ePhraseType::Judge:
 			break;
 		case ePhraseType::Draw:
-			LogHandler::setLog("BattleSystem::handlePhrase", STR::format("player %d get %d cards", (int)player->getID(), m_drawcount));
+			drawCards(player->getID(), m_drawcount);
 			break;
 		case ePhraseType::Battle:
 			break;
@@ -211,4 +230,17 @@ void BattleSystem::handlePhrase(Player * player, ePhraseType ptype)
 		default:
 			break;
 	}
+}
+
+uint BattleSystem::drawCard()
+{
+	if (m_card_deck.size() < 1)
+	{
+		m_card_recycle_bin.merge(m_card_deck);
+		SuffleList(m_card_deck);
+	}
+
+	auto ret = m_card_deck.front();
+	m_card_deck.pop_front();
+	return ret;
 }
