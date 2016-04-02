@@ -13,9 +13,9 @@ void Log(const std::string& tag, const std::string& log)
 
 int main()
 {
-	int i = StringManager::indexOf("83d9e66e632619a2c31753cfec2f52b3", "");
-	auto str1 = StringManager::replace("83d9e66e632619a2c31753cfec2f52b3", "3cf", "%#");
-	str1 = StringManager::trimEnd(str1, '6', 0);
+	std::vector<std::string> arr;
+	StringManager::split("83d9e66e632619a2c31753cfec2f52b3", arr, '6', '3', 0);
+	auto path = StringManager::replace("F:\\VC++工作文件夹\\OpenSGS\\OpenSGS-Server\\src\\libs", 'z', '/');
 
 	LogHandler::setLogEventCallback(Log);
 	auto ev = new EventGetPlayerStatus();
@@ -45,14 +45,18 @@ int main()
 	auto pack1 = new EventsPack();
 	pack1->unserialize(pack->serialize());
 
-	auto file = GamePackFile::create("standard.gpk");
-	file->open();
-	file->loadInfo();
-
-	auto info = file->getPackInfo();
-
 	std::vector<uint> vec;
-	file->loadDeckList(vec);
+	GamePackFile::addSerchPath(".");
+	auto file = GamePackFile::create("standard.gpk");
+	if (file)
+	{
+		file->open();
+		file->loadInfo();
+
+		auto info = file->getPackInfo();
+
+		file->loadDeckList(vec);
+	}
 
 	system("pause");
 	return 0;

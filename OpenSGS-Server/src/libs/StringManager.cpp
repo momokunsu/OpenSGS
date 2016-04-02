@@ -82,6 +82,33 @@ const char* StringManager::trimEnd(const char* str, ...)
 	return pbuf;
 }
 
+const char* StringManager::replace(const char* str, char src, char dst)
+{
+	char* pbuf = (char*)GC::getGlobalBuffer();
+	string strobj;
+	if (GC::isRangeOfGlobalBuf(str))
+	{
+		strobj = str;
+		str = strobj.c_str();
+	}
+
+	auto ret = pbuf;
+	int index = indexOf(str, src);
+	while (index != -1)
+	{
+		memcpy(pbuf, str, index + 1);
+		pbuf += index, str += index;
+
+		*pbuf = dst, str++;
+		if(dst) pbuf ++;
+
+		index = indexOf(str, src);
+	}
+	strcpy(pbuf, str);
+
+	return ret;
+}
+
 const char* StringManager::replace(const char* str, const char* src, const char* dst)
 {
 	char* pbuf = (char*)GC::getGlobalBuffer();
@@ -111,9 +138,42 @@ const char* StringManager::replace(const char* str, const char* src, const char*
 	return ret;
 }
 
+const void StringManager::split(const char* str, std::vector<std::string>& arr, va_list ap)
+{
+	char* pbuf = (char*)GC::getGlobalBuffer();
+	strcpy(pbuf, str);
+
+	while (*pbuf)
+	{
+		if (isContainsChar(*pbuf, ap))
+		{
+			pbuf++;
+			continue;
+		}
+
+		auto it = pbuf;
+		while (*it && !isContainsChar(*it, ap)) it++;
+		if(*it) *it = 0, it++;
+		arr.push_back(pbuf);
+		pbuf = it;
+	}
+}
+
+const void StringManager::split(const char* str, std::vector<std::string>& arr, ...)
+{
+	va_list ap;
+	va_start(ap, str);
+	split(str, arr, ap);
+	va_end(ap);
+}
+
 int StringManager::indexOf(const char* str, const char* dst)
 {
 	int i = 0, j = 0;
+
+	if (!dst[j])
+		return -1;
+
 	while (str[i])
 	{
 		while (dst[j])
@@ -134,6 +194,10 @@ int StringManager::indexOf(const char* str, const char* dst)
 int StringManager::indexOf(const char* str, char dst)
 {
 	int i = 0;
+
+	if (!dst)
+		return -1;
+
 	while (str[i])
 	{
 		if (str[i] == dst)	return i;
@@ -222,4 +286,9 @@ unsigned long long StringManager::toUint(const char* str)
 double StringManager::toFloat(const char* str)
 {
 	return stod(str);
+}
+
+void StringManager::toFormatValue(const char* str, const char* fmt, void *value)
+{
+	sscanf(str, fmt, value);
 }

@@ -33,3 +33,10 @@ void SuffleVector(std::vector<Tclass> vec)
 	std::random_shuffle(vec.begin(), vec.end());
 	std::random_shuffle(vec.begin(), vec.end());
 }
+
+template<class Tclass>
+void SuffleList(std::list<Tclass> vec)
+{
+	std::random_shuffle(vec.begin(), vec.end());
+	std::random_shuffle(vec.begin(), vec.end());
+}

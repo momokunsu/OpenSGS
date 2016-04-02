@@ -2,9 +2,19 @@
 #include "Player.h"
 
 
-struct BattleInfo
+struct BattleData
 {
+	std::vector<uint> deck;         //牌组
+	std::vector<uint> heroDeck;  //武将牌组
+	std::vector<uint> recycleBin; //弃牌区
 
+	int globalDrawCount;  //全局抽卡数
+	int drawCount;	          //本回合抽卡数
+
+	BattleData()
+	{
+		memset(this, 0, sizeof(BattleData));
+	}
 };
 
 class BattleSystem
@@ -16,6 +26,8 @@ class BattleSystem
 		bool addPlayer(Player* player);
 		bool setPlayerLocal(Player* player, int pos);
 		void sufflePlayersLocal();
+
+		void setDeck(std::vector<uint> deck);
 
 		bool initGame();
 

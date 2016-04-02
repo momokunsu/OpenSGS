@@ -3,9 +3,6 @@
 #include "GamePackFile.h"
 #include "LogHandler.h"
 
-#pragma pack(push)
-#pragma pack(1)
-
 typedef StringManager STR;
 
 enum class ePackInfoIndex
@@ -45,6 +42,9 @@ enum class ePackDeckListIndex
 	Depend
 };
 
+
+std::vector<std::string> GamePackFile::m_serch_path;
+
 short GamePackFile::m_cur_offset = 0;
 std::map<std::string, GamePackFile*> GamePackFile::m_file_cache;
 
@@ -72,33 +72,60 @@ GamePackFile::~GamePackFile()
 	m_file_cache.erase(m_file_cache.find(m_filename));
 }
 
-GamePackFile * GamePackFile::create(const char * filename)
+GamePackFile * GamePackFile::create(const char * filename, short idoffset)
 {
 	auto self = m_file_cache[filename];
 	if(self)
 		return self;
 
 	self = new GamePackFile(filename);
-	if (!self->open() || !self->loadPackInfo())
+	if (!self || !self->open() || !self->loadPackInfo())
+	{
+		self->close();
 		return nullptr;
+	}
 	self->close();
-	self->m_idoffset = m_cur_offset;
-	m_cur_offset += self->m_packinfo.cardNum;
+
+	if (idoffset > -1)
+		self->m_idoffset = idoffset;
+	else
+	{
+		self->m_idoffset = m_cur_offset;
+		m_cur_offset += self->m_packinfo.cardNum;
+	}
 
 	self->retain();
 	m_file_cache[filename] = self;
 	return self;
 }
 
+void GamePackFile::addSerchPath(const char * path)
+{
+	m_serch_path.push_back(STR::trimEnd(STR::replace(path, '\\', '/'), '/', 0));
+}
+
 bool GamePackFile::open()
 {
-	if (sqlite3_open(m_filename.c_str(), &m_db) != SQLITE_OK)
+	for (auto path : m_serch_path)
 	{
-		LogHandler::setLog("GamePackFile::loadInfo", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
-		close();
-		return false;
+		path = path + '/' + m_filename;
+		FILE* file;
+		if (file = fopen(path.c_str(), "r"))
+		{
+			fclose(file);
+			if (sqlite3_open(path.c_str(), &m_db) != SQLITE_OK)
+			{
+				LogHandler::setLog("GamePackFile::loadInfo", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
+				close();
+				return false;
+			}
+			return true;
+		}
 	}
-	return true;
+
+	LogHandler::setLog("GamePackFile::loadInfo", STR::format("file \"%s\" not found!!", m_filename.c_str()));
+	close();
+	return false;
 }
 
 void GamePackFile::close()
@@ -244,7 +271,7 @@ bool GamePackFile::loadBaseInfo()
 	return true;
 }
 
-void GamePackFile::loadDeckList(std::vector<uint>& vec)
+void GamePackFile::loadDeckList(std::list<uint>& vec)
 {
 	LogHandler::setLog("GamePackFile::loadDeckList", STR::format("begin load decklist! \"%s\"", m_filename.c_str()));
 
