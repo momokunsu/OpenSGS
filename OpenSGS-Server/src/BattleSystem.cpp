@@ -130,7 +130,7 @@ void BattleSystem::startGame()
 	broadcastEvent(new EventGameStart());
 }
 
-void BattleSystem::distributeStatus()
+void BattleSystem::dealStatus()
 {
 	//分发身份
 	LogHandler::setLog("BattleSystem::distributeStatus", "dispatch player status");
@@ -140,6 +140,17 @@ void BattleSystem::distributeStatus()
 		ev->statusMap[m_players[i]->getID()] = m_statusgroup[i];
 	}
 	broadcastEvent(ev);
+}
+
+void BattleSystem::dealCards()
+{
+	for (int i = 0; i < 2; i++)
+	{
+		for (auto player : m_players)
+		{
+			drawCards(player->getID(), 2);
+		}
+	}
 }
 
 void BattleSystem::startBattle()
