@@ -33,7 +33,8 @@ class BattleSystem
 		bool initGame();
 
 		void startGame();
-		void distributeStatus();
+		void dealStatus();
+		void dealCards();
 		void startBattle();
 		void phraseStep();
 

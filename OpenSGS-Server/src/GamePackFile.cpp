@@ -25,7 +25,9 @@ enum class ePackCardsIndex
 {
 	Id = 0,
 	Name,
-	Type
+	Type,
+	Depend,
+	DependId
 }; 
 
 enum class ePackBaseIndex
@@ -38,8 +40,7 @@ enum class ePackDeckListIndex
 {
 	Id = 0,
 	Pattern,
-	Number,
-	Depend
+	Number
 };
 
 
@@ -280,16 +281,23 @@ void GamePackFile::loadDeckList(std::list<uint>& vec)
 	{
 		uTypeUnion val;
 
-		auto str = (const char*)sqlite3_column_text(sqlstate, (int)ePackDeckListIndex::Depend);
-		if (str)
+		int id = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Id);
+		auto sqlstate1 = sqlQuery(STR::format("select * from cards where id = %d", id));
+		const char* str = nullptr;
+		if (sqlStep(sqlstate1) && (str = (const char *)sqlite3_column_text(sqlstate1, (int)ePackCardsIndex::Depend)))
 		{
-			if (auto depend = create(str))
-				val.shortVal[0] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Id) + depend->getIdoffset();
+			auto depend = create(str);
+			short depend_id = sqlite3_column_int(sqlstate1, (int)ePackCardsIndex::DependId);
+
+			if (depend_id)
+				val.shortVal[0] = depend_id + depend->getIdoffset();
 			else
 				val.shortVal[0] = 0;
 		}
 		else
 			val.shortVal[0] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Id) + m_idoffset;
+		sqlEnd(sqlstate1);
+
 		val.charVal[2] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Pattern);
 		val.charVal[3] = sqlite3_column_int(sqlstate, (int)ePackDeckListIndex::Number);
 		vec.push_back(val.intVal[0]);

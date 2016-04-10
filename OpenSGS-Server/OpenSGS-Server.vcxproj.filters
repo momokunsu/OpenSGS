@@ -42,9 +42,6 @@
     <ClInclude Include="src\libs\StringManager.h">
       <Filter>src\libs</Filter>
     </ClInclude>
-    <ClInclude Include="src\CardsManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\libs\lua-5.3.2\lapi.h">
       <Filter>src\libs\lua-5.3.2</Filter>
     </ClInclude>
@@ -132,6 +129,9 @@
     <ClInclude Include="src\libs\GC.h">
       <Filter>src\libs</Filter>
     </ClInclude>
+    <ClInclude Include="src\PackManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\libs\Encoding.cpp">
@@ -154,9 +154,6 @@
     </ClCompile>
     <ClCompile Include="src\libs\StringManager.cpp">
       <Filter>src\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CardsManager.cpp">
-      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\libs\sqlite3\sqlite3.c">
       <Filter>src\libs\sqlite3</Filter>
@@ -268,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="src\libs\GC.cpp">
       <Filter>src\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PackManager.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#include "libs/GC.h"
+
 
 enum class eCardType
 {
@@ -11,7 +13,7 @@ enum class eCardType
 	Hero
 };
 
-class Card
+class Card : public GC
 {
 	public:
 		Card();
