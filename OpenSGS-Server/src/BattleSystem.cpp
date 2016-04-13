@@ -127,14 +127,14 @@ void BattleSystem::startGame()
 {
 	//游戏开始
 	LogHandler::setLog("BattleSystem::startGame", STR::format("game start!!! player count is %d", m_players.size()));
-	broadcastEvent(new EventGameStart());
+	broadcastEvent(GameEvent::create(eGameEvent::GameStart));
 }
 
 void BattleSystem::dealStatus()
 {
 	//分发身份
 	LogHandler::setLog("BattleSystem::distributeStatus", "dispatch player status");
-	auto ev = new EventGetPlayerStatus();
+	auto ev = (EventGetPlayerStatus*)GameEvent::create(eGameEvent::GetPlayerStatus);
 	for (int i = 0; i < (int)m_players.size(); i++)
 	{
 		ev->statusMap[m_players[i]->getID()] = m_statusgroup[i];
@@ -157,7 +157,7 @@ void BattleSystem::startBattle()
 {
 	//战斗开始
 	LogHandler::setLog("BattleSystem::startBattle", "battle start!!!");
-	broadcastEvent(new EventBattleStart());
+	broadcastEvent(GameEvent::create(eGameEvent::BattleStart));
 }
 
 void BattleSystem::phraseStep()
@@ -170,7 +170,7 @@ void BattleSystem::phraseStep()
 	}
 
 	//流程开始
-	auto ev_phrase = new EventPhrase();
+	auto ev_phrase = (EventPhrase*)GameEvent::create(eGameEvent::Phrase);
 	ev_phrase->type = m_cur_phrase;
 	ev_phrase->playerID = m_players[m_cur_player]->getID();
 	while (true)
@@ -200,7 +200,7 @@ void BattleSystem::drawCards(uchar playerid, int count, int index)
 		return;
 	}
 
-	auto ev = new EventGetCards();
+	auto ev = (EventGetCards*)GameEvent::create(eGameEvent::GetCards);
 	ev->getType = eGetCardType::Draw;
 	ev->playerID = playerid;
 	for (int i = 0; i < count; i++)

@@ -44,6 +44,7 @@ GameEvent * GameEvent::create(eGameEvent ev)
 {
 	if (m_event_creators.size() == 0)
 	{
+		m_event_creators[eGameEvent::None] = []() -> GameEvent * { return new GameEvent(); };
 		m_event_creators[eGameEvent::GameStart] = []() -> GameEvent * { return new EventGameStart(); };
 		m_event_creators[eGameEvent::BattleStart] = []() -> GameEvent * { return new EventBattleStart(); };
 		m_event_creators[eGameEvent::GetPlayerStatus] = []() -> GameEvent * { return new EventGetPlayerStatus(); };
@@ -170,15 +171,33 @@ void GameEvent::unserialize(const void * data)
 	m_event_id = (eGameEvent)val.intVal[0];
 }
 
+void EventsPack::addEvent(GameEvent * ev)
+{
+	addRef(ev);
+	m_events.push_back(ev);
+}
+
+void EventsPack::removeEvent(GameEvent * ev)
+{
+	removeRef(ev);
+	m_events.erase(std::find(m_events.begin(), m_events.end(), ev));
+}
+
+void EventsPack::removeAllEvents()
+{
+	removeAllRef();
+	m_events.clear();
+}
+
 void EventsPack::serializeTo(void * data)
 {
 	GameEvent::serializeTo(data);
 
 	uTypeUnion val;
 
-	val.charVal[0] = events.size();
+	val.charVal[0] = m_events.size();
 	writeVal8(val);
-	for (auto it : events)
+	for (auto it : m_events)
 	{
 		it->serializeTo(m_cur_ptr);
 		m_cur_size += it->getBufferSize();
@@ -194,18 +213,17 @@ void EventsPack::unserialize(const void * data)
 
 	uTypeUnion val;
 
-	events.clear();
+	removeAllEvents();
 	val = readVal8();
 	for (int i = 0, size = val.charVal[0]; i < size; i++)
 	{
-		GameEvent ev;
-		ev.unserialize(m_cur_ptr);
+		auto ev = GameEvent::create();
+		ev->unserialize(m_cur_ptr);
 
-		auto id = ev.getEvent();
-		auto pev = GameEvent::create(ev.getEvent());
+		auto pev = GameEvent::create(ev->getEvent());
 		pev->unserialize(m_cur_ptr);
 
-		events.push_back(pev);
+		addEvent(pev);
 		m_cur_ptr += pev->getBufferSize();
 	}
 }
