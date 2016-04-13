@@ -56,11 +56,12 @@ enum class eGameEvent
 	EventsPack
 };
 
-class GameEvent
+class GameEvent : public GC
 {
 	public:
-		GameEvent(eGameEvent ev = eGameEvent::None);
-		virtual ~GameEvent();
+		static GameEvent* create(eGameEvent ev = eGameEvent::None);
+		static GameEvent* create(void* data);
+		static void initEndian();
 
 		eGameEvent getEvent() { return m_event_id; }
 		int getBufferSize() { return m_cur_size; }
@@ -69,10 +70,10 @@ class GameEvent
 		virtual void serializeTo(void* data);
 		virtual void unserialize(const void* data);
 
-		static void initEndian();
-		static GameEvent* create(eGameEvent ev);
-
 	protected:
+		GameEvent(eGameEvent ev = eGameEvent::None);
+		virtual ~GameEvent();
+
 		void writeVal8(uTypeUnion val);
 		void writeVal16(uTypeUnion val);
 		void writeVal32(uTypeUnion val);
@@ -95,59 +96,73 @@ class GameEvent
 
 class EventsPack :public GameEvent
 {
+	friend class GameEvent;
 	public:
-		EventsPack() :GameEvent(eGameEvent::EventsPack) {}
-
-		std::vector<GameEvent*> events;
+		const std::vector<GameEvent*>& getEvents() { return m_events; }
+		void addEvent(GameEvent* ev);
+		void removeEvent(GameEvent* ev);
+		void removeAllEvents();
 
 		void serializeTo(void* data) override;
 		void unserialize(const void* data) override;
+
+	private:
+		std::vector<GameEvent*> m_events;
+		EventsPack() :GameEvent(eGameEvent::EventsPack) {}
 };
 
 class EventGameStart :public GameEvent
 {
-	public:
+	friend class GameEvent;
+	private:
 		EventGameStart() :GameEvent(eGameEvent::GameStart) {}
 };
 
 class EventBattleStart :public GameEvent
 {
-	public:
+	friend class GameEvent;
+	private:
 		EventBattleStart() :GameEvent(eGameEvent::BattleStart) {}
 };
 
 class EventGetPlayerStatus :public GameEvent
 {
+	friend class GameEvent;
 	public:
-		EventGetPlayerStatus() :GameEvent(eGameEvent::GetPlayerStatus) {}
-
 		std::map<uchar, ePlayerStatusType> statusMap;
 
 		void serializeTo(void* data) override;
 		void unserialize(const void* data) override;
+
+	private:
+		EventGetPlayerStatus() :GameEvent(eGameEvent::GetPlayerStatus) {}
 };
 
 class EventGetCards :public GameEvent
 {
+	friend class GameEvent;
 	public:
-		EventGetCards() :GameEvent(eGameEvent::GetCards) {}
-
 		uchar playerID;
 		eGetCardType getType;
 		std::vector<uint> cards;
 
 		void serializeTo(void* data) override;
 		void unserialize(const void* data) override;
+
+	private:
+		EventGetCards() :GameEvent(eGameEvent::GetCards) {}
 };
 
 class EventPhrase :public GameEvent
 {
+	friend class GameEvent;
 	public:
-		EventPhrase() :GameEvent(eGameEvent::Phrase) {}
-
 		uchar playerID;
 		ePhraseType type;
 
 		void serializeTo(void* data) override;
 		void unserialize(const void* data) override;
+
+	private:
+		EventPhrase() :GameEvent(eGameEvent::Phrase) {}
 };

@@ -1,4 +1,3 @@
-#include "libs/sqlite3/sqlite3.h"
 #include "libs/StringManager.h"
 
 #include "def.h"

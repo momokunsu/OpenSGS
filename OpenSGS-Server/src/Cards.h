@@ -24,7 +24,7 @@ class Card : public GC
 		void setType(eCardType type) { m_type = type; }
 		eCardType getType() { return m_type; }
 
-	private:
+	protected:
 		Card();
 		virtual ~Card();
 
@@ -32,7 +32,7 @@ class Card : public GC
 		eCardType m_type;
 };
 
-class BaseCard :public Card
+class BaseCard : public Card
 {
 	public:
 		BaseCard();
