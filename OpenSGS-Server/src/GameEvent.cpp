@@ -44,6 +44,7 @@ GameEvent * GameEvent::create(eGameEvent ev)
 {
 	if (m_event_creators.size() == 0)
 	{
+		m_event_creators[eGameEvent::None] = []() -> GameEvent * { return new GameEvent(); };
 		m_event_creators[eGameEvent::GameStart] = []() -> GameEvent * { return new EventGameStart(); };
 		m_event_creators[eGameEvent::BattleStart] = []() -> GameEvent * { return new EventBattleStart(); };
 		m_event_creators[eGameEvent::GetPlayerStatus] = []() -> GameEvent * { return new EventGetPlayerStatus(); };
