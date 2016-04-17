@@ -129,7 +129,7 @@
     <ClInclude Include="src\libs\GC.h">
       <Filter>src\libs</Filter>
     </ClInclude>
-    <ClInclude Include="src\PackManager.h">
+    <ClInclude Include="src\CardsManager.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -266,7 +266,7 @@
     <ClCompile Include="src\libs\GC.cpp">
       <Filter>src\libs</Filter>
     </ClCompile>
-    <ClCompile Include="src\PackManager.cpp">
+    <ClCompile Include="src\CardsManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

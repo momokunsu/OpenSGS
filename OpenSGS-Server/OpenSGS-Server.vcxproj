@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClInclude Include="src\BattleSystem.h" />
     <ClInclude Include="src\Cards.h" />
-    <ClInclude Include="src\PackManager.h" />
+    <ClInclude Include="src\CardsManager.h" />
     <ClInclude Include="src\GamePackFile.h" />
     <ClInclude Include="src\def.h" />
     <ClInclude Include="src\GameEvent.h" />
@@ -62,7 +62,7 @@
   <ItemGroup>
     <ClCompile Include="src\BattleSystem.cpp" />
     <ClCompile Include="src\Cards.cpp" />
-    <ClCompile Include="src\PackManager.cpp" />
+    <ClCompile Include="src\CardsManager.cpp" />
     <ClCompile Include="src\GamePackFile.cpp" />
     <ClCompile Include="src\GameEvent.cpp" />
     <ClCompile Include="src\libs\Encoding.cpp" />

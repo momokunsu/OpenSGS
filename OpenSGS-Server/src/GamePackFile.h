@@ -48,6 +48,9 @@ class GamePackFile : public GC
 		static void addSerchPath(const char *path);
 		static void removeAllSerchPath() { m_serch_path.clear(); }
 
+		static const std::map<std::string, GamePackFile*>& getFileCache() { return m_file_cache; }
+		static void releaseFileCache();
+
 		bool open();
 		void close();
 
@@ -59,8 +62,6 @@ class GamePackFile : public GC
 		const PackInfo& getPackInfo() { return m_packinfo; }
 		const std::map<ushort, BaseCardInfo>& getBaseCardInfo() { return m_base; }
 
-		const std::map<std::string, GamePackFile*>& getFileCache() { return m_file_cache; }
-		void releaseFileCache();
 
 	private:
 		GamePackFile(const char *filename);
