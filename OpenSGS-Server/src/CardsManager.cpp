@@ -22,7 +22,23 @@ void CardsManager::initDeckToList(std::list<uint>& vec)
 	for (auto info : m_packname_buf)
 	{
 		auto file = GamePackFile::create(info.first.c_str(), info.second);
-		file->loadInfo();
 		file->loadDeckList(vec);
 	}
+
+	//加载卡牌信息
+	for (auto info : GamePackFile::getFileCache())
+	{
+		auto pack = info.second;
+		pack->loadInfo();
+
+		for (auto card : pack->getBaseCardInfo())
+		{
+			m_id_cards[card.first] = card.second;
+		}
+	}
+}
+
+Card * CardsManager::getCardInfo(uint)
+{
+	return nullptr;
 }

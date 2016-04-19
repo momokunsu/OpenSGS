@@ -16,7 +16,7 @@ enum class eCardType
 class Card : public GC
 {
 	public:
-		static Card* create(){}
+		static Card* create();
 
 		void setName(const char* name) { m_name = name; }
 		const std::string& getName(){ return m_name; }
@@ -25,8 +25,8 @@ class Card : public GC
 		eCardType getType() { return m_type; }
 
 	protected:
-		Card();
-		virtual ~Card();
+		Card() {}
+		virtual ~Card() {}
 
 		std::string m_name;
 		eCardType m_type;

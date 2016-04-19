@@ -1,11 +1,8 @@
 #include "Cards.h"
 
-Card::Card()
+Card * Card::create()
 {
-}
-
-Card::~Card()
-{
+	return nullptr;
 }
 
 BaseCard::BaseCard()
