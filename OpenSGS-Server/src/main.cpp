@@ -2,7 +2,7 @@
 
 #include "def.h"
 #include "GameEvent.h"
-#include "GamePackFile.h"
+#include "CardsManager.h"
 #include "LogHandler.h"
 #include "BattleSystem.h"
 
@@ -16,16 +16,10 @@ int main()
 {
 	auto sys = new BattleSystem();
 
-	GamePackFile::addSerchPath(".");
-	auto file = GamePackFile::create("standard.gpk");
-	if (file)
+	CardsManager::addSerchPath(".");
+	CardsManager::addPack("standard.gpk");
+	if (CardsManager::initDeckToList(sys->cardsDeck()))
 	{
-		file->open();
-		file->loadInfo();
-
-		auto info = file->getPackInfo();
-
-		file->loadDeckList(sys->cardsDeck());
 		sys->shuffleCardsDeck();
 	}
 

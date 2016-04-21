@@ -1,7 +1,8 @@
-#include "libs/StringManager.h"
-#include "def.h"
 #include "GamePackFile.h"
 #include "LogHandler.h"
+
+#include "libs/StringManager.h"
+#include "def.h"
 
 typedef StringManager STR;
 
@@ -82,6 +83,7 @@ GamePackFile * GamePackFile::create(const char * filename, short idoffset)
 	self = new GamePackFile(filename);
 	if (!self || !self->open() || !self->loadPackInfo())
 	{
+		LogHandler::setLog("GamePackFile::create", STR::format("create fail: \"%s\"", filename));
 		self->close();
 		return nullptr;
 	}
@@ -272,8 +274,14 @@ bool GamePackFile::loadBaseInfo()
 	return true;
 }
 
-void GamePackFile::loadDeckList(std::list<uint>& vec)
+bool GamePackFile::loadDeckList(std::list<uint>& vec)
 {
+	if (!m_db)
+	{
+		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("not open the data file!"));
+		return false;
+	}
+
 	LogHandler::setLog("GamePackFile::loadDeckList", STR::format("begin load decklist! \"%s\"", m_filename.c_str()));
 
 	auto sqlstate = sqlQuery("select * from decklist");

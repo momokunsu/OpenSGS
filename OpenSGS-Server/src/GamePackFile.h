@@ -57,7 +57,7 @@ class GamePackFile : public GC
 		short getIdoffset() { return m_idoffset; }
 
 		bool loadInfo();
-		void loadDeckList(std::list<uint> &vec);
+		bool loadDeckList(std::list<uint> &vec);
 
 		const PackInfo& getPackInfo() { return m_packinfo; }
 		const std::map<ushort, BaseCardInfo>& getBaseCardInfo() { return m_base; }

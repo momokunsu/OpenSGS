@@ -19,7 +19,7 @@ class CardsManager
 		static void removeAllPack() { m_packname_buf.clear(); }
 		static const std::map<std::string, short>& getPackNames() { return m_packname_buf; }
 
-		static void initDeckToList(std::list<uint>& vec);
+		static bool initDeckToList(std::list<uint>& vec);
 		static Card* getCardInfo(uint id);
 
 	private:
