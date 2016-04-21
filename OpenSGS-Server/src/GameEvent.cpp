@@ -60,7 +60,7 @@ GameEvent * GameEvent::create(void * data)
 	tmp.retain();
 	tmp.unserialize(data);
 
-	auto ev = m_event_creators[tmp.getEvent()]();
+	auto ev = create(tmp.getEvent());
 	ev->unserialize(data);
 	return ev;
 }

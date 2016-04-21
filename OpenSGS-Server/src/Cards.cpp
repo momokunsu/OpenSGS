@@ -1,15 +1,17 @@
 #include "Cards.h"
 
-Card * Card::create()
+Card::Card()
 {
-	return nullptr;
+	m_type = eCardType::None;
 }
 
-BaseCard::BaseCard()
+
+BaseCard * BaseCard::create(BaseCardInfo & info)
 {
-	setType(eCardType::Base);
+	auto card = new BaseCard();
+	card->setId(info.id);
+	card->setType(eCardType::Base);
+	card->setName(info.name.c_str());
+	return card;
 }
 
-BaseCard::~BaseCard()
-{
-}

@@ -4,7 +4,7 @@
 
 #include "libs/sqlite3/sqlite3.h"
 #include "libs/GC.h"
-#include "Cards.h"
+#include "def.h"
 
 
 struct PackInfo

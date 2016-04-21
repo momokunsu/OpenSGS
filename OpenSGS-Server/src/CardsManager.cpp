@@ -33,12 +33,14 @@ void CardsManager::initDeckToList(std::list<uint>& vec)
 
 		for (auto card : pack->getBaseCardInfo())
 		{
-			m_id_cards[card.first] = card.second;
+			m_id_cards[card.first] = BaseCard::create(card.second);
 		}
 	}
 }
 
-Card * CardsManager::getCardInfo(uint)
+Card * CardsManager::getCardInfo(uint id)
 {
-	return nullptr;
+	uTypeUnion val;
+	val.intVal[0] = id;
+	return m_id_cards[val.shortVal[0]];
 }
