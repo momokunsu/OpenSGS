@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <vector>
 
@@ -31,6 +32,25 @@ class StringManager
 		static unsigned long long toUint(const char* str);
 		static double toFloat(const char* str);
 		static void toFormatValue(const char* str, const char* fmt, void *value);
-	
+
+		static const char* UTF16LToUTF8(const wchar_t *str);
+		static const wchar_t* UTF8ToUTF16L(const char *str);
 	private:
 };
+
+
+#ifndef UTF8
+	#ifndef WIN32
+		#define UTF8(code) (StringManager::UTF16LToUTF8(L##code))
+	#else
+		#define UTF8(code) code
+	#endif
+#endif
+
+#ifndef UTF16L
+	#ifndef WIN32
+		#define UTF16L(code) (L##code)
+	#else
+		#define UTF16L(code) (StringManager::UTF8ToUTF16L(code))
+	#endif
+#endif

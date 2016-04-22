@@ -25,7 +25,6 @@
     <ClInclude Include="src\GamePackFile.h" />
     <ClInclude Include="src\def.h" />
     <ClInclude Include="src\GameEvent.h" />
-    <ClInclude Include="src\libs\Encoding.h" />
     <ClInclude Include="src\libs\GC.h" />
     <ClInclude Include="src\libs\lua-5.3.2\lapi.h" />
     <ClInclude Include="src\libs\lua-5.3.2\lauxlib.h" />
@@ -65,7 +64,6 @@
     <ClCompile Include="src\CardsManager.cpp" />
     <ClCompile Include="src\GamePackFile.cpp" />
     <ClCompile Include="src\GameEvent.cpp" />
-    <ClCompile Include="src\libs\Encoding.cpp" />
     <ClCompile Include="src\libs\GC.cpp" />
     <ClCompile Include="src\libs\lua-5.3.2\lapi.c" />
     <ClCompile Include="src\libs\lua-5.3.2\lauxlib.c" />
