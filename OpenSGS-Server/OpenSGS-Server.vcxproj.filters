@@ -129,6 +129,9 @@
     <ClInclude Include="src\CardsManager.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\NetPlayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -261,6 +264,9 @@
       <Filter>src\libs</Filter>
     </ClCompile>
     <ClCompile Include="src\CardsManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NetPlayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

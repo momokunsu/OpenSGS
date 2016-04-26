@@ -15,7 +15,7 @@ enum class eEquipsIndex
 	Treasure
 };
 
-class Player
+class Player : public GC
 {
 	public:
 		Player();
@@ -30,16 +30,15 @@ class Player
 
 		bool isDead() { return m_is_dead; }
 
-		void setEventCallback(std::function<void(const GameEvent*)> event) { mc_event_callback = event; }
-		void dispatchEvent(const GameEvent *etype) { mc_event_callback(etype); }
+		void dispatchEvent(GameEvent *etype) { EventCallback(etype); }
+		virtual void EventCallback(GameEvent* ev) {}
 
-	private:
+	protected:
 		uchar m_id;
-		ePlayerStatusType *m_status;
+		ePlayerStatusType m_status;
 		bool m_is_dead;
 		ulong m_equips[5];
 		std::vector<ulong> m_handcards;
 		std::vector<ulong> m_judges;
 		std::vector<ulong> m_ext_cards;
-		std::function<void(const GameEvent*)> mc_event_callback;
 };
