@@ -132,6 +132,9 @@
     <ClInclude Include="src\NetPlayer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\ScriptEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -267,6 +270,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\NetPlayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScriptEngine.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -58,6 +58,7 @@
     <ClInclude Include="src\LogHandler.h" />
     <ClInclude Include="src\NetPlayer.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\ScriptEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BattleSystem.cpp" />
@@ -105,6 +106,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\NetPlayer.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\ScriptEngine.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7FF0F533-578F-4A95-9211-80AA94E87871}</ProjectGuid>

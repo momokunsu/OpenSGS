@@ -16,7 +16,7 @@ void NetPlayer::EventCallback(GameEvent * ev)
 			{
 				auto evins = (EventGetPlayerStatus *)ev;
 				m_status = evins->statusMap[m_id];
-			}
+			} 
 			break;
 		case eGameEvent::GetCards:
 			{
