@@ -3,12 +3,15 @@
 #include "libs/lua-5.3.2/lua.hpp"
 
 
-class ScriptEngine
+class ScriptEngine : public GC
 {
 	public:
 		ScriptEngine();
 		~ScriptEngine();
 
-	private:
+		void luaCall(const char *funname, va_list ap);
+		void luaCall(const char *funname, ...);
 
+	private:
+		lua_State * m_lua_state;
 };
