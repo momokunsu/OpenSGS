@@ -167,6 +167,19 @@ const void StringManager::split(const char* str, std::vector<std::string>& arr, 
 	va_end(ap);
 }
 
+int StringManager::compare(const char * src, const char * dst)
+{
+	int i = 0;
+	while (src[i] || dst[i])
+	{
+		int d = src[i] - dst[i];
+		if (d)
+			return d;
+		i++;
+	}
+	return 0;
+}
+
 int StringManager::indexOf(const char* str, const char* dst)
 {
 	int i = 0, j = 0;

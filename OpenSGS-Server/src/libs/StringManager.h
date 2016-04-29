@@ -15,6 +15,9 @@ class StringManager
 		static const char* replace(const char* str, const char* src, const char* dst);
 		static const void split(const char* str, std::vector<std::string>& arr, va_list ap);
 		static const void split(const char* str, std::vector<std::string>& arr, ...);
+		
+		static int compare(const char* src, const char* dst);
+		static bool equals(const char* src, const char* dst) { return compare(src, dst) == 0; }
 
 		static int indexOf(const char* str, const char* dst);
 		static int indexOf(const char* str, char dst);
