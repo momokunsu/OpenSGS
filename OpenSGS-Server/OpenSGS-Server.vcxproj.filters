@@ -276,4 +276,9 @@
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test.lua">
+      <Filter>src</Filter>
+    </None>
+  </ItemGroup>
 </Project>

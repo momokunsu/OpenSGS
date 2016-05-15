@@ -8,6 +8,8 @@ using namespace std;
 typedef StringManager STR;
 
 
+std::map<std::string, std::function<void(lua_State *, va_list)>> ScriptEngine::m_push_lua_param;
+
 ScriptEngine::ScriptEngine()
 {
 	if (m_push_lua_param.empty())
@@ -19,6 +21,9 @@ ScriptEngine::ScriptEngine()
 		m_push_lua_param["string"] = [](lua_State * L, va_list ap) { char * val = va_arg(ap, char *); lua_pushlstring(L, val, strlen(val)); };
 	}
 	m_lua_state = luaL_newstate();
+
+	auto a = luaL_dofile(m_lua_state, "test.lua");
+	luaCall("test(bool int float)", true, 12830, 2.5f);
 }
 
 ScriptEngine::~ScriptEngine()
@@ -34,8 +39,9 @@ void ScriptEngine::luaCall(const char * funname, va_list ap)
 	STR::split(funname, list, ' ', ',', '(', ')', '\t', '\r', '\n');
 
 	auto it = list.begin();
-
-	lua_getfield(m_lua_state, LUA_RIDX_GLOBALS, (*it).c_str());          /* 将调用的函数 */
+	
+	lua_getglobal(m_lua_state, (*it).c_str());          /* 将调用的函数 */
+	m_ret_index = lua_gettop(m_lua_state);
 	it++;
 
 	int count = 0;
@@ -45,6 +51,7 @@ void ScriptEngine::luaCall(const char * funname, va_list ap)
 		it++;
 		count++;
 	}
+	m_ret_index = lua_gettop(m_lua_state);
 	lua_call(m_lua_state, count, LUA_MULTRET);
 }
 

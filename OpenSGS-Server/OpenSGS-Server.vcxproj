@@ -108,6 +108,9 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\ScriptEngine.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test.lua" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7FF0F533-578F-4A95-9211-80AA94E87871}</ProjectGuid>
     <RootNamespace>OpenSGSServer</RootNamespace>
