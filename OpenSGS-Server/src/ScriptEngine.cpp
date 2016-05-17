@@ -1,4 +1,5 @@
 #include "ScriptEngine.h"
+#include "LogHandler.h"
 #include "libs/StringManager.h"
 
 #include <vector>
@@ -23,7 +24,11 @@ ScriptEngine::ScriptEngine()
 	m_lua_state = luaL_newstate();
 
 	auto a = luaL_dofile(m_lua_state, "test.lua");
-	luaCall("test(bool int float)", true, 12830, 2.5f);
+	if (luaCall("test(bool int float)", true, 12830, 2.5f))
+	{
+
+		LogHandler::setLog("ScriptEngine::ScriptEngine")
+	}
 }
 
 ScriptEngine::~ScriptEngine()
@@ -31,7 +36,7 @@ ScriptEngine::~ScriptEngine()
 	lua_close(m_lua_state);
 }
 
-void ScriptEngine::luaCall(const char * funname, va_list ap)
+int ScriptEngine::luaCall(const char * funname, va_list ap)
 {
 	m_ret_index = lua_gettop(m_lua_state);
 
@@ -52,13 +57,14 @@ void ScriptEngine::luaCall(const char * funname, va_list ap)
 		count++;
 	}
 	m_ret_index = lua_gettop(m_lua_state);
-	lua_call(m_lua_state, count, LUA_MULTRET);
+	return lua_pcall(m_lua_state, count, LUA_MULTRET, 0);
 }
 
-void ScriptEngine::luaCall(const char * funname, ...)
+int ScriptEngine::luaCall(const char * funname, ...)
 {
 	va_list ap;
 	va_start(ap, funname);
-	luaCall(funname, ap);
+	auto ret = luaCall(funname, ap);
 	va_end(ap);
+	return ret;
 }

@@ -13,8 +13,8 @@ class ScriptEngine : public GC
 		ScriptEngine();
 		~ScriptEngine();
 
-		void luaCall(const char *funname, va_list ap);
-		void luaCall(const char *funname, ...);
+		int luaCall(const char *funname, va_list ap);
+		int luaCall(const char *funname, ...);
 
 		bool getRetValToBool() { return lua_toboolean(m_lua_state, ++m_ret_index); }
 		int getRetValToInt() { return lua_tointeger(m_lua_state, ++m_ret_index); }
