@@ -16,9 +16,9 @@ class ScriptEngine : public GC
 		int luaCall(const char *funname, va_list ap);
 		int luaCall(const char *funname, ...);
 
-		bool getRetValToBool() { return lua_toboolean(m_lua_state, ++m_ret_index); }
-		int getRetValToInt() { return lua_tointeger(m_lua_state, ++m_ret_index); }
-		float getRetValToFloat() { return lua_tonumber(m_lua_state, ++m_ret_index); }
+		bool getRetValToBool() { return lua_toboolean(m_lua_state, ++m_ret_index) != 0; }
+		int getRetValToInt() { return (int)lua_tointeger(m_lua_state, ++m_ret_index); }
+		float getRetValToFloat() { return (float)lua_tonumber(m_lua_state, ++m_ret_index); }
 		const char * getRetValToString() { return lua_tostring(m_lua_state, ++m_ret_index); }
 
 	private:

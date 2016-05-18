@@ -12,7 +12,7 @@ typedef StringManager STR;
 BattleSystem::BattleSystem()
 {
 	//初始化随机数生成器
-	srand(time(nullptr));
+	srand((uint)time(nullptr));
 	//初始化大小端转化器
 	GameEvent::initEndian();
 }
