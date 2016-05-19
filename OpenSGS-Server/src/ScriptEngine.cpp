@@ -26,7 +26,7 @@ ScriptEngine::ScriptEngine()
 	auto a = luaL_dofile(m_lua_state, "test.lua");
 	if (luaCall("test(bool int float)", true, 12830, 2.5f))
 	{
-		//LogHandler::setLog("ScriptEngine::ScriptEngine");
+		LogHandler::setLog("[luaCall Error]", STR::format("code: %d"));
 	}
 }
 
