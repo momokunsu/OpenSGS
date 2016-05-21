@@ -17,6 +17,8 @@ void Log(const std::string& tag, const std::string& log)
 
 int main()
 {
+	LogHandler::setLogEventCallback(Log);
+
 	auto engine = new ScriptEngine();
 
 	auto sys = new BattleSystem();

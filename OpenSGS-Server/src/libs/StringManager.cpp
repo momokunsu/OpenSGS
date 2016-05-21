@@ -138,7 +138,7 @@ const char* StringManager::replace(const char* str, const char* src, const char*
 	return ret;
 }
 
-const void StringManager::split(const char* str, std::vector<std::string>& arr, va_list ap)
+const void StringManager::split(std::vector<std::string>& arr, const char* str, va_list ap)
 {
 	char* pbuf = (char*)GC::getGlobalBuffer();
 	strcpy(pbuf, str);
@@ -159,11 +159,11 @@ const void StringManager::split(const char* str, std::vector<std::string>& arr, 
 	}
 }
 
-const void StringManager::split(const char* str, std::vector<std::string>& arr, ...)
+const void StringManager::split(std::vector<std::string>& arr,const char* str,  ...)
 {
 	va_list ap;
 	va_start(ap, str);
-	split(str, arr, ap);
+	split(arr, str, ap);
 	va_end(ap);
 }
 

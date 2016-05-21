@@ -13,8 +13,8 @@ class StringManager
 		static const char* trimEnd(const char* str, ...);
 		static const char* replace(const char* str, char src, char dst);
 		static const char* replace(const char* str, const char* src, const char* dst);
-		static const void split(const char* str, std::vector<std::string>& arr, va_list ap);
-		static const void split(const char* str, std::vector<std::string>& arr, ...);
+		static const void split(std::vector<std::string>& arr, const char* str, va_list ap);
+		static const void split(std::vector<std::string>& arr, const char* str, ...);
 		
 		static int compare(const char* src, const char* dst);
 		static bool equals(const char* src, const char* dst) { return compare(src, dst) == 0; }

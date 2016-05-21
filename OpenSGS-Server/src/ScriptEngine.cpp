@@ -26,7 +26,7 @@ ScriptEngine::ScriptEngine()
 	auto a = luaL_dofile(m_lua_state, "test.lua");
 	if (luaCall("test(bool int float)", true, 12830, 2.5f))
 	{
-		LogHandler::setLog("[luaCall Error]", STR::format("code: %d"));
+		LogHandler::setLog("[luaCall Error]", lua_tolstring(m_lua_state, lua_gettop(m_lua_state), nullptr));
 	}
 }
 
@@ -40,7 +40,7 @@ int ScriptEngine::luaCall(const char * funname, va_list ap)
 	m_ret_index = lua_gettop(m_lua_state);
 
 	vector<string> list;
-	STR::split(funname, list, ' ', ',', '(', ')', '\t', '\r', '\n');
+	STR::split(list, funname, ' ', ',', '(', ')', '\t', '\r', '\n');
 
 	auto it = list.begin();
 	

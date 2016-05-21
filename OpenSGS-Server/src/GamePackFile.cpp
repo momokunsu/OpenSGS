@@ -313,4 +313,5 @@ bool GamePackFile::loadDeckList(std::list<uint>& vec)
 
 	sqlEnd(sqlstate);
 	LogHandler::setLog("GamePackFile::loadDeckList", STR::format("end load decklist! \"%s\"", m_filename.c_str()));
+	return true;
 }
