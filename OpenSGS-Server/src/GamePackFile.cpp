@@ -83,7 +83,7 @@ GamePackFile * GamePackFile::create(const char * filename, short idoffset)
 	self = new GamePackFile(filename);
 	if (!self || !self->open() || !self->loadPackInfo())
 	{
-		LogHandler::setLog("GamePackFile::create", STR::format("create fail: \"%s\"", filename));
+		LogError("GamePackFile::create", STR::format("create fail: \"%s\"", filename));
 		self->close();
 		return nullptr;
 	}
@@ -112,13 +112,14 @@ bool GamePackFile::open()
 	for (auto path : m_serch_path)
 	{
 		path = path + '/' + m_filename;
+		LogDebug("GamePackFile::open", STR::format("open pack file path \"%s\"", path.c_str()));
 		FILE* file;
 		if (file = fopen(path.c_str(), "r"))
 		{
 			fclose(file);
 			if (sqlite3_open(path.c_str(), &m_db) != SQLITE_OK)
 			{
-				LogHandler::setLog("GamePackFile::loadInfo", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
+				LogError("GamePackFile::open", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
 				close();
 				return false;
 			}
@@ -126,7 +127,7 @@ bool GamePackFile::open()
 		}
 	}
 
-	LogHandler::setLog("GamePackFile::loadInfo", STR::format("file \"%s\" not found!!", m_filename.c_str()));
+	LogError("GamePackFile::open", STR::format("file \"%s\" not found!!", m_filename.c_str()));
 	close();
 	return false;
 }
@@ -135,7 +136,7 @@ void GamePackFile::close()
 {
 	if (m_db)
 	{
-		LogHandler::setLog("GamePackFile::close", STR::format("sqlite3: close file! \"%s\"", m_filename.c_str()));
+		LogError("GamePackFile::close", STR::format("sqlite3: close file! \"%s\"", m_filename.c_str()));
 		sqlite3_close(m_db);
 		m_db = nullptr;
 	}
@@ -146,7 +147,7 @@ sqlite3_stmt* GamePackFile::sqlQuery(const char * script)
 	sqlite3_stmt *sqlstate = nullptr;
 	if (sqlite3_prepare(m_db, script, -1, &sqlstate, NULL) != SQLITE_OK)
 	{
-		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
+		LogDebug("GamePackFile::sqlQuery", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
 		close();
 	}
 	return sqlstate;
@@ -171,9 +172,10 @@ bool GamePackFile::sqlStep(sqlite3_stmt *sqlstate)
 	}
 	else if (result != SQLITE_DONE)
 	{
-		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
+		LogError("GamePackFile::sqlStep", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
 		close();
 	}
+	LogDebug("GamePackFile::sqlStep", "sql step done!");
 	return false;
 }
 
@@ -181,7 +183,7 @@ void GamePackFile::sqlEnd(sqlite3_stmt *psqlstate)
 {
 	if(sqlite3_finalize(psqlstate) != SQLITE_OK)
 	{
-		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
+		LogError("GamePackFile::sqlEnd", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
 	}
 }
 
@@ -189,32 +191,37 @@ void GamePackFile::sqlReset(sqlite3_stmt * psqlstate)
 {
 	if (sqlite3_reset(psqlstate) != SQLITE_OK)
 	{
-		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
+		LogError("GamePackFile::sqlReset", STR::format("sqlite3: %s \"%s\"", sqlite3_errmsg(m_db), m_filename.c_str()));
 	}
+	LogDebug("GamePackFile::sqlStep", "sql reset!");
 }
 
 bool GamePackFile::loadInfo()
 {
 	if (!m_db)
 	{
-		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("not open the data file!"));
+		LogError("GamePackFile::loadInfo", STR::format("not open the data file!"));
 		return false;
 	}
 
 	if (!loadBaseInfo())
 		return false;
 
+	LogDebug("GamePackFile::loadInfo", "load the pack info");
 	return true;
 }
 
 bool GamePackFile::loadPackInfo()
 {
-	LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("begin load pack info! \"%s\"", m_filename.c_str()));
+	LogDebug("GamePackFile::loadPackInfo", STR::format("begin load pack info! \"%s\"", m_filename.c_str()));
 
 	//读取包信息
 	auto sqlstate = sqlQuery("select * from info");
 	if (!sqlstate || !sqlStep(sqlstate))
+	{
+		LogError("GamePackFile::loadPackInfo", "could not get the info status!");
 		return false;
+	}
 
 	const char *str_res = nullptr;
 
@@ -235,18 +242,21 @@ bool GamePackFile::loadPackInfo()
 	m_packinfo.skillNum = sqlite3_column_int(sqlstate, (int)ePackInfoIndex::SkillNum);
 
 	sqlEnd(sqlstate);
-	LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("end load pack info! \"%s\"", m_filename.c_str()));
+	LogDebug("GamePackFile::loadPackInfo", STR::format("end load pack info! \"%s\"", m_filename.c_str()));
 	return true;
 }
 
 bool GamePackFile::loadBaseInfo()
 {
-	LogHandler::setLog("GamePackFile::loadBaseInfo", STR::format("begin load base info! \"%s\"", m_filename.c_str()));
+	LogDebug("GamePackFile::loadBaseInfo", STR::format("begin load base info! \"%s\"", m_filename.c_str()));
 
 	//读取基本牌信息
 	auto sqlstate = sqlQuery("select * from base");
 	if (!sqlstate)
+	{
+		LogError("GamePackFile::loadBaseInfo", "could not get the base status!");
 		return false;
+	}
 
 	m_base.clear();
 	while (sqlStep(sqlstate))
@@ -270,7 +280,7 @@ bool GamePackFile::loadBaseInfo()
 	}
 
 	sqlEnd(sqlstate);
-	LogHandler::setLog("GamePackFile::loadBaseInfo", STR::format("end load base info! \"%s\"", m_filename.c_str()));
+	LogDebug("GamePackFile::loadBaseInfo", STR::format("end load base info! \"%s\"", m_filename.c_str()));
 	return true;
 }
 
@@ -278,11 +288,11 @@ bool GamePackFile::loadDeckList(std::list<uint>& vec)
 {
 	if (!m_db)
 	{
-		LogHandler::setLog("GamePackFile::loadPackInfo", STR::format("not open the data file!"));
+		LogError("GamePackFile::loadPackInfo", STR::format("not open the data file!"));
 		return false;
 	}
 
-	LogHandler::setLog("GamePackFile::loadDeckList", STR::format("begin load decklist! \"%s\"", m_filename.c_str()));
+	LogDebug("GamePackFile::loadDeckList", STR::format("begin load decklist! \"%s\"", m_filename.c_str()));
 
 	auto sqlstate = sqlQuery("select * from decklist");
 	while (sqlStep(sqlstate))
@@ -312,6 +322,6 @@ bool GamePackFile::loadDeckList(std::list<uint>& vec)
 	}
 
 	sqlEnd(sqlstate);
-	LogHandler::setLog("GamePackFile::loadDeckList", STR::format("end load decklist! \"%s\"", m_filename.c_str()));
+	LogDebug("GamePackFile::loadDeckList", STR::format("end load decklist! \"%s\"", m_filename.c_str()));
 	return true;
 }

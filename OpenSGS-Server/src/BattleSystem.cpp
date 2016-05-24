@@ -26,7 +26,7 @@ bool BattleSystem::addPlayer(Player * player)
 {
 	if (m_players.size() > 10)
 	{
-		LogHandler::setLog("BattleSystem::addPlayer", "player max count is 10!!!");
+		LogWarn("BattleSystem::addPlayer", "player max count is 10!!!");
 		return false;
 	}
 
@@ -38,7 +38,7 @@ bool BattleSystem::setPlayerLocal(Player *player, int pos)
 {
 	if (pos < 0 || pos >(int)m_players.size() - 1)
 	{
-		LogHandler::setLog("BattleSystem::setPlayerLocal", STR::format("invaild player local!!! index: %d", pos));
+		LogWarn("BattleSystem::setPlayerLocal", STR::format("invaild player local!!! index: %d", pos));
 		return false;
 	}
 
@@ -70,7 +70,7 @@ bool BattleSystem::initGame()
 {
 	if (m_players.size() < 4)
 	{
-		LogHandler::setLog("BattleSystem::initGame", "player min count is 4!!!");
+		LogWarn("BattleSystem::initGame", "player min count is 4!!!");
 		return false;
 	}
 
@@ -111,7 +111,7 @@ bool BattleSystem::initGame()
 		if (m_statusgroup[i] == ePlayerStatusType::Ruler)
 		{
 			m_cur_player = i;
-			LogHandler::setLog("BattleSystem::initGame", STR::format("confirm the ruler location is pos: %d", m_cur_player));
+			LogInfo("BattleSystem::initGame", STR::format("confirm the ruler location is pos: %d", m_cur_player));
 			break;
 		}
 	}
@@ -126,14 +126,14 @@ bool BattleSystem::initGame()
 void BattleSystem::startGame()
 {
 	//游戏开始
-	LogHandler::setLog("BattleSystem::startGame", STR::format("game start!!! player count is %d", m_players.size()));
+	LogInfo("BattleSystem::startGame", STR::format("game start!!! player count is %d", m_players.size()));
 	broadcastEvent(GameEvent::create(eGameEvent::GameStart));
 }
 
 void BattleSystem::dealStatus()
 {
 	//分发身份
-	LogHandler::setLog("BattleSystem::distributeStatus", "dispatch player status");
+	LogInfo("BattleSystem::distributeStatus", "dispatch player status");
 	auto ev = (EventGetPlayerStatus*)GameEvent::create(eGameEvent::GetPlayerStatus);
 	for (int i = 0; i < (int)m_players.size(); i++)
 	{
@@ -156,7 +156,7 @@ void BattleSystem::dealCards()
 void BattleSystem::startBattle()
 {
 	//战斗开始
-	LogHandler::setLog("BattleSystem::startBattle", "battle start!!!");
+	LogInfo("BattleSystem::startBattle", "battle start!!!");
 	broadcastEvent(GameEvent::create(eGameEvent::BattleStart));
 }
 
@@ -196,7 +196,7 @@ void BattleSystem::drawCards(uchar playerid, int count, int index)
 	auto player = m_id_players[playerid];
 	if (!player)
 	{
-		LogHandler::setLog("BattleSystem::drawCards", STR::format("player %d not exist!!", playerid));
+		LogWarn("BattleSystem::drawCards", STR::format("player %d not exist!!", playerid));
 		return;
 	}
 
@@ -206,7 +206,7 @@ void BattleSystem::drawCards(uchar playerid, int count, int index)
 	for (int i = 0; i < count; i++)
 		ev->cards.push_back(drawCard());
 
-	LogHandler::setLog("BattleSystem::drawCards", STR::format("player %d draw %d cards", playerid, m_drawcount));
+	LogInfo("BattleSystem::drawCards", STR::format("player %d draw %d cards", playerid, m_drawcount));
 	broadcastEvent(ev);
 }
 

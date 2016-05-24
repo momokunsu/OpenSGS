@@ -141,6 +141,12 @@ const char* StringManager::replace(const char* str, const char* src, const char*
 const void StringManager::split(std::vector<std::string>& arr, const char* str, va_list ap)
 {
 	char* pbuf = (char*)GC::getGlobalBuffer();
+	string strobj;
+	if (GC::isRangeOfGlobalBuf(str))
+	{
+		strobj = str;
+		str = strobj.c_str();
+	}
 	strcpy(pbuf, str);
 
 	while (*pbuf)

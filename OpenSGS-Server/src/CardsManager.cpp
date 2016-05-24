@@ -28,7 +28,7 @@ bool CardsManager::initDeckToList(std::list<uint>& vec)
 		auto file = GamePackFile::create(name, info.second);
 		if (!file)
 		{
-			LogHandler::setLog("CardsManager::initDeckToList", STR::format("GamePackFile create fail: \"%s\"", name));
+			LogError("CardsManager::initDeckToList", STR::format("GamePackFile create fail: \"%s\"", name));
 			return false;
 		}
 		file->open();
