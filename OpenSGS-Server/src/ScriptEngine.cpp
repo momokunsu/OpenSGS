@@ -18,15 +18,13 @@ ScriptEngine::ScriptEngine()
 		m_push_lua_param["nil"] = [](lua_State * L, va_list ap) { lua_pushnil(L); };
 		m_push_lua_param["bool"] = [](lua_State * L, va_list ap) { int val = va_arg(ap, bool); lua_pushboolean(L, val); };
 		m_push_lua_param["int"] = [](lua_State * L, va_list ap) { lua_Integer val = va_arg(ap, int); lua_pushinteger(L, val); };
-		m_push_lua_param["float"] = [](lua_State * L, va_list ap) { lua_Number val = va_arg(ap, float); lua_pushnumber(L, val); };
+		m_push_lua_param["float"] = [](lua_State * L, va_list ap) { lua_Number val = va_arg(ap, double); lua_pushnumber(L, val); };
 		m_push_lua_param["string"] = [](lua_State * L, va_list ap) { char * val = va_arg(ap, char *); lua_pushlstring(L, val, strlen(val)); };
 	}
 	m_lua_state = luaL_newstate();
 
 	luaL_dofile(m_lua_state, "test.lua");
-
-	//luaL_loadfile(m_lua_state, "test.lua");
-	if (luaCall("test(bool int float)", true, 12830, 2.5f))
+	if (luaCall("test(bool int float)", true, 12830, 2.5))
 	{
 		LogHandler::setLog("luaCall Error", lua_tolstring(m_lua_state, lua_gettop(m_lua_state), nullptr));
 		lua_pop(m_lua_state, 1);
@@ -42,13 +40,13 @@ ScriptEngine::~ScriptEngine()
 
 int ScriptEngine::luaCall(const char * funname, va_list ap)
 {
-	m_ret_index = lua_gettop(m_lua_state);
+	int ret_index = lua_gettop(m_lua_state) + 1;
 
 	vector<string> list;
 	STR::split(list, funname, ' ', ',', '(', ')', '\t', '\r', '\n');
 
 	auto it = list.begin();
-	
+
 	lua_getglobal(m_lua_state, (*it).c_str());          /* 将调用的函数 */
 	it++;
 
@@ -59,7 +57,21 @@ int ScriptEngine::luaCall(const char * funname, va_list ap)
 		it++;
 		count++;
 	}
-	return lua_pcall(m_lua_state, count, LUA_MULTRET, 0);
+
+	switch (lua_pcall(m_lua_state, count, LUA_MULTRET, 0))
+	{
+		case LUA_OK:
+			{
+				auto cur_index = lua_gettop(m_lua_state);
+				for (int i = ret_index; i <= cur_index; i++)
+					m_retval_arr.push_back(luaGetValue(i));
+			}
+		case LUA_ERRRUN:
+		case LUA_ERRMEM:
+		case LUA_ERRERR:
+		default:
+			break;
+	}
 }
 
 int ScriptEngine::luaCall(const char * funname, ...)
@@ -68,5 +80,33 @@ int ScriptEngine::luaCall(const char * funname, ...)
 	va_start(ap, funname);
 	auto ret = luaCall(funname, ap);
 	va_end(ap);
+	return ret;
+}
+
+uTypeUnion ScriptEngine::luaGetValue(int index)
+{
+	uTypeUnion ret;
+	ret.int64Val = 0;
+	switch (lua_type(m_lua_state, index))
+	{
+		case LUA_TNIL:
+			ret.int64Val = 0;
+			break;
+		case LUA_TNUMBER:
+			ret.doubleVal = lua_tonumber(m_lua_state, index);
+			break;
+		case LUA_TBOOLEAN:
+			ret.intVal[0] = lua_toboolean(m_lua_state, index);
+			break;
+		case LUA_TSTRING:
+			auto src = lua_tostring(m_lua_state, index);
+			int len = strlen(src);
+			auto dst = new char[len + 1];
+
+			ret.ptrVal[0] = (void *)lua_tostring(m_lua_state, index);
+			break;
+		default:
+			break;
+	}
 	return ret;
 }
