@@ -25,3 +25,13 @@ class ScriptEngine : public GC
 		lua_State * m_lua_state;
 		std::vector<uTypeUnion> m_retval_arr;
 };
+
+class Script
+{
+	public:
+		Script();
+		~Script();
+
+	private:
+
+};

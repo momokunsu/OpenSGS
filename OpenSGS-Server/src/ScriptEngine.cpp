@@ -110,3 +110,11 @@ uTypeUnion ScriptEngine::luaGetValue(int index)
 	}
 	return ret;
 }
+
+Script::Script()
+{
+}
+
+Script::~Script()
+{
+}
