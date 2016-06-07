@@ -277,8 +277,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.lua">
-      <Filter>src</Filter>
-    </None>
+    <None Include="test2.lua" />
+    <None Include="test.lua" />
   </ItemGroup>
 </Project>

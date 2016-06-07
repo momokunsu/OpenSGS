@@ -8,30 +8,31 @@
 #include <functional>
 
 
+class Script
+{
+	public:
+		Script();
+		~Script();
+};
+
 class ScriptEngine : public GC
 {
 	public:
 		ScriptEngine();
 		~ScriptEngine();
 
+		bool loadScript(const char * script);
+		bool loadScriptFromFile(const char * filename);
+
 		int luaCall(const char *funname, va_list ap);
 		int luaCall(const char *funname, ...);
 
 	private:
 		uTypeUnion luaGetValue(int index);
+		bool luaAsserts(int res, int tindex);
 
 		static std::map<std::string, std::function<void(lua_State *, va_list)>> m_push_lua_param;
 
 		lua_State * m_lua_state;
 		std::vector<uTypeUnion> m_retval_arr;
-};
-
-class Script
-{
-	public:
-		Script();
-		~Script();
-
-	private:
-
 };

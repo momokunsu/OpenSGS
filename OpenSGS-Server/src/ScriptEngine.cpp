@@ -23,14 +23,12 @@ ScriptEngine::ScriptEngine()
 	}
 	m_lua_state = luaL_newstate();
 
-	luaL_dofile(m_lua_state, "test.lua");
-	if (luaCall("test(bool int float)", true, 12830, 2.5))
-	{
-		LogHandler::setLog("luaCall Error", lua_tolstring(m_lua_state, lua_gettop(m_lua_state), nullptr));
-		lua_pop(m_lua_state, 1);
-		LogHandler::setLog("luaCall Error", lua_tolstring(m_lua_state, lua_gettop(m_lua_state), nullptr));
-		lua_pop(m_lua_state, 1);
-	}
+	luaAsserts(luaL_dofile(m_lua_state, "test.lua"), lua_gettop(m_lua_state));
+	int ret_index = lua_gettop(m_lua_state);
+	luaAsserts(luaL_dofile(m_lua_state, "test2.lua"), lua_gettop(m_lua_state));
+	ret_index = lua_gettop(m_lua_state);
+	luaCall("test(bool int float)", true, 12830, 2.5);
+	luaCall("test2(bool int float)", true, 12830, 2.5);
 }
 
 ScriptEngine::~ScriptEngine()
@@ -38,9 +36,19 @@ ScriptEngine::~ScriptEngine()
 	lua_close(m_lua_state);
 }
 
+bool ScriptEngine::loadScript(const char * script)
+{
+	return luaAsserts(luaL_dostring(m_lua_state, script), lua_gettop(m_lua_state));
+}
+
+bool ScriptEngine::loadScriptFromFile(const char * filename)
+{
+	return luaAsserts(luaL_dofile(m_lua_state, filename), lua_gettop(m_lua_state));
+}
+
 int ScriptEngine::luaCall(const char * funname, va_list ap)
 {
-	int ret_index = lua_gettop(m_lua_state) + 1;
+	int ret_index = lua_gettop(m_lua_state);
 
 	vector<string> list;
 	STR::split(list, funname, ' ', ',', '(', ')', '\t', '\r', '\n');
@@ -58,20 +66,14 @@ int ScriptEngine::luaCall(const char * funname, va_list ap)
 		count++;
 	}
 
-	switch (lua_pcall(m_lua_state, count, LUA_MULTRET, 0))
+	if (luaAsserts(lua_pcall(m_lua_state, count, LUA_MULTRET, 0), ret_index))
 	{
-		case LUA_OK:
-			{
-				auto cur_index = lua_gettop(m_lua_state);
-				for (int i = ret_index; i <= cur_index; i++)
-					m_retval_arr.push_back(luaGetValue(i));
-			}
-		case LUA_ERRRUN:
-		case LUA_ERRMEM:
-		case LUA_ERRERR:
-		default:
-			break;
+		auto cur_index = lua_gettop(m_lua_state);
+		for (int i = ret_index + 1; i <= cur_index; i++)
+			m_retval_arr.push_back(luaGetValue(i));
+		return true;
 	}
+	return false;
 }
 
 int ScriptEngine::luaCall(const char * funname, ...)
@@ -99,16 +101,45 @@ uTypeUnion ScriptEngine::luaGetValue(int index)
 			ret.intVal[0] = lua_toboolean(m_lua_state, index);
 			break;
 		case LUA_TSTRING:
-			auto src = lua_tostring(m_lua_state, index);
-			int len = strlen(src);
-			auto dst = new char[len + 1];
+			{
+				auto src = lua_tostring(m_lua_state, index);
+				int len = strlen(src);
+				auto dst = new char[len + 1];
 
-			ret.ptrVal[0] = (void *)lua_tostring(m_lua_state, index);
+				ret.ptrVal[0] = (void *)lua_tostring(m_lua_state, index);
+			}
 			break;
 		default:
 			break;
 	}
 	return ret;
+}
+
+bool ScriptEngine::luaAsserts(int res, int tindex)
+{
+	switch (res)
+	{
+		case LUA_OK	:
+			return true;
+		case LUA_YIELD:
+		case LUA_ERRRUN:
+		case LUA_ERRSYNTAX:
+		case LUA_ERRMEM:
+		case LUA_ERRGCMM:
+		case LUA_ERRERR:
+		default:
+			{
+				int top = lua_gettop(m_lua_state);
+				while (top > tindex)
+				{
+					LogError("lua error", lua_tolstring(m_lua_state, top, nullptr));
+					lua_pop(m_lua_state, 1);
+					top = lua_gettop(m_lua_state);
+				}
+			}
+			break;
+	}
+	return false;
 }
 
 Script::Script()
