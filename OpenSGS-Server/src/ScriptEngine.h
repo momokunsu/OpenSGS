@@ -8,11 +8,14 @@
 #include <functional>
 
 
-class Script
+class Script : public GC
 {
 	public:
-		Script();
-		~Script();
+		Script(){}
+		virtual ~Script() = 0 {}
+
+	private:
+		ScriptEngine *m_runner;
 };
 
 class ScriptEngine : public GC
@@ -35,4 +38,17 @@ class ScriptEngine : public GC
 
 		lua_State * m_lua_state;
 		std::vector<uTypeUnion> m_retval_arr;
+};
+
+class ScriptBaseCard : public Script
+{
+	friend class ScriptEngine;
+	public:
+		bool canUse(Player *player, int pos);
+		bool canUseObjects(std::vector<Player *> &players);
+
+
+	private:
+		ScriptBaseCard();
+		virtual ~ScriptBaseCard();
 };

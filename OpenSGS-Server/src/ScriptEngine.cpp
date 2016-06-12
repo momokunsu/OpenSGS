@@ -141,11 +141,3 @@ bool ScriptEngine::luaAsserts(int res, int tindex)
 	}
 	return false;
 }
-
-Script::Script()
-{
-}
-
-Script::~Script()
-{
-}
