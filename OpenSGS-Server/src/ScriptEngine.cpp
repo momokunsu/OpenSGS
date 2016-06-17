@@ -3,6 +3,7 @@
 #include "libs/StringManager.h"
 
 #include <vector>
+#include <fstream>
 
 
 using namespace std;
@@ -23,10 +24,24 @@ ScriptEngine::ScriptEngine()
 	}
 	m_lua_state = luaL_newstate();
 
-	luaAsserts(luaL_dofile(m_lua_state, "test.lua"), lua_gettop(m_lua_state));
-	int ret_index = lua_gettop(m_lua_state);
-	luaAsserts(luaL_dofile(m_lua_state, "test2.lua"), lua_gettop(m_lua_state));
-	ret_index = lua_gettop(m_lua_state);
+	//luaAsserts(luaL_dofile(m_lua_state, "test.lua"), lua_gettop(m_lua_state));
+	//int ret_index = lua_gettop(m_lua_state);
+	//luaAsserts(luaL_dofile(m_lua_state, "test2.lua"), lua_gettop(m_lua_state));
+	//ret_index = lua_gettop(m_lua_state);
+	auto buf = (char *)GC::getGlobalBuffer();
+	std::ifstream t;
+	int length;
+	t.open("test.lua", ios::binary);      // open input file  
+	t.seekg(0, std::ios::end);    // go to the end  
+	length = t.tellg();           // report location (this is the length)  
+	t.seekg(0, std::ios::beg);    // go back to the beginning  
+	t.read(buf, length);       // read the whole file into the buffer  
+	t.close();                    // close file handle
+
+	buf[length] = 0;
+	//loadScriptFromFile("test.lua");
+	loadScript(buf, "fuck!");
+	loadScriptFromFile("test2.lua");
 	luaCall("test(bool int float)", true, 12830, 2.5);
 	luaCall("test2(bool int float)", true, 12830, 2.5);
 }
@@ -36,14 +51,18 @@ ScriptEngine::~ScriptEngine()
 	lua_close(m_lua_state);
 }
 
-bool ScriptEngine::loadScript(const char * script)
+bool ScriptEngine::loadScript(const char * script, const char * name)
 {
-	return luaAsserts(luaL_dostring(m_lua_state, script), lua_gettop(m_lua_state));
+	if (luaAsserts(luaL_loadbuffer(m_lua_state, script, strlen(script), name), lua_gettop(m_lua_state)))
+		return luaAsserts(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state));
+	return false;
 }
 
 bool ScriptEngine::loadScriptFromFile(const char * filename)
 {
-	return luaAsserts(luaL_dofile(m_lua_state, filename), lua_gettop(m_lua_state));
+	if (luaAsserts(luaL_loadfile(m_lua_state, filename), lua_gettop(m_lua_state)))
+		return luaAsserts(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state));
+	return false;
 }
 
 int ScriptEngine::luaCall(const char * funname, va_list ap)
@@ -51,12 +70,18 @@ int ScriptEngine::luaCall(const char * funname, va_list ap)
 	int ret_index = lua_gettop(m_lua_state);
 
 	vector<string> list;
-	STR::split(list, funname, ' ', ',', '(', ')', '\t', '\r', '\n');
+	STR::split(list, funname, ' ', ',', '(', ')', '\t', '\r', '\n', 0);
 
 	auto it = list.begin();
-
-	lua_getglobal(m_lua_state, (*it).c_str());          /* 将调用的函数 */
-	it++;
+	vector<string> list_ele;
+	STR::split(list_ele, (*it).c_str(), '.', 0); it++;
+	auto it_ele = list_ele.begin();
+	lua_getglobal(m_lua_state, (*it_ele).c_str()); it_ele++;
+	while (it_ele != list_ele.end())
+	{
+		int cur_top = lua_gettop(m_lua_state);
+		lua_getfield(m_lua_state, -1, (*it_ele).c_str());
+	}
 
 	int count = 0;
 	while (it != list.end())

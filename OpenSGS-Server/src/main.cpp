@@ -12,6 +12,7 @@ typedef StringManager STR;
 
 void Log(const std::string& tag, const std::string& log)
 {
+	auto n = tag.c_str();
 	printf("[%-28s]%s\n", tag.c_str(), log.c_str());
 }
 
