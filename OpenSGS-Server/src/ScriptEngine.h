@@ -20,17 +20,21 @@ class ScriptEngine : public GC
 		bool loadScript(const char * script, const char * name = "");
 		bool loadScriptFromFile(const char * filename);
 
-		int luaCall(const char *funname, va_list ap);
-		int luaCall(const char *funname, ...);
+		bool luaCall(const char *funname, va_list ap);
+		bool luaCall(const char *funname, ...);
+
+		const std::vector<uTypeUnion>& getRetValues() { return m_retval_arr; }
+		void clearRetValues() { m_retval_arr.clear(); m_retval_strings.clear(); }
 
 	private:
 		uTypeUnion luaGetValue(int index);
 		bool luaAsserts(int res, int tindex);
 
-		static std::map<std::string, std::function<void(lua_State *, va_list)>> m_push_lua_param;
+		static std::map<std::string, std::function<void(lua_State *, va_list *)>> m_push_lua_param;
 
 		lua_State * m_lua_state;
 		std::vector<uTypeUnion> m_retval_arr;
+		std::vector<std::string> m_retval_strings;
 };
 
 class Script : public GC
