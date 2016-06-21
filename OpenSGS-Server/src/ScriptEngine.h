@@ -54,6 +54,8 @@ class ScriptBaseCard : public Script
 		bool canUse(Player *player, int pos);
 		bool canUseObjects(std::vector<Player *> &players);
 
+		void use(Player *player);
+
 	private:
 		ScriptBaseCard();
 		virtual ~ScriptBaseCard();
