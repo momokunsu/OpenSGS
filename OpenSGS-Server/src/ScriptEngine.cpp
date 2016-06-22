@@ -12,7 +12,7 @@ typedef StringManager STR;
 
 std::map<std::string, std::function<void(lua_State *, va_list *)>> ScriptEngine::m_push_lua_param;
 
-ScriptEngine::ScriptEngine()
+ScriptEngine::ScriptEngine() 
 {
 	if (m_push_lua_param.empty())
 	{
@@ -39,7 +39,7 @@ ScriptEngine::ScriptEngine()
 	//loadScriptFromFile("test.lua");
 	loadScript(buf, "fuck!");
 	loadScriptFromFile("test2.lua");
-	luaCall("test(bool int string)", true, "wa ha ha!!", 12830);
+	luaCall("test(bool string int)", true, "wa ha ha!!", 12830);
 	luaCall("test2(bool int float)", true, 12830, 2.5);
 	luaCall("A.B.C()", true, 12830, 2.5);
 }
