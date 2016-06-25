@@ -342,3 +342,11 @@ void EventPhrase::unserialize(const void * data)
 	val = readVal8();
 	type = (ePhraseType)val.charVal[0];
 }
+
+void EventUseCard::serializeTo(void * data)
+{
+}
+
+void EventUseCard::unserialize(const void * data)
+{
+}
