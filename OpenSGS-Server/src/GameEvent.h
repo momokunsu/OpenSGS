@@ -6,6 +6,7 @@
 #include <map>
 #include <functional>
 #include <vector>
+#include <thread>
 
 //ÕÊº“…Ì∑›
 enum class ePlayerStatusType
@@ -53,6 +54,7 @@ enum class eGameEvent
 	GetPlayerStatus,
 	GetCards,
 	Phrase,
+	UseCard,
 	EventsPack
 };
 
@@ -185,8 +187,8 @@ class EventUseCard :public GameEvent
 {
 	friend class GameEvent;
 	public:
-		uchar playerID;
-		ePhraseType type;
+		uchar objectID;
+		ushort cardID;
 
 		void serializeTo(void* data) override;
 		void unserialize(const void* data) override;

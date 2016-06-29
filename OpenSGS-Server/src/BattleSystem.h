@@ -39,6 +39,7 @@ class BattleSystem
 		void phraseStep();
 
 		void drawCards(uchar playerid, int count, int index = 0);
+		void useCard(uchar userid, uchar objectid, ushort cardid);
 		void skipThisTurn();
 		
 	private:

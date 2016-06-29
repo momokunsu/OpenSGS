@@ -50,6 +50,7 @@ GameEvent * GameEvent::create(eGameEvent ev)
 		m_event_creators[eGameEvent::GetPlayerStatus] = []() -> GameEvent * { return new EventGetPlayerStatus(); };
 		m_event_creators[eGameEvent::GetCards] = []() -> GameEvent * { return new EventGetCards(); };
 		m_event_creators[eGameEvent::Phrase] = []() -> GameEvent * { return new EventPhrase(); };
+		m_event_creators[eGameEvent::UseCard] = []() -> GameEvent * { return new EventUseCard(); };
 	}
 	return m_event_creators[ev]();
 }
@@ -345,8 +346,28 @@ void EventPhrase::unserialize(const void * data)
 
 void EventUseCard::serializeTo(void * data)
 {
+	GameEvent::serializeTo(data);
+
+	uTypeUnion val;
+
+	val.charVal[0] = objectID;
+	writeVal8(val);
+
+	val.shortVal[0] = cardID;
+	writeVal16(val);
+
+	reSize(data);
 }
 
 void EventUseCard::unserialize(const void * data)
 {
+	GameEvent::unserialize(data);
+
+	uTypeUnion val;
+
+	val = readVal8();
+	objectID = val.charVal[0];
+
+	val = readVal16();
+	cardID = val.shortVal[0];
 }

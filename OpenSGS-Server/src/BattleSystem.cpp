@@ -196,7 +196,7 @@ void BattleSystem::drawCards(uchar playerid, int count, int index)
 	auto player = m_id_players[playerid];
 	if (!player)
 	{
-		LogWarn("BattleSystem::drawCards", STR::format("player %d not exist!!", playerid));
+		LogError("BattleSystem::drawCards", STR::format("player %d not exist!!", playerid));
 		return;
 	}
 
@@ -208,6 +208,24 @@ void BattleSystem::drawCards(uchar playerid, int count, int index)
 
 	LogInfo("BattleSystem::drawCards", STR::format("player %d draw %d cards", playerid, m_drawcount));
 	broadcastEvent(ev);
+}
+
+void BattleSystem::useCard(uchar userid, uchar objectid, ushort cardid)
+{
+	auto user = m_id_players[userid];
+	if (!user)
+	{
+		LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", userid));
+		return;
+	}
+	auto object = m_id_players[objectid];
+	if (!object)
+	{
+		LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", objectid));
+		return;
+	}
+
+
 }
 
 void BattleSystem::skipThisTurn()
