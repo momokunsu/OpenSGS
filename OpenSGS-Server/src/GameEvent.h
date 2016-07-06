@@ -169,20 +169,6 @@ class EventPhrase :public GameEvent
 		EventPhrase() :GameEvent(eGameEvent::Phrase) {}
 };
 
-class EventPhrase :public GameEvent
-{
-	friend class GameEvent;
-	public:
-		uchar playerID;
-		ePhraseType type;
-
-		void serializeTo(void* data) override;
-		void unserialize(const void* data) override;
-
-	private:
-		EventPhrase() :GameEvent(eGameEvent::Phrase) {}
-};
-
 class EventUseCard :public GameEvent
 {
 	friend class GameEvent;

@@ -221,7 +221,7 @@ void BattleSystem::useCard(uchar userid, uchar objectid, ushort cardid)
 	auto object = m_id_players[objectid];
 	if (!object)
 	{
-		LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", objectid));
+		LogError("BattleSystem::useCard", STR::format("objectid %d not exist!!", objectid));
 		return;
 	}
 
