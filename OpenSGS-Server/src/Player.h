@@ -24,9 +24,9 @@ class Player : public GC
 		uchar getID() { return m_id; }
 		void setID(uchar id) { m_id = id; }
 
-		int getHandCardsCount() { return (int)m_handcards.size(); }
-		ulong getHandCard(int index) { return m_handcards[index]; }
-		void suffle();
+		//int getHandCardsCount() { return (int)m_handcards.size(); }
+		//ulong getHandCard(int index) { return m_handcards[index]; }
+		std::vector<ulong> & getHandCards() { return m_handcards; }
 
 		bool isDead() { return m_is_dead; }
 

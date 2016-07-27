@@ -1,5 +1,6 @@
 ﻿#include "BattleSystem.h"
 #include "LogHandler.h"
+#include "CardsManager.h"
 #include "libs\StringManager.h"
 
 #include <string>
@@ -210,7 +211,7 @@ void BattleSystem::drawCards(uchar playerid, int count, int index)
 	broadcastEvent(ev);
 }
 
-void BattleSystem::useCard(uchar userid, uchar objectid, ushort cardid)
+void BattleSystem::useCard(uchar userid, uchar objectid, int cardpos)
 {
 	auto user = m_id_players[userid];
 	if (!user)
@@ -224,8 +225,18 @@ void BattleSystem::useCard(uchar userid, uchar objectid, ushort cardid)
 		LogError("BattleSystem::useCard", STR::format("objectid %d not exist!!", objectid));
 		return;
 	}
+	auto cards = user->getHandCards();
+	if(cardpos >= cards.size())
+	{
+		LogError("BattleSystem::useCard", STR::format("invalid card pos: %d, max size is %d!!", cardpos, (int)cards.size()));
+		return;
+	}
 
-
+	UseCardData data;
+	data.card = CardsManager::getCardInfo(cards[cardpos]);
+	data.player = m_id_players[objectid];
+	cards.erase(cards.begin() + cardpos);
+	m_use_card_stack.push_back(data);
 }
 
 void BattleSystem::skipThisTurn()

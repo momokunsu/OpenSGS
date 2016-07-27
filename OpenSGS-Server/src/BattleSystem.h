@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Player.h"
-
+#include "Cards.h"
 
 struct BattleData
 {
@@ -14,6 +14,17 @@ struct BattleData
 	BattleData()
 	{
 		memset(this, 0, sizeof(BattleData));
+	}
+};
+
+struct UseCardData
+{
+	Player* player;
+	Card* card;
+
+	UseCardData()
+	{
+		memset(this, 0, sizeof(UseCardData));
 	}
 };
 
@@ -39,7 +50,7 @@ class BattleSystem
 		void phraseStep();
 
 		void drawCards(uchar playerid, int count, int index = 0);
-		void useCard(uchar userid, uchar objectid, ushort cardid);
+		void useCard(uchar userid, uchar objectid, int cardpos);
 		void skipThisTurn();
 		
 	private:
@@ -56,6 +67,7 @@ class BattleSystem
 
 		std::list<uint> m_card_deck;
 		std::list<uint> m_card_recycle_bin;
+		std::vector<UseCardData> m_use_card_stack;
 
 		int m_global_drawcount;
 		int m_drawcount;
