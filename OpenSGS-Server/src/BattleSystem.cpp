@@ -192,6 +192,10 @@ void BattleSystem::phraseStep()
 	}
 }
 
+void BattleSystem::handleUseCardStack()
+{
+}
+
 void BattleSystem::drawCards(uchar playerid, int count, int index)
 {
 	auto player = m_id_players[playerid];

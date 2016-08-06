@@ -48,6 +48,7 @@ class BattleSystem
 		void dealCards();
 		void startBattle();
 		void phraseStep();
+		void handleUseCardStack();
 
 		void drawCards(uchar playerid, int count, int index = 0);
 		void useCard(uchar userid, uchar objectid, int cardpos);
