@@ -35,6 +35,7 @@ class BattleSystem
 		virtual ~BattleSystem();
 
 		bool addPlayer(Player* player);
+
 		bool setPlayerLocation(Player* player, int pos);
 		void sufflePlayersLocation();
 
@@ -55,7 +56,7 @@ class BattleSystem
 		void skipThisTurn();
 		
 	private:
-		void broadcastEvent(GameEvent *ev);
+		void broadcastEvent(GameEvent& ev);
 		void handlePhrase(Player *player, ePhraseType ptype);
 		uint drawCard();
 

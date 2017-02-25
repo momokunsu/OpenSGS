@@ -1,6 +1,6 @@
 #include "GameEvent.h"
 #include <functional>
-
+/*
 void endianChage(uTypeUnion &u, int size)
 {
 	int dsize = size / 2;
@@ -371,3 +371,4 @@ void EventUseCard::unserialize(const void * data)
 	val = readVal16();
 	cardID = val.shortVal[0];
 }
+*/

@@ -16,7 +16,7 @@ BattleSystem::BattleSystem()
 	//初始化随机数生成器
 	srand((uint)time(nullptr));
 	//初始化大小端转化器
-	GameEvent::initEndian();
+	//GameEvent::initEndian();
 }
 
 BattleSystem::~BattleSystem()
@@ -91,10 +91,11 @@ bool BattleSystem::initGame()
 		return false;
 	}
 
-	//分配玩家ID
+	//分配玩家ID 与 位置
 	for (int i = 0; i < (int)m_players.size(); i++)
 	{
 		m_players[i]->setID(i + 1);
+		m_players[i]->setLocation(i);
 		m_id_players[m_players[i]->getID()] = m_players[i];
 	}
 
@@ -121,17 +122,6 @@ bool BattleSystem::initGame()
 		m_statusgroup.push_back(ePlayerStatusType::Rebel);
 	SuffleVector(m_statusgroup);
 
-	//确定主公位置
-	for (int i = 0; i < (int)m_statusgroup.size(); i++)
-	{
-		if (m_statusgroup[i] == ePlayerStatusType::Ruler)
-		{
-			m_cur_player = i;
-			LogInfo("BattleSystem::initGame", STR::format("confirm the ruler location is pos: %d", m_cur_player));
-			break;
-		}
-	}
-
 	m_cur_phrase = ePhraseType::Begin;
 	m_drawcount = m_global_drawcount = 2;
 	m_card_recycle_bin.clear();
@@ -142,20 +132,26 @@ bool BattleSystem::initGame()
 void BattleSystem::startGame()
 {
 	//游戏开始
+	EventGameStart ev;
+	ev.PlayerGroup = &m_players;
+	broadcastEvent(ev);
 	LogInfo("BattleSystem::startGame", STR::format("game start!!! player count is %d", m_players.size()));
-	broadcastEvent(GameEvent::create(eGameEvent::GameStart));
 }
 
 void BattleSystem::dealStatus()
 {
 	//分发身份
-	LogInfo("BattleSystem::dealStatus", "dispatch player status");
-	auto ev = (EventGetPlayerStatus*)GameEvent::create(eGameEvent::GetPlayerStatus);
+	EventGetPlayerStatus ev;
 	for (int i = 0; i < (int)m_players.size(); i++)
 	{
-		ev->statusMap[m_players[i]->getID()] = m_statusgroup[i];
+		ev.PlayerStatusMap[m_players[i]] = m_statusgroup[i];
 	}
 	broadcastEvent(ev);
+	for (auto it : ev.PlayerStatusMap)
+	{
+		it.first->setPlayerStatus(it.second);
+	}
+	LogInfo("BattleSystem::dealStatus", "dispatch player status");
 }
 
 void BattleSystem::dealCards()
@@ -171,9 +167,25 @@ void BattleSystem::dealCards()
 
 void BattleSystem::startBattle()
 {
+	//确定主公位置
+	for (auto player : m_players)
+	{
+		if (player->getPlayerStatus() == ePlayerStatusType::Ruler)
+		{
+			m_cur_player = player->getLocation();
+			LogInfo("BattleSystem::initGame", STR::format("confirm the ruler location is pos: %d", m_cur_player));
+			break;
+		}
+	}
+
 	//战斗开始
+	EventBattleStart ev;
+	ev.StartPlayer = m_players[m_cur_player];
+	ev.StartPhrase = m_cur_phrase;
+	broadcastEvent(ev);
+	m_cur_player = ev.StartPlayer->getLocation();
+	m_cur_phrase = ev.StartPhrase;
 	LogInfo("BattleSystem::startBattle", "battle start!!!");
-	broadcastEvent(GameEvent::create(eGameEvent::BattleStart));
 }
 
 void BattleSystem::phraseStep()
@@ -186,24 +198,22 @@ void BattleSystem::phraseStep()
 	}
 
 	//流程开始
-	auto ev_phrase = (EventPhrase*)GameEvent::create(eGameEvent::Phrase);
-	ev_phrase->type = m_cur_phrase;
-	ev_phrase->playerID = m_players[m_cur_player]->getID();
-	while (true)
+	EventPhrase ev_phrase;
+	ev_phrase.PhraseType = m_cur_phrase;
+	ev_phrase.Target = m_players[m_cur_player];
+	broadcastEvent(ev_phrase);
+	m_cur_phrase = ev_phrase.PhraseType;
+	m_cur_player = ev_phrase.Target->getLocation();
+
+	//执行流程
+	handlePhrase(m_players[m_cur_player], m_cur_phrase);
+
+	//指向下一阶段
+	if (ev_phrase.PhraseType != ePhraseType::End)
+		ev_phrase.PhraseType = (ePhraseType)(((int)ev_phrase.PhraseType) + 1);
+	else
 	{
-		//处理事件
-		broadcastEvent(ev_phrase);
-
-		//执行流程
-		handlePhrase(m_players[m_cur_player], m_cur_phrase);
-
-		//指向下一阶段
-		if (ev_phrase->type != ePhraseType::End)
-			ev_phrase->type = (ePhraseType)(((int)ev_phrase->type) + 1);
-		else
-		{
-			skipThisTurn();
-		}
+		skipThisTurn();
 	}
 }
 
@@ -265,7 +275,7 @@ void BattleSystem::skipThisTurn()
 	m_drawcount = m_global_drawcount;
 }
 
-void BattleSystem::broadcastEvent(GameEvent * ev)
+void BattleSystem::broadcastEvent(GameEvent& ev)
 {
 	for (auto player : m_players)
 	{

@@ -8,7 +8,7 @@ class NetPlayer : public Player
 		NetPlayer();
 		~NetPlayer();
 
-		void EventCallback(GameEvent* ev) override;
+		void eventCallback(GameEvent& ev) override;
 
 	protected:
 };

@@ -3,10 +3,15 @@
 #include "def.h"
 #include "libs/GC.h"
 
+#include "Player.h"
+#include "Cards.h"
+
 #include <map>
 #include <functional>
 #include <vector>
 #include <thread>
+
+class Player;
 
 //ÕÊº“…Ì∑›
 enum class ePlayerStatusType
@@ -58,7 +63,91 @@ enum class eGameEvent
 	EventsPack
 };
 
-class GameEvent : public GC
+struct GameEvent
+{
+	GameEvent() { EventType = eGameEvent::None; }
+
+	eGameEvent EventType;
+};
+
+struct EventGameStart : public GameEvent
+{
+	EventGameStart()
+	{
+		EventType = eGameEvent::GameStart;
+		PlayerGroup = nullptr;
+	}
+
+	std::vector<Player *>* PlayerGroup;
+};
+
+struct EventBattleStart : public GameEvent
+{
+	EventBattleStart()
+	{
+		EventType = eGameEvent::BattleStart;
+		StartPlayer = nullptr;
+		StartPhrase = ePhraseType::None;
+	}
+
+	Player* StartPlayer;
+	ePhraseType StartPhrase;
+};
+
+struct EventGetPlayerStatus : public GameEvent
+{
+	EventGetPlayerStatus()
+	{
+		EventType = eGameEvent::GetPlayerStatus;
+	}
+
+	std::map<Player *, ePlayerStatusType> PlayerStatusMap;
+};
+
+struct EventGetCards : public GameEvent
+{
+	EventGetCards()
+	{
+		EventType = eGameEvent::GetCards;
+		Target = nullptr;
+		GetType = eGetCardType::None;
+	}
+
+	Player* Target;
+	eGetCardType GetType;
+	std::vector<Card *> Cards;
+};
+
+struct EventPhrase : public GameEvent
+{
+	EventPhrase()
+	{
+		EventType = eGameEvent::Phrase;
+		Target = nullptr;
+		PhraseType = ePhraseType::None;
+	}
+
+	Player* Target;
+	ePhraseType PhraseType;
+};
+
+struct EventUseCard : public GameEvent
+{
+	EventUseCard()
+	{
+		EventType = eGameEvent::UseCard;
+		User = nullptr;
+		Target = nullptr;
+		UseCard = nullptr;
+	}
+
+	Player* User;
+	Player* Target;
+	Card * UseCard;
+};
+
+/*
+class GameEvent// : public GC
 {
 	public:
 		static GameEvent* create(eGameEvent ev = eGameEvent::None);
@@ -182,3 +271,4 @@ class EventUseCard :public GameEvent
 	private:
 		EventUseCard() :GameEvent(eGameEvent::Phrase) {}
 };
+*/
