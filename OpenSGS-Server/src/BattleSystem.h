@@ -35,8 +35,8 @@ class BattleSystem
 		virtual ~BattleSystem();
 
 		bool addPlayer(Player* player);
-		bool setPlayerLocal(Player* player, int pos);
-		void sufflePlayersLocal();
+		bool setPlayerLocation(Player* player, int pos);
+		void sufflePlayersLocation();
 
 		std::list<uint>& cardsDeck() { return m_card_deck; }
 		void shuffleCardsDeck();

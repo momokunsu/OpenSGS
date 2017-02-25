@@ -18,7 +18,6 @@ BattleSystem::BattleSystem()
 	GameEvent::initEndian();
 }
 
-
 BattleSystem::~BattleSystem()
 {
 }
@@ -35,11 +34,11 @@ bool BattleSystem::addPlayer(Player * player)
 	return true;
 }
 
-bool BattleSystem::setPlayerLocal(Player *player, int pos)
+bool BattleSystem::setPlayerLocation(Player *player, int pos)
 {
-	if (pos < 0 || pos >(int)m_players.size() - 1)
+	if (pos < 0 || pos > (int)m_players.size() - 1)
 	{
-		LogWarn("BattleSystem::setPlayerLocal", STR::format("invaild player local!!! index: %d", pos));
+		LogWarn("BattleSystem::setPlayerLocation", STR::format("invaild player location!!! index: %d", pos));
 		return false;
 	}
 
@@ -51,12 +50,15 @@ bool BattleSystem::setPlayerLocal(Player *player, int pos)
 			Player *n = m_players[i];
 			m_players[i] = m_players[pos];
 			m_players[pos] = n;
+			LogInfo("BattleSystem::setPlayerLocation", STR::format("set player location to index: %d", pos));
+			return true;
 		}
 	}
-	return true;
+	LogWarn("BattleSystem::setPlayerLocation", "player not found!!");
+	return false;
 }
 
-void BattleSystem::sufflePlayersLocal()
+void BattleSystem::sufflePlayersLocation()
 {
 	SuffleVector(m_players);
 	return;
@@ -71,7 +73,7 @@ bool BattleSystem::initGame()
 {
 	if (m_players.size() < 4)
 	{
-		LogWarn("BattleSystem::initGame", "player min count is 4!!!");
+		LogError("BattleSystem::initGame", "player min count is 4!!!");
 		return false;
 	}
 
@@ -84,7 +86,7 @@ bool BattleSystem::initGame()
 
 	//根据人数匹配身份
 	m_statusgroup.push_back(ePlayerStatusType::Ruler);
-	m_statusgroup.push_back(ePlayerStatusType::Subject);
+	m_statusgroup.push_back(ePlayerStatusType::Courtier);
 	m_statusgroup.push_back(ePlayerStatusType::Spy);
 	m_statusgroup.push_back(ePlayerStatusType::Rebel);
 	if (m_players.size() > 4)
@@ -92,7 +94,7 @@ bool BattleSystem::initGame()
 	if (m_players.size() > 5)
 	{
 		m_statusgroup.erase(std::find(m_statusgroup.begin(), m_statusgroup.end(), ePlayerStatusType::Spy));
-		m_statusgroup.push_back(ePlayerStatusType::Subject);
+		m_statusgroup.push_back(ePlayerStatusType::Courtier);
 		m_statusgroup.push_back(ePlayerStatusType::Rebel);
 	}
 	if (m_players.size() > 6)
@@ -100,11 +102,10 @@ bool BattleSystem::initGame()
 	if (m_players.size() > 7)
 		m_statusgroup.push_back(ePlayerStatusType::Rebel);
 	if (m_players.size() > 8)
-		m_statusgroup.push_back(ePlayerStatusType::Subject);
+		m_statusgroup.push_back(ePlayerStatusType::Courtier);
 	if (m_players.size() > 9)
 		m_statusgroup.push_back(ePlayerStatusType::Rebel);
 	SuffleVector(m_statusgroup);
-
 
 	//确定主公位置
 	for (int i = 0; i < (int)m_statusgroup.size(); i++)
@@ -134,7 +135,7 @@ void BattleSystem::startGame()
 void BattleSystem::dealStatus()
 {
 	//分发身份
-	LogInfo("BattleSystem::distributeStatus", "dispatch player status");
+	LogInfo("BattleSystem::dealStatus", "dispatch player status");
 	auto ev = (EventGetPlayerStatus*)GameEvent::create(eGameEvent::GetPlayerStatus);
 	for (int i = 0; i < (int)m_players.size(); i++)
 	{

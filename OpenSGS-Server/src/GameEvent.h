@@ -13,7 +13,7 @@ enum class ePlayerStatusType
 {
 	None = 0,
 	Ruler,
-	Subject,
+	Courtier,
 	Rebel,
 	Spy
 };
