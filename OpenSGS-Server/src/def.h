@@ -29,7 +29,7 @@ typedef union
 #pragma pack(pop)
 
 template<class Tclass>
-void SuffleVector(std::vector<Tclass> vec)
+void SuffleVector(std::vector<Tclass> &vec)
 {
 	std::random_shuffle(vec.begin(), vec.end());
 	std::random_shuffle(vec.begin(), vec.end());

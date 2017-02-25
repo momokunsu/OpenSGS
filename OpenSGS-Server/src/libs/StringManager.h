@@ -22,6 +22,11 @@ class StringManager
 		static int indexOf(const char* str, const char* dst);
 		static int indexOf(const char* str, char dst);
 
+		static int endIndexOf(const char* str, const char* dst);
+		static int endIndexOf(const char* str, char dst);
+
+		static const char* subString(const char* str, int start_index, int len = 0);
+
 		static bool isContainsChar(const char* str, va_list ap);
 		static bool isContainsChar(const char* str, ...);
 		static bool isContainsChar(char cvar, va_list ap);

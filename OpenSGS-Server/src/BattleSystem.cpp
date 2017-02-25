@@ -9,6 +9,7 @@
 
 typedef StringManager STR;
 
+using namespace std;
 
 BattleSystem::BattleSystem()
 {
@@ -60,7 +61,20 @@ bool BattleSystem::setPlayerLocation(Player *player, int pos)
 
 void BattleSystem::sufflePlayersLocation()
 {
+	vector<Player *> tmp_vec = m_players;
 	SuffleVector(m_players);
+	string log = "suffle the players:\n";
+	for (size_t i = 0; i < tmp_vec.size(); i++)
+	{
+		for (size_t j = 0; j < m_players.size(); j++)
+		{
+			if (tmp_vec[i] == m_players[j])
+			{
+				log += STR::format("player[%d] ---> player[%d]\n", i + 1, j + 1);
+			}
+		}
+	}
+	LogInfo("BattleSystem::sufflePlayersLocation", log.c_str());
 	return;
 }
 

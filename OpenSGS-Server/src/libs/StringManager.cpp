@@ -225,6 +225,62 @@ int StringManager::indexOf(const char* str, char dst)
 	return -1;
 }
 
+int StringManager::endIndexOf(const char * str, const char * dst)
+{
+	int i = strlen(str) - 1, j = 0;
+
+	if (!dst[j])
+		return -1;
+
+	while (i >= 0)
+	{
+		while (dst[j])
+		{
+			if (str[i + j] != dst[j])
+				break;
+			j++;
+		}
+		if (!dst[j])
+			return i;
+		else
+			j = 0;
+		i--;
+	}
+	return -1;
+}
+
+int StringManager::endIndexOf(const char * str, char dst)
+{
+	int i = strlen(str) - 1;
+
+	if (!dst)
+		return -1;
+
+	while (i >= 0)
+	{
+		if (str[i] == dst)	return i;
+		i--;
+	}
+	return -1;
+}
+
+const char * StringManager::subString(const char * str, int start_index, int len)
+{
+	char* pbuf = (char*)GC::getGlobalBuffer();
+	string strobj;
+	if (GC::isRangeOfGlobalBuf(str))
+	{
+		strobj = str;
+		str = strobj.c_str();
+	}
+	strcpy(pbuf, str);
+
+	if (len > 0)
+		pbuf[start_index + len] = 0;
+
+	return pbuf + start_index;
+}
+
 bool StringManager::isContainsChar(const char* str, va_list ap)
 {
 	int i = 0;
