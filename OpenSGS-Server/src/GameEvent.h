@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "def.h"
 #include "libs/GC.h"
@@ -13,7 +13,7 @@
 
 class Player;
 
-//Íæ¼ÒÉí·İ
+//ç©å®¶èº«ä»½
 enum class ePlayerStatusType
 {
 	None = 0,
@@ -23,7 +23,7 @@ enum class ePlayerStatusType
 	Spy
 };
 
-//Á÷³ÌÀàĞÍ
+//æµç¨‹ç±»å‹
 enum class ePhraseType
 {
 	None = 0,
@@ -40,7 +40,7 @@ enum class ePhraseType
 	End,
 };
 
-//»ñÈ¡¿¨ÅÆÀàĞÍ
+//è·å–å¡ç‰Œç±»å‹
 enum class eGetCardType
 {
 	None = 0,
@@ -50,7 +50,7 @@ enum class eGetCardType
 	FromGarbage
 };
 
-//Íæ¼ÒÊÂ¼ş»Øµ÷
+//ç©å®¶äº‹ä»¶å›è°ƒ
 enum class eGameEvent
 {
 	None = 0,

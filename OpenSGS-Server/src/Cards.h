@@ -40,7 +40,7 @@ class Card : public GC
 class BaseCard : public Card
 {
 	public:
-		static BaseCard* create(BaseCardInfo &info = BaseCardInfo());
+		static BaseCard* create(BaseCardInfo &info = c_card_info);
 
 		void setScript(const char* script) { m_script = script; }
 		const char * getScript() { return m_script.c_str(); }
@@ -48,6 +48,7 @@ class BaseCard : public Card
 	private:
 		BaseCard() {}
 		virtual ~BaseCard() {}
+        static BaseCardInfo c_card_info;
 
 		std::string m_script;
 };

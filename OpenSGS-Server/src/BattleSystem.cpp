@@ -1,7 +1,7 @@
 ﻿#include "BattleSystem.h"
 #include "LogHandler.h"
 #include "CardsManager.h"
-#include "libs\StringManager.h"
+#include "libs/StringManager.h"
 
 #include <string>
 #include <time.h>

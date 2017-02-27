@@ -1,8 +1,9 @@
- #pragma once
+ï»¿ #pragma once
 
 #include <vector>
 #include <list>
 #include <algorithm>
+#include <stdlib.h>
 
 typedef unsigned char uchar;
 typedef unsigned short ushort;
@@ -14,7 +15,7 @@ typedef unsigned long long uint64;
 #pragma pack(push)
 #pragma pack(1)
 
-//ÀàĞÍ×ª»»ÓÃÁªºÏ
+//ç±»å‹è½¬æ¢ç”¨è”åˆ
 typedef union
 {
 	uchar charVal[8];

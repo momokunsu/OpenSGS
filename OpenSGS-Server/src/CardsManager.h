@@ -12,7 +12,7 @@ class CardsManager
 	public:
 		static void addSerchPath(const char *path) { GamePackFile::addSerchPath(path); }
 		static void removeAllSerchPath() { GamePackFile::removeAllSerchPath(); }
-		static const std::map<std::string, GamePackFile*>& getFileCache() { GamePackFile::getFileCache(); }
+		static const std::map<std::string, GamePackFile*>& getFileCache() { return GamePackFile::getFileCache(); }
 
 		static void addPack(const char *filename, short offset = -1) { m_packname_buf[filename] = offset; }
 		static void removePack(const char *filename){ m_packname_buf.erase(m_packname_buf.find(filename)); }
