@@ -86,11 +86,11 @@ struct EventBattleStart : public GameEvent
 	EventBattleStart()
 	{
 		EventType = eGameEvent::BattleStart;
-		StartPlayer = nullptr;
+		StartPlayerId = 0;
 		StartPhrase = ePhraseType::None;
 	}
 
-	Player* StartPlayer;
+	uchar StartPlayerId;
 	ePhraseType StartPhrase;
 };
 
@@ -101,7 +101,7 @@ struct EventGetPlayerStatus : public GameEvent
 		EventType = eGameEvent::GetPlayerStatus;
 	}
 
-	std::map<Player *, ePlayerStatusType> PlayerStatusMap;
+	std::map<uchar, ePlayerStatusType> PlayerStatusMap;
 };
 
 struct EventGetCards : public GameEvent
@@ -109,26 +109,13 @@ struct EventGetCards : public GameEvent
 	EventGetCards()
 	{
 		EventType = eGameEvent::GetCards;
-		Target = nullptr;
+		TargetId = 0;
 		GetType = eGetCardType::None;
 	}
 
-	Player* Target;
+	uchar TargetId;
 	eGetCardType GetType;
-	std::vector<Card *> Cards;
-};
-
-struct EventPhrase : public GameEvent
-{
-	EventPhrase()
-	{
-		EventType = eGameEvent::Phrase;
-		Target = nullptr;
-		PhraseType = ePhraseType::None;
-	}
-
-	Player* Target;
-	ePhraseType PhraseType;
+	std::vector<uint> Cards;
 };
 
 struct EventUseCard : public GameEvent
@@ -136,14 +123,27 @@ struct EventUseCard : public GameEvent
 	EventUseCard()
 	{
 		EventType = eGameEvent::UseCard;
-		User = nullptr;
-		Target = nullptr;
+		UserId = 0;
+		TargetId = 0;
 		UseCard = nullptr;
 	}
 
-	Player* User;
-	Player* Target;
-	Card * UseCard;
+	uchar UserId;
+	uchar TargetId;
+	Card* UseCard;
+};
+
+struct EventPhrase : public GameEvent
+{
+	EventPhrase()
+	{
+		EventType = eGameEvent::Phrase;
+		TargetId = 0;
+		PhraseType = ePhraseType::None;
+	}
+
+	uchar TargetId;
+	ePhraseType PhraseType;
 };
 
 /*

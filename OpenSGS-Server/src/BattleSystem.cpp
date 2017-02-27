@@ -144,12 +144,12 @@ void BattleSystem::dealStatus()
 	EventGetPlayerStatus ev;
 	for (int i = 0; i < (int)m_players.size(); i++)
 	{
-		ev.PlayerStatusMap[m_players[i]] = m_statusgroup[i];
+		ev.PlayerStatusMap[m_players[i]->getID()] = m_statusgroup[i];
 	}
 	broadcastEvent(ev);
 	for (auto it : ev.PlayerStatusMap)
 	{
-		it.first->setPlayerStatus(it.second);
+		m_id_players[it.first]->setPlayerStatus(it.second);
 	}
 	LogInfo("BattleSystem::dealStatus", "dispatch player status");
 }
@@ -180,10 +180,10 @@ void BattleSystem::startBattle()
 
 	//战斗开始
 	EventBattleStart ev;
-	ev.StartPlayer = m_players[m_cur_player];
+	ev.StartPlayerId = m_players[m_cur_player]->getID();
 	ev.StartPhrase = m_cur_phrase;
 	broadcastEvent(ev);
-	m_cur_player = ev.StartPlayer->getLocation();
+	m_cur_player = m_id_players[ev.StartPlayerId]->getLocation();
 	m_cur_phrase = ev.StartPhrase;
 	LogInfo("BattleSystem::startBattle", "battle start!!!");
 }
@@ -200,10 +200,10 @@ void BattleSystem::phraseStep()
 	//流程开始
 	EventPhrase ev_phrase;
 	ev_phrase.PhraseType = m_cur_phrase;
-	ev_phrase.Target = m_players[m_cur_player];
+	ev_phrase.TargetId = m_players[m_cur_player];
 	broadcastEvent(ev_phrase);
 	m_cur_phrase = ev_phrase.PhraseType;
-	m_cur_player = ev_phrase.Target->getLocation();
+	m_cur_player = ev_phrase.TargetId->getLocation();
 
 	//执行流程
 	handlePhrase(m_players[m_cur_player], m_cur_phrase);
@@ -230,17 +230,21 @@ void BattleSystem::drawCards(uchar playerid, int count, int index)
 		return;
 	}
 
-	auto ev = (EventGetCards*)GameEvent::create(eGameEvent::GetCards);
-	ev->getType = eGetCardType::Draw;
-	ev->playerID = playerid;
+	auto ev = EventGetCards();
+	std::string str = "";
+	ev.GetType = eGetCardType::Draw;
+	ev.TargetId = playerid;
 	for (int i = 0; i < count; i++)
-		ev->cards.push_back(drawCard());
+	{
+		ev.Cards.push_back(drawCard());
+		str += ev.Cards.back() + " ";
+	}
 
-	LogInfo("BattleSystem::drawCards", STR::format("player %d draw %d cards", playerid, m_drawcount));
+	LogInfo("BattleSystem::drawCards", STR::format("player %d draw %d cards:\n%s", playerid, m_drawcount, str));
 	broadcastEvent(ev);
 }
 
-void BattleSystem::useCard(uchar userid, uchar objectid, int cardpos)
+void BattleSystem::useCard(uchar userid, uchar targetid, int cardpos)
 {
 	auto user = m_id_players[userid];
 	if (!user)
@@ -248,24 +252,18 @@ void BattleSystem::useCard(uchar userid, uchar objectid, int cardpos)
 		LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", userid));
 		return;
 	}
-	auto object = m_id_players[objectid];
-	if (!object)
-	{
-		LogError("BattleSystem::useCard", STR::format("objectid %d not exist!!", objectid));
-		return;
-	}
 	auto cards = user->getHandCards();
-	if(cardpos >= cards.size())
+	if (cardpos < 0 || cardpos >= (int)cards.size())
 	{
 		LogError("BattleSystem::useCard", STR::format("invalid card pos: %d, max size is %d!!", cardpos, (int)cards.size()));
 		return;
 	}
 
-	UseCardData data;
-	data.card = CardsManager::getCardInfo(cards[cardpos]);
-	data.player = m_id_players[objectid];
-	cards.erase(cards.begin() + cardpos);
-	m_use_card_stack.push_back(data);
+	auto ev = EventUseCard();
+	ev.UserId = userid;
+	ev.TargetId = targetid;
+	ev.UseCard = CardsManager::getCardInfo(cards[cardpos]);
+	broadcastEvent(ev);
 }
 
 void BattleSystem::skipThisTurn()

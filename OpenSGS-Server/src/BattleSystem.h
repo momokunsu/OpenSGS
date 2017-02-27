@@ -52,7 +52,7 @@ class BattleSystem
 		void handleUseCardStack();
 
 		void drawCards(uchar playerid, int count, int index = 0);
-		void useCard(uchar userid, uchar objectid, int cardpos);
+		void useCard(uchar userid, uchar targetid, int cardpos);
 		void skipThisTurn();
 		
 	private:
