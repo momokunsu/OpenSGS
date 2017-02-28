@@ -126,11 +126,13 @@ struct EventUseCard : public GameEvent
 		UserId = 0;
 		TargetId = 0;
 		UseCard = nullptr;
+    canThrow = true;
 	}
 
 	uchar UserId;
 	uchar TargetId;
 	Card* UseCard;
+  bool canThrow;
 };
 
 struct EventPhrase : public GameEvent

@@ -53,6 +53,8 @@ class BattleSystem
 		void drawCards(uchar playerid, int count, int index = 0);
 		void useCard(uchar userid, uint cardpos, uchar targetid = 0);
 		void useCard(uchar userid, Card* card, uchar targetid = 0);
+    void handleUseCards();
+  
 		void skipThisTurn();
 		
 	private:

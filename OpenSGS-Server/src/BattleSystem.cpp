@@ -255,6 +255,7 @@ void BattleSystem::useCard(uchar userid, uint cardpos, uchar targetid)
 		return;
 	}
 
+  cards.erase(cards.begin() + cardpos);
   useCard(userid, CardsManager::getCardInfo(cards[cardpos]), targetid);
 }
 
@@ -273,6 +274,13 @@ void BattleSystem::useCard(uchar userid, Card* card, uchar targetid)
   ev.UseCard = card;
   broadcastEvent(ev);
   m_used_card_list.push_back(ev);
+}
+
+void BattleSystem::handleUseCards()
+{
+  while (m_used_card_list.size() > 0) {
+    
+  }
 }
 
 void BattleSystem::skipThisTurn()
