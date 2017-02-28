@@ -35,7 +35,7 @@ class Player : public GC
 
 		//int getHandCardsCount() { return (int)m_handcards.size(); }
 		//ulong getHandCard(int index) { return m_handcards[index]; }
-		std::vector<ulong> & getHandCards() { return m_handcards; }
+		std::vector<uint> & getHandCards() { return m_handcards; }
 
 		bool isDead() { return m_is_dead; }
 
@@ -47,8 +47,8 @@ class Player : public GC
 		uchar m_location;
 		ePlayerStatusType m_status;
 		bool m_is_dead;
-		ulong m_equips[5];
-		std::vector<ulong> m_handcards;
-		std::vector<ulong> m_judges;
-		std::vector<ulong> m_ext_cards;
+		uint m_equips[5];
+		std::vector<uint> m_handcards;
+		std::vector<uint> m_judges;
+		std::vector<uint> m_ext_cards;
 };

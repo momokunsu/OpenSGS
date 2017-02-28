@@ -39,7 +39,7 @@ void SuffleVector(std::vector<Tclass> &vec)
 template<class Tclass>
 void SuffleList(std::list<Tclass> &vec)
 {
-	int count = vec.size() / 2;
+	int count = (int)vec.size() / 2;
 
 	for (int j = 0; j < count; j++)
 	{

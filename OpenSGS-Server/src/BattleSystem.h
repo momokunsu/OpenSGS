@@ -49,10 +49,10 @@ class BattleSystem
 		void dealCards();
 		void startBattle();
 		void phraseStep();
-		void handleUseCardStack();
 
 		void drawCards(uchar playerid, int count, int index = 0);
-		void useCard(uchar userid, uchar targetid, int cardpos);
+		void useCard(uchar userid, uint cardpos, uchar targetid = 0);
+		void useCard(uchar userid, Card* card, uchar targetid = 0);
 		void skipThisTurn();
 		
 	private:
@@ -69,7 +69,8 @@ class BattleSystem
 
 		std::list<uint> m_card_deck;
 		std::list<uint> m_card_recycle_bin;
-		std::vector<UseCardData> m_use_card_stack;
+  
+		std::list<EventUseCard> m_used_card_list;
 
 		int m_global_drawcount;
 		int m_drawcount;

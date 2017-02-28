@@ -114,7 +114,7 @@ bool GamePackFile::open()
 		path = path + '/' + m_filename;
 		LogDebug("GamePackFile::open", STR::format("open pack file path \"%s\"", path.c_str()));
 		FILE* file;
-		if (file = fopen(path.c_str(), "r"))
+		if ((file = fopen(path.c_str(), "r")))
 		{
 			fclose(file);
 			if (sqlite3_open(path.c_str(), &m_db) != SQLITE_OK)
@@ -225,13 +225,13 @@ bool GamePackFile::loadPackInfo()
 
 	const char *str_res = nullptr;
 
-	if (str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackInfoIndex::Name))
+	if ((str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackInfoIndex::Name)))
 		m_packinfo.packName = str_res;
-	if (str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackInfoIndex::Author))
+	if ((str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackInfoIndex::Author)))
 		m_packinfo.author = str_res;
-	if (str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackInfoIndex::CreateDate))
+	if ((str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackInfoIndex::CreateDate)))
 		m_packinfo.createDate = str_res;
-	if (str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackInfoIndex::Version))
+	if ((str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackInfoIndex::Version)))
 		m_packinfo.version = str_res;
 
 	m_packinfo.cardNum = sqlite3_column_int(sqlstate, (int)ePackInfoIndex::CardNum);
@@ -265,13 +265,13 @@ bool GamePackFile::loadBaseInfo()
 
 		BaseCardInfo info;
 		info.id = sqlite3_column_int(sqlstate, (int)ePackBaseIndex::Id) + m_idoffset;
-		if (str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackBaseIndex::Script))
+		if ((str_res = (const char*)sqlite3_column_text(sqlstate, (int)ePackBaseIndex::Script)))
 			info.script = str_res;
 
 		auto sqlstate1 = sqlQuery("select name from cards");
 		if (sqlstate1 && sqlStep(sqlstate1))
 		{
-			if (str_res = (const char*)sqlite3_column_text(sqlstate1, 0))
+			if ((str_res = (const char*)sqlite3_column_text(sqlstate1, 0)))
 				info.name = str_res;
 		}
 		sqlEnd(sqlstate1);

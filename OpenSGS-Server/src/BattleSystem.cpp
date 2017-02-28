@@ -3,8 +3,8 @@
 #include "CardsManager.h"
 #include "libs/StringManager.h"
 
-#include <string>
 #include <time.h>
+#include <string>
 #include <algorithm>
 
 typedef StringManager STR;
@@ -200,10 +200,10 @@ void BattleSystem::phraseStep()
 	//流程开始
 	EventPhrase ev_phrase;
 	ev_phrase.PhraseType = m_cur_phrase;
-	ev_phrase.TargetId = m_players[m_cur_player];
+	ev_phrase.TargetId = m_players[m_cur_player]->getID();
 	broadcastEvent(ev_phrase);
 	m_cur_phrase = ev_phrase.PhraseType;
-	m_cur_player = ev_phrase.TargetId->getLocation();
+	m_cur_player = m_id_players[ev_phrase.TargetId]->getLocation();
 
 	//执行流程
 	handlePhrase(m_players[m_cur_player], m_cur_phrase);
@@ -215,10 +215,6 @@ void BattleSystem::phraseStep()
 	{
 		skipThisTurn();
 	}
-}
-
-void BattleSystem::handleUseCardStack()
-{
 }
 
 void BattleSystem::drawCards(uchar playerid, int count, int index)
@@ -237,14 +233,14 @@ void BattleSystem::drawCards(uchar playerid, int count, int index)
 	for (int i = 0; i < count; i++)
 	{
 		ev.Cards.push_back(drawCard());
-		str += ev.Cards.back() + " ";
+    str += STR::format("%d ", (int)ev.Cards.back());
 	}
 
-	LogInfo("BattleSystem::drawCards", STR::format("player %d draw %d cards:\n%s", playerid, m_drawcount, str));
+	LogInfo("BattleSystem::drawCards", STR::format("player %d draw %d cards:\n%s", playerid, m_drawcount, str.c_str()));
 	broadcastEvent(ev);
 }
 
-void BattleSystem::useCard(uchar userid, uchar targetid, int cardpos)
+void BattleSystem::useCard(uchar userid, uint cardpos, uchar targetid)
 {
 	auto user = m_id_players[userid];
 	if (!user)
@@ -253,17 +249,30 @@ void BattleSystem::useCard(uchar userid, uchar targetid, int cardpos)
 		return;
 	}
 	auto cards = user->getHandCards();
-	if (cardpos < 0 || cardpos >= (int)cards.size())
+	if (cardpos >= cards.size())
 	{
 		LogError("BattleSystem::useCard", STR::format("invalid card pos: %d, max size is %d!!", cardpos, (int)cards.size()));
 		return;
 	}
 
-	auto ev = EventUseCard();
-	ev.UserId = userid;
-	ev.TargetId = targetid;
-	ev.UseCard = CardsManager::getCardInfo(cards[cardpos]);
-	broadcastEvent(ev);
+  useCard(userid, CardsManager::getCardInfo(cards[cardpos]), targetid);
+}
+
+void BattleSystem::useCard(uchar userid, Card* card, uchar targetid)
+{
+  auto user = m_id_players[userid];
+  if (!user)
+  {
+    LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", userid));
+    return;
+  }
+  
+  auto ev = EventUseCard();
+  ev.UserId = userid;
+  ev.TargetId = targetid;
+  ev.UseCard = card;
+  broadcastEvent(ev);
+  m_used_card_list.push_back(ev);
 }
 
 void BattleSystem::skipThisTurn()

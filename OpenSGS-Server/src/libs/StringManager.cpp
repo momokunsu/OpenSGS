@@ -61,7 +61,7 @@ const char* StringManager::trimEnd(const char* str, va_list ap)
 	}
 
 	strcpy(pbuf, str);
-	int n = strlen(pbuf) - 1;
+	int n = (int)strlen(pbuf) - 1;
 	for (int i = n; i > -1; i--)
 	{
 		if (!isContainsChar(str[i], ap))
@@ -120,8 +120,8 @@ const char* StringManager::replace(const char* str, const char* src, const char*
 	}
 
 	auto ret = pbuf;
-	int srcsize = strlen(src);
-	int dstsize = strlen(dst);
+	int srcsize = (int)strlen(src);
+	int dstsize = (int)strlen(dst);
 	int index = indexOf(str, src);
 	while (index != -1)
 	{
@@ -227,7 +227,7 @@ int StringManager::indexOf(const char* str, char dst)
 
 int StringManager::endIndexOf(const char * str, const char * dst)
 {
-	int i = strlen(str) - 1, j = 0;
+	int i = (int)strlen(str) - 1, j = 0;
 
 	if (!dst[j])
 		return -1;
@@ -251,7 +251,7 @@ int StringManager::endIndexOf(const char * str, const char * dst)
 
 int StringManager::endIndexOf(const char * str, char dst)
 {
-	int i = strlen(str) - 1;
+	int i = (int)strlen(str) - 1;
 
 	if (!dst)
 		return -1;
@@ -385,18 +385,18 @@ const char* StringManager::UTF16LToUTF8(const wchar_t *str)
 		if (str[i] >> 11)
 		{
 			code = str[i];
-			pbuf[j + 2] = (char)(code & 0x003F | 0x0080);
+			pbuf[j + 2] = (char)((code & 0x003F) | 0x0080);
 			code = code >> 6;
-			pbuf[j + 1] = (char)(code & 0x003F | 0x0080);
+			pbuf[j + 1] = (char)((code & 0x003F) | 0x0080);
 			code = code >> 6;
-			pbuf[j] = (char)(code & 0x000F | 0x00E0);
+			pbuf[j] = (char)((code & 0x000F) | 0x00E0);
 			i++, j += 3;
 			continue;
 		}
 		code = str[i];
-		pbuf[j + 1] = (char)(code & 0x003F | 0x0080);
+		pbuf[j + 1] = (char)((code & 0x003F) | 0x0080);
 		code = code >> 6;
-		pbuf[j] = (char)(code & 0x001F | 0x00C0);
+		pbuf[j] = (char)((code & 0x001F) | 0x00C0);
 		i++, j += 2;
 		continue;
 	}

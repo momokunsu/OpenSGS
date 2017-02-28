@@ -41,7 +41,7 @@ class Script : public GC
 {
 	public:
 		Script() {}
-		virtual ~Script() = 0 {}
+		virtual ~Script() = 0;
 
 	private:
 		ScriptEngine *m_runner;

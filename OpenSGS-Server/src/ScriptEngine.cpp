@@ -27,7 +27,7 @@ ScriptEngine::ScriptEngine()
 
 	auto buf = (char *)GC::getGlobalBuffer();
 	std::ifstream t;
-	int length;
+	long long length;
 	t.open("test.lua", ios::binary);      // open input file  
 	t.seekg(0, std::ios::end);    // go to the end  
 	length = t.tellg();           // report location (this is the length)  
@@ -94,7 +94,7 @@ bool ScriptEngine::luaCall(const char * funname, va_list ap)
 	int count = 0;
 	while (it != list.end())
 	{
-		m_push_lua_param[(*it).c_str()](m_lua_state, &ap); it++;
+    m_push_lua_param[(*it).c_str()](m_lua_state, (va_list*)&ap); it++;
 		count++;
 	}
 
