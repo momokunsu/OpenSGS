@@ -259,7 +259,7 @@ void BattleSystem::useCard(uchar userid, uint cardpos, uchar targetid)
   useCard(userid, CardsManager::getCardInfo(cards[cardpos]), targetid);
 }
 
-void BattleSystem::useCard(uchar userid, Card* card, uchar targetid)
+void BattleSystem::useCard(uchar userid, Card* card, uchar targetid, bool canThrow)
 {
   auto user = m_id_players[userid];
   if (!user)
@@ -272,14 +272,31 @@ void BattleSystem::useCard(uchar userid, Card* card, uchar targetid)
   ev.UserId = userid;
   ev.TargetId = targetid;
   ev.UseCard = card;
-  broadcastEvent(ev);
+  ev.CanThrow = canThrow;
   m_used_card_list.push_back(ev);
+  broadcastEvent(m_used_card_list.back());
+}
+
+void BattleSystem::throwCard(const std::vector<uint>& Cards, eThrowCardType throwType)
+{
+  auto ev = EventThrowCard();
+  ev.Cards = Cards;
+  ev.ThrowType = throwType;
+  broadcastEvent(ev);
+  for (auto card : ev.Cards)
+  {
+    m_card_recycle_bin.push_back(card);
+  }
 }
 
 void BattleSystem::handleUseCards()
 {
-  while (m_used_card_list.size() > 0) {
-    
+  while (m_used_card_list.size() > 0)
+  {
+    // 弃牌
+    std::vector<uint> vec(1);
+    vec.push_back(m_used_card_list.back().UseCard->getId());
+    throwCard(vec);
   }
 }
 

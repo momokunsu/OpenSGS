@@ -9,12 +9,11 @@
 
 typedef StringManager STR;
 
-
 void Log(const std::string& tag, const std::string& log)
 {
-	auto n = tag.c_str();
-	auto str = LogHandler::getCurFileName().c_str();
-	printf("[%s:%d %s]%s\n", STR::subString(str, STR::endIndexOf(str, '\\') + 1), LogHandler::getCurLineNum(), tag.c_str(), log.c_str());
+  std::vector<std::string> strs;
+  STR::split(strs, LogHandler::getCurFileName().c_str(), '\\', '/', 0);
+	printf("[%s:%d %s]%s\n", strs.back().c_str(), LogHandler::getCurLineNum(), tag.c_str(), log.c_str());
 }
 
 int main()

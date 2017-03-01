@@ -28,7 +28,7 @@ class ScriptEngine : public GC
 
 	private:
 		uTypeUnion luaGetValue(int index);
-		bool luaAsserts(int res, int tindex);
+		bool luaAsserts(int res, int tindex, const char* tag, int lineNum);
 
 		static std::map<std::string, std::function<void(lua_State *, va_list *)>> m_push_lua_param;
 

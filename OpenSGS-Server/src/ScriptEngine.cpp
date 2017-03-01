@@ -52,15 +52,15 @@ ScriptEngine::~ScriptEngine()
 
 bool ScriptEngine::loadScript(const char * script, const char * name)
 {
-	if (luaAsserts(luaL_loadbuffer(m_lua_state, script, strlen(script), name), lua_gettop(m_lua_state)))
-		return luaAsserts(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state));
+	if (luaAsserts(luaL_loadbuffer(m_lua_state, script, strlen(script), name), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__))
+		return luaAsserts(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__);
 	return false;
 }
 
 bool ScriptEngine::loadScriptFromFile(const char * filename)
 {
-	if (luaAsserts(luaL_loadfile(m_lua_state, filename), lua_gettop(m_lua_state)))
-		return luaAsserts(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state));
+	if (luaAsserts(luaL_loadfile(m_lua_state, filename), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__))
+		return luaAsserts(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__);
 	return false;
 }
 
@@ -98,7 +98,7 @@ bool ScriptEngine::luaCall(const char * funname, va_list ap)
 		count++;
 	}
 
-	if (luaAsserts(lua_pcall(m_lua_state, count, LUA_MULTRET, 0), ret_index))
+	if (luaAsserts(lua_pcall(m_lua_state, count, LUA_MULTRET, 0), ret_index, "ScriptEngine::luaCall", __LINE__))
 	{
 		auto cur_index = lua_gettop(m_lua_state);
 		clearRetValues();
@@ -145,7 +145,7 @@ uTypeUnion ScriptEngine::luaGetValue(int index)
 	return ret;
 }
 
-bool ScriptEngine::luaAsserts(int res, int tindex)
+bool ScriptEngine::luaAsserts(int res, int tindex, const char* tag, int lineNum)
 {
 	switch (res)
 	{
@@ -162,7 +162,7 @@ bool ScriptEngine::luaAsserts(int res, int tindex)
 				int top = lua_gettop(m_lua_state);
 				while (top > tindex)
 				{
-					LogError("lua error", lua_tolstring(m_lua_state, top, nullptr));
+          LogHandler::setLog(tag, STR::format("lua error:\t%s", lua_tolstring(m_lua_state, top, nullptr)), eLogType::Error, __FILE__, lineNum);
 					lua_pop(m_lua_state, 1);
 					top = lua_gettop(m_lua_state);
 				}

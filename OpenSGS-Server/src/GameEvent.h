@@ -50,6 +50,14 @@ enum class eGetCardType
 	FromGarbage
 };
 
+//弃置卡牌类型
+enum class eThrowCardType
+{
+  None = 0,
+  Used,
+  Throw
+};
+
 //玩家事件回调
 enum class eGameEvent
 {
@@ -60,7 +68,7 @@ enum class eGameEvent
 	GetCards,
 	Phrase,
 	UseCard,
-	EventsPack
+	ThrowCard
 };
 
 struct GameEvent
@@ -126,13 +134,24 @@ struct EventUseCard : public GameEvent
 		UserId = 0;
 		TargetId = 0;
 		UseCard = nullptr;
-    canThrow = true;
+    CanThrow = true;
 	}
 
 	uchar UserId;
 	uchar TargetId;
 	Card* UseCard;
-  bool canThrow;
+  bool CanThrow;
+};
+
+struct EventThrowCard : public GameEvent
+{
+  EventThrowCard()
+  {
+    EventType = eGameEvent::ThrowCard;
+  }
+  
+  std::vector<uint> Cards;
+  eThrowCardType ThrowType;
 };
 
 struct EventPhrase : public GameEvent
