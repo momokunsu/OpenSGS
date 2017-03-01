@@ -143,9 +143,9 @@ struct EventUseCard : public GameEvent
   bool CanThrow;
 };
 
-struct EventThrowCard : public GameEvent
+struct EventThrowCards : public GameEvent
 {
-  EventThrowCard()
+  EventThrowCards()
   {
     EventType = eGameEvent::ThrowCard;
   }

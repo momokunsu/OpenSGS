@@ -11,6 +11,8 @@ typedef StringManager STR;
 
 using namespace std;
 
+BattleSystem *BattleSystem::self = nullptr;
+
 BattleSystem::BattleSystem()
 {
 	//初始化随机数生成器
@@ -21,6 +23,14 @@ BattleSystem::BattleSystem()
 
 BattleSystem::~BattleSystem()
 {
+}
+
+BattleSystem* BattleSystem::getInstance()
+{
+	if (!self)
+		self = new BattleSystem();
+
+	return self;
 }
 
 bool BattleSystem::addPlayer(Player * player)
@@ -217,70 +227,70 @@ void BattleSystem::phraseStep()
 	}
 }
 
-void BattleSystem::drawCards(uchar playerid, int count, int index)
+void BattleSystem::drawCards(uchar playerId, int count, int index)
 {
-	auto player = m_id_players[playerid];
+	auto player = m_id_players[playerId];
 	if (!player)
 	{
-		LogError("BattleSystem::drawCards", STR::format("player %d not exist!!", playerid));
+		LogError("BattleSystem::drawCards", STR::format("player %d not exist!!", playerId));
 		return;
 	}
 
 	auto ev = EventGetCards();
 	std::string str = "";
 	ev.GetType = eGetCardType::Draw;
-	ev.TargetId = playerid;
+	ev.TargetId = playerId;
 	for (int i = 0; i < count; i++)
 	{
 		ev.Cards.push_back(drawCard());
     str += STR::format("%d ", (int)ev.Cards.back());
 	}
 
-	LogInfo("BattleSystem::drawCards", STR::format("player %d draw %d cards:\n%s", playerid, m_drawcount, str.c_str()));
+	LogInfo("BattleSystem::drawCards", STR::format("player %d draw %d cards:\n%s", playerId, m_drawcount, str.c_str()));
 	broadcastEvent(ev);
 }
 
-void BattleSystem::useCard(uchar userid, uint cardpos, uchar targetid)
+void BattleSystem::useCard(uchar userId, uint cardPos, uchar targetId)
 {
-	auto user = m_id_players[userid];
+	auto user = m_id_players[userId];
 	if (!user)
 	{
-		LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", userid));
+		LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", userId));
 		return;
 	}
 	auto cards = user->getHandCards();
-	if (cardpos >= cards.size())
+	if (cardPos >= cards.size())
 	{
-		LogError("BattleSystem::useCard", STR::format("invalid card pos: %d, max size is %d!!", cardpos, (int)cards.size()));
+		LogError("BattleSystem::useCard", STR::format("invalid card pos: %d, max size is %d!!", cardPos, (int)cards.size()));
 		return;
 	}
 
-  cards.erase(cards.begin() + cardpos);
-  useCard(userid, CardsManager::getCardInfo(cards[cardpos]), targetid);
+  cards.erase(cards.begin() + cardPos);
+  useCard(userId, CardsManager::getCardInfo(cards[cardPos]), targetId);
 }
 
-void BattleSystem::useCard(uchar userid, Card* card, uchar targetid, bool canThrow)
+void BattleSystem::useCard(uchar userId, Card* card, uchar targetId, bool canThrow)
 {
-  auto user = m_id_players[userid];
+  auto user = m_id_players[userId];
   if (!user)
   {
-    LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", userid));
+    LogError("BattleSystem::useCard", STR::format("userid %d not exist!!", userId));
     return;
   }
   
   auto ev = EventUseCard();
-  ev.UserId = userid;
-  ev.TargetId = targetid;
+  ev.UserId = userId;
+  ev.TargetId = targetId;
   ev.UseCard = card;
   ev.CanThrow = canThrow;
   m_used_card_list.push_back(ev);
   broadcastEvent(m_used_card_list.back());
 }
 
-void BattleSystem::throwCard(const std::vector<uint>& Cards, eThrowCardType throwType)
+void BattleSystem::throwCard(const std::vector<uint>& cards, eThrowCardType throwType)
 {
-  auto ev = EventThrowCard();
-  ev.Cards = Cards;
+  auto ev = EventThrowCards();
+  ev.Cards = cards;
   ev.ThrowType = throwType;
   broadcastEvent(ev);
   for (auto card : ev.Cards)

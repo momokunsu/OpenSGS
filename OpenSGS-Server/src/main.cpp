@@ -13,7 +13,7 @@ void Log(const std::string& tag, const std::string& log)
 {
   std::vector<std::string> strs;
   STR::split(strs, LogHandler::getCurFileName().c_str(), '\\', '/', 0);
-	printf("[%s:%d %s]%s\n", strs.back().c_str(), LogHandler::getCurLineNum(), tag.c_str(), log.c_str());
+	printf("[%s:%d %-28s] %s\n", strs.back().c_str(), LogHandler::getCurLineNum(), tag.c_str(), log.c_str());
 }
 
 int main()
@@ -22,7 +22,7 @@ int main()
 
 	auto engine = new ScriptEngine();
 
-	auto sys = new BattleSystem();
+	auto sys = BattleSystem::getInstance();
 
 	for (int i = 0; i < 8; i++)
 	{

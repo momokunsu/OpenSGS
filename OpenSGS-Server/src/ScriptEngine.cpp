@@ -1,4 +1,4 @@
-#include "ScriptEngine.h"
+﻿#include "ScriptEngine.h"
 #include "LogHandler.h"
 #include "libs/StringManager.h"
 
@@ -25,23 +25,7 @@ ScriptEngine::ScriptEngine()
 	m_lua_state = luaL_newstate();
 	luaopen_base(m_lua_state);
 
-	auto buf = (char *)GC::getGlobalBuffer();
-	std::ifstream t;
-	long long length;
-	t.open("test.lua", ios::binary);      // open input file  
-	t.seekg(0, std::ios::end);    // go to the end  
-	length = t.tellg();           // report location (this is the length)  
-	t.seekg(0, std::ios::beg);    // go back to the beginning  
-	t.read(buf, length);       // read the whole file into the buffer  
-	t.close();                    // close file handle
-
-	buf[length] = 0;
-	//loadScriptFromFile("test.lua");
-	loadScript(buf, "fuck!");
-	loadScriptFromFile("test2.lua");
-	luaCall("test(bool string int)", true, "wa ha ha!!", 12830);
-	luaCall("test2(bool int float)", true, 12830, 2.5);
-	luaCall("A.B.C()", true, 12830, 2.5);
+	init();
 }
 
 ScriptEngine::~ScriptEngine()
@@ -50,17 +34,32 @@ ScriptEngine::~ScriptEngine()
 	lua_close(m_lua_state);
 }
 
+void ScriptEngine::init()
+{
+	int top = 0;
+
+	// 创建表
+	lua_newtable(m_lua_state);
+	lua_setglobal(m_lua_state, "__Battle");
+
+	// 添加函数
+	lua_getglobal(m_lua_state, "__Battle");
+
+	lua_pushcfunction(m_lua_state, [](lua_State * L)->int { printf("what the fuck!!!"); return 0; });
+	lua_setfield(m_lua_state, -2, "Fuck");
+}
+
 bool ScriptEngine::loadScript(const char * script, const char * name)
 {
-	if (luaAsserts(luaL_loadbuffer(m_lua_state, script, strlen(script), name), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__))
-		return luaAsserts(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__);
+	if (luaAssert(luaL_loadbuffer(m_lua_state, script, strlen(script), name), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__))
+		return luaAssert(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__);
 	return false;
 }
 
 bool ScriptEngine::loadScriptFromFile(const char * filename)
 {
-	if (luaAsserts(luaL_loadfile(m_lua_state, filename), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__))
-		return luaAsserts(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state), "ScriptEngine::loadScript", __LINE__);
+	if (luaAssert(luaL_loadfile(m_lua_state, filename), lua_gettop(m_lua_state), "ScriptEngine::loadScriptFromFile", __LINE__))
+		return luaAssert(lua_pcall(m_lua_state, 0, LUA_MULTRET, 0), lua_gettop(m_lua_state), "ScriptEngine::loadScriptFromFile", __LINE__);
 	return false;
 }
 
@@ -73,32 +72,32 @@ bool ScriptEngine::luaCall(const char * funname, va_list ap)
 
 	auto it = list.begin();
 	vector<string> list_ele;
-	STR::split(list_ele, (*it).c_str(), '.', 0); it++;
+	STR::split(list_ele, it->c_str(), '.', 0); it++;
 	auto it_ele = list_ele.begin();
-	auto cur_table = (*it_ele).c_str();
+	auto cur_table = it_ele->c_str();
 	lua_getglobal(m_lua_state, cur_table); it_ele++;
 	while (it_ele != list_ele.end())
 	{
 		int cur_top = lua_gettop(m_lua_state);
 		if (!lua_istable(m_lua_state, cur_top))
 		{
-			LogError("lua error", STR::format("element %s is not a table!", cur_table));
+			LogError("ScriptEngine::luaCall", STR::format("lua error: element %s is not a table!", cur_table));
 			lua_pop(m_lua_state, cur_top - ret_index);
 			return false;
 		}
-		cur_table = (*it_ele).c_str();
-		lua_getfield(m_lua_state, -1, (*it_ele).c_str()); it_ele++;
+		cur_table = it_ele->c_str();
+		lua_getfield(m_lua_state, -1, it_ele->c_str()); it_ele++;
 		lua_remove(m_lua_state, cur_top);
 	}
 
 	int count = 0;
 	while (it != list.end())
 	{
-    m_push_lua_param[(*it).c_str()](m_lua_state, (va_list*)&ap); it++;
+    m_push_lua_param[it->c_str()](m_lua_state, (va_list*)&ap); it++;
 		count++;
 	}
 
-	if (luaAsserts(lua_pcall(m_lua_state, count, LUA_MULTRET, 0), ret_index, "ScriptEngine::luaCall", __LINE__))
+	if (luaAssert(lua_pcall(m_lua_state, count, LUA_MULTRET, 0), ret_index, "ScriptEngine::luaCall", __LINE__))
 	{
 		auto cur_index = lua_gettop(m_lua_state);
 		clearRetValues();
@@ -116,6 +115,22 @@ bool ScriptEngine::luaCall(const char * funname, ...)
 	auto ret = luaCall(funname, ap);
 	va_end(ap);
 	return ret;
+}
+
+int ScriptEngine::getFileSize(const char * filePath)
+{
+	char* pbuf = (char*)GC::getGlobalBuffer();
+	std::ifstream t;
+	long long length;
+
+	t.open(filePath, ios::binary);
+	t.seekg(0, std::ios::end);
+	length = t.tellg();
+	t.seekg(0, std::ios::beg);
+	t.read(pbuf, length);
+	t.close();
+
+	return (int)length;
 }
 
 uTypeUnion ScriptEngine::luaGetValue(int index)
@@ -145,7 +160,7 @@ uTypeUnion ScriptEngine::luaGetValue(int index)
 	return ret;
 }
 
-bool ScriptEngine::luaAsserts(int res, int tindex, const char* tag, int lineNum)
+bool ScriptEngine::luaAssert(int res, int tindex, const char* tag, int lineNum)
 {
 	switch (res)
 	{
@@ -162,7 +177,7 @@ bool ScriptEngine::luaAsserts(int res, int tindex, const char* tag, int lineNum)
 				int top = lua_gettop(m_lua_state);
 				while (top > tindex)
 				{
-          LogHandler::setLog(tag, STR::format("lua error:\t%s", lua_tolstring(m_lua_state, top, nullptr)), eLogType::Error, __FILE__, lineNum);
+          LogHandler::setLog(tag, STR::format("lua error: %s", lua_tolstring(m_lua_state, top, nullptr)), eLogType::Error, __FILE__, lineNum);
 					lua_pop(m_lua_state, 1);
 					top = lua_gettop(m_lua_state);
 				}

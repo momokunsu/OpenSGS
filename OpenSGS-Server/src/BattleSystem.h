@@ -2,20 +2,6 @@
 #include "Player.h"
 #include "Cards.h"
 
-struct BattleData
-{
-	std::vector<uint> deck;         //牌组
-	std::vector<uint> heroDeck;  //武将牌组
-	std::vector<uint> recycleBin; //弃牌区
-
-	int globalDrawCount;  //全局抽卡数
-	int drawCount;	          //本回合抽卡数
-
-	BattleData()
-	{
-		memset(this, 0, sizeof(BattleData));
-	}
-};
 
 struct UseCardData
 {
@@ -31,8 +17,7 @@ struct UseCardData
 class BattleSystem
 {
 	public:
-		BattleSystem();
-		virtual ~BattleSystem();
+		static BattleSystem* getInstance();
 
 		bool addPlayer(Player* player);
 
@@ -50,18 +35,23 @@ class BattleSystem
 		void startBattle();
 		void phraseStep();
 
-		void drawCards(uchar playerid, int count, int index = 0);
-		void useCard(uchar userid, uint cardpos, uchar targetid = 0);
-		void useCard(uchar userid, Card* card, uchar targetid = 0, bool canThrow = true);
-		void throwCard(const std::vector<uint>& Cards, eThrowCardType throwType = eThrowCardType::Used);
+		void drawCards(uchar playerId, int count, int index = 0);
+		void useCard(uchar userId, uint cardPos, uchar targetId = 0);
+		void useCard(uchar userId, Card* card, uchar targetId = 0, bool canThrow = true);
+		void throwCard(const std::vector<uint>& cards, eThrowCardType throwType = eThrowCardType::Used);
     void handleUseCards();
   
 		void skipThisTurn();
 		
 	private:
+		BattleSystem();
+		virtual ~BattleSystem();
+
 		void broadcastEvent(GameEvent& ev);
 		void handlePhrase(Player *player, ePhraseType ptype);
 		uint drawCard();
+
+		static BattleSystem *self;
 
 		std::vector<ePlayerStatusType> m_statusgroup;
 		std::vector<Player*> m_players;
