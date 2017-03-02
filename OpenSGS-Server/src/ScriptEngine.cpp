@@ -117,18 +117,11 @@ bool ScriptEngine::luaCall(const char * funname, ...)
 
 int ScriptEngine::getFileSize(const char * filePath)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
 	std::ifstream t;
-	long long length;
-
 	t.open(filePath, ios::binary);
 	t.seekg(0, std::ios::end);
-	length = t.tellg();
-	t.seekg(0, std::ios::beg);
-	t.read(pbuf, length);
-	t.close();
 
-	return (int)length;
+	return (int)t.tellg();
 }
 
 uTypeUnion ScriptEngine::luaGetValue(int index)

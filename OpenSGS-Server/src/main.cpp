@@ -11,8 +11,8 @@ typedef StringManager STR;
 
 void Log(const std::string& tag, const std::string& log)
 {
-  std::vector<std::string> strs;
-  STR::split(strs, LogHandler::getCurFileName().c_str(), '\\', '/', 0);
+	std::vector<std::string> strs;
+	STR::split(strs, LogHandler::getCurFileName().c_str(), '\\', '/', 0);
 	printf("[%s:%d %-28s] %s\n", strs.back().c_str(), LogHandler::getCurLineNum(), tag.c_str(), log.c_str());
 }
 
@@ -21,8 +21,8 @@ int main()
 	LogHandler::setLogEventCallback(Log);
 
 	auto engine = new ScriptEngine();
-  engine->loadScriptFromFile("test.lua");
-  engine->luaCall("test(bool string int)", true, "what the fuck!", 25);
+	engine->loadScriptFromFile("test.lua");
+	engine->luaCall("test(bool string int)", true, "what the fuck!", 25);
 
 	auto sys = BattleSystem::getInstance();
 
