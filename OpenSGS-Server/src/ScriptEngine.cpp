@@ -36,8 +36,6 @@ ScriptEngine::~ScriptEngine()
 
 void ScriptEngine::init()
 {
-	int top = 0;
-
 	// 创建表
 	lua_newtable(m_lua_state);
 	lua_setglobal(m_lua_state, "__Battle");
@@ -81,7 +79,7 @@ bool ScriptEngine::luaCall(const char * funname, va_list ap)
 		int cur_top = lua_gettop(m_lua_state);
 		if (!lua_istable(m_lua_state, cur_top))
 		{
-			LogError("ScriptEngine::luaCall", STR::format("lua error: element %s is not a table!", cur_table));
+			LogError("ScriptEngine::luaCall", STR::format("lua error: element \"%s\" is not a table!", cur_table));
 			lua_pop(m_lua_state, cur_top - ret_index);
 			return false;
 		}

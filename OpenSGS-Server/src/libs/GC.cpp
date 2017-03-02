@@ -3,7 +3,7 @@
 #include <algorithm>
 
 
-const int _buffer_size = 4 * 1024 * 1024;
+const int _buffer_size = 4 * 1024 * 1024; // 4MB
 
 char *GC::m_global_buffer = new char[_buffer_size];
 std::list<GC*> GC::m_garbage_que;

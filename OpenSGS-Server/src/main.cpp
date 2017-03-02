@@ -21,6 +21,8 @@ int main()
 	LogHandler::setLogEventCallback(Log);
 
 	auto engine = new ScriptEngine();
+  engine->loadScriptFromFile("test.lua");
+  engine->luaCall("test(bool string int)", true, "what the fuck!", 25);
 
 	auto sys = BattleSystem::getInstance();
 
