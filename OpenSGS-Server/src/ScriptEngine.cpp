@@ -115,13 +115,65 @@ bool ScriptEngine::luaCall(const char * funname, ...)
 	return ret;
 }
 
+bool ScriptEngine::luaAddTable(const char * name, const char * parentName)
+{
+	if (parentName == std::string("_G"))
+	{
+		lua_newtable(m_lua_state);
+		lua_setglobal(m_lua_state, name);
+	}
+	else
+	{
+		auto ret_index = lua_gettop(m_lua_state);
+
+		vector<string> list_ele;
+		STR::split(list_ele, parentName, '.', 0);
+		auto it_ele = list_ele.begin();
+
+		auto cur_table = it_ele->c_str();
+		lua_getglobal(m_lua_state, cur_table); it_ele++;
+		if (!lua_istable(m_lua_state, lua_gettop(m_lua_state)))
+		{
+			LogError("ScriptEngine::luaAddTable", STR::format("lua error: element \"%s\" is not a table!", cur_table));
+			lua_pop(m_lua_state, 1);
+			return false;
+		}
+
+		while (it_ele != list_ele.end())
+		{
+			int cur_top = lua_gettop(m_lua_state);
+			if (!lua_istable(m_lua_state, cur_top))
+			{
+				LogError("ScriptEngine::luaAddTable", STR::format("lua error: element \"%s\" is not a table!", cur_table));
+				lua_pop(m_lua_state, cur_top - ret_index);
+				return false;
+			}
+			cur_table = it_ele->c_str();
+			lua_getfield(m_lua_state, -1, it_ele->c_str()); it_ele++;
+		}
+		lua_setfield(m_lua_state, -1, name);
+
+		lua_pop(m_lua_state, lua_gettop(m_lua_state) - ret_index);
+	}
+	return true;
+}
+
+bool ScriptEngine::luaAddFunction(const char * name, lua_CFunction func, const char * parentName)
+{
+	return false;
+}
+
 int ScriptEngine::getFileSize(const char * filePath)
 {
-	std::ifstream t;
-	t.open(filePath, ios::binary);
-	t.seekg(0, std::ios::end);
+	std::ifstream file;
+	file.open(filePath, ios::binary);
+	if (!file.is_open()) LogWarn("ScriptEngine::getFileSize", STR::format("file \"%s\" can not open!", filePath));
 
-	return (int)t.tellg();
+	file.seekg(0, std::ios::end);
+	auto ret = (int)file.tellg();
+	file.close();
+
+	return ret;
 }
 
 uTypeUnion ScriptEngine::luaGetValue(int index)
@@ -176,4 +228,35 @@ bool ScriptEngine::luaAssert(int res, int tindex, const char* tag, int lineNum)
 			break;
 	}
 	return false;
+}
+
+bool ScriptEngine::luaGetTableToStackTop(const char * tableName)
+{
+	auto ret_index = lua_gettop(m_lua_state);
+
+	vector<string> list_ele;
+	STR::split(list_ele, tableName, '.', 0);
+	auto it_ele = list_ele.begin();
+
+	auto cur_table = it_ele->c_str();
+	lua_getglobal(m_lua_state, cur_table); it_ele++;
+	if (!lua_istable(m_lua_state, lua_gettop(m_lua_state)))
+	{
+		LogError("ScriptEngine::luaAddTable", STR::format("lua error: element \"%s\" is not a table!", cur_table));
+		lua_pop(m_lua_state, 1);
+		return false;
+	}
+
+	while (it_ele != list_ele.end())
+	{
+		int cur_top = lua_gettop(m_lua_state);
+		if (!lua_istable(m_lua_state, cur_top))
+		{
+			LogError("ScriptEngine::luaAddTable", STR::format("lua error: element \"%s\" is not a table!", cur_table));
+			lua_pop(m_lua_state, cur_top - ret_index);
+			return false;
+		}
+		cur_table = it_ele->c_str();
+		lua_getfield(m_lua_state, -1, it_ele->c_str()); it_ele++;
+	}
 }

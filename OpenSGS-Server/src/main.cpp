@@ -24,6 +24,8 @@ int main()
 	engine->loadScriptFromFile("test.lua");
 	engine->luaCall("test(bool string int)", true, "what the fuck!", 25);
 
+	auto size = ScriptEngine::getFileSize("test2.lua");
+
 	auto sys = BattleSystem::getInstance();
 
 	for (int i = 0; i < 8; i++)
