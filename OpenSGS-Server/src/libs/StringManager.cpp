@@ -151,6 +151,11 @@ const void StringManager::split(std::vector<std::string>& arr, const char* str, 
 
 	while (*pbuf)
 	{
+#ifdef __APPLE__
+    auto tmp_ap = ap;
+#else
+    auto tmp_ap = ap;
+#endif
 		if (isContainsChar(*pbuf, ap))
 		{
 			pbuf++;
