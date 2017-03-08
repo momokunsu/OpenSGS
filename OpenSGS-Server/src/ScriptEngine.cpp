@@ -259,7 +259,4 @@ bool ScriptEngine::luaGetTableToStackTop(const char * tableName)
 		cur_table = it_ele->c_str();
 		lua_getfield(m_lua_state, -1, it_ele->c_str()); it_ele++;
 	}
-  
-  return true;
 }
-
