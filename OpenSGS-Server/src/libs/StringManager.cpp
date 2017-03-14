@@ -149,21 +149,23 @@ const void StringManager::split(std::vector<std::string>& arr, const char* str, 
 	}
 	strcpy(pbuf, str);
 
+  va_list tmp_ap;
+  va_copy(tmp_ap, ap);
 	while (*pbuf)
 	{
-#ifdef __APPLE__
-    auto tmp_ap = ap;
-#else
-    auto tmp_ap = ap;
-#endif
-		if (isContainsChar(*pbuf, ap))
+		if (isContainsChar(*pbuf, tmp_ap))
 		{
 			pbuf++;
 			continue;
 		}
 
-		auto it = pbuf;
-		while (*it && !isContainsChar(*it, ap)) it++;
+    auto it = pbuf;
+    va_copy(tmp_ap, ap);
+    while (*it && !isContainsChar(*it, tmp_ap))
+    {
+      it++;
+      va_copy(tmp_ap, ap);
+    }
 		if(*it) *it = 0, it++;
 		arr.push_back(pbuf);
 		pbuf = it;

@@ -91,7 +91,8 @@ bool ScriptEngine::luaCall(const char * funname, va_list ap)
 	int count = 0;
 	while (it != list.end())
 	{
-    m_push_lua_param[it->c_str()](m_lua_state, (va_list*)&ap); it++;
+    void* ap_ptr = ap;
+    m_push_lua_param[it->c_str()](m_lua_state, (va_list*)&ap_ptr); it++;
 		count++;
 	}
 

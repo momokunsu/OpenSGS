@@ -7,7 +7,11 @@
 #include "BattleSystem.h"
 #include "ScriptEngine.h"
 
+#include <unistd.h>
+
 typedef StringManager STR;
+typedef char A[];
+//typedef char* A;
 
 void Log(const std::string& tag, const std::string& log)
 {
@@ -19,12 +23,13 @@ void Log(const std::string& tag, const std::string& log)
 int main()
 {
 	LogHandler::setLogEventCallback(Log);
-
+  getcwd((char*)GC::getGlobalBuffer(), GC::getGlobalBufSize());
+  printf((char*)GC::getGlobalBuffer());
 	auto engine = new ScriptEngine();
-	engine->loadScriptFromFile("test.lua");
+	engine->loadScriptFromFile("/Users/momo-su/Documents/OpenSGS/OpenSGS-Server/test.lua");
 	engine->luaCall("test(bool string int)", true, "what the fuck!", 25);
 
-	auto size = ScriptEngine::getFileSize("test2.lua");
+	auto size = ScriptEngine::getFileSize("/Users/momo-su/Documents/OpenSGS/OpenSGS-Server/test2.lua");
 
 	auto sys = BattleSystem::getInstance();
 
@@ -34,13 +39,13 @@ int main()
 	}
 	sys->sufflePlayersLocation();
 
-	CardsManager::addSerchPath(".");
+	CardsManager::addSerchPath("/Users/momo-su/Documents/OpenSGS/OpenSGS-Server");
 	CardsManager::addPack("standard.gpk");
 	if (CardsManager::initDeckToList(sys->cardsDeck()))
 	{
 		sys->shuffleCardsDeck();
 	}
-
+  
 	system("pause");
 	return 0;
 }
