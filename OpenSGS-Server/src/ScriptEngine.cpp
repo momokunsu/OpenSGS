@@ -91,8 +91,32 @@ bool ScriptEngine::luaCall(const char * funname, va_list ap)
 	int count = 0;
 	while (it != list.end())
 	{
-    void* ap_ptr = ap;
-    m_push_lua_param[it->c_str()](m_lua_state, (va_list*)&ap_ptr); it++;
+//    m_push_lua_param[it->c_str()](m_lua_state, (va_list*)&ap); it++;
+    if((*it) == "nil")
+    {
+      lua_pushnil(m_lua_state);
+    }
+    else if ((*it) == "bool")
+    {
+      int val = va_arg(ap, bool);
+      lua_pushboolean(m_lua_state, val);
+    }
+    else if ((*it) == "int")
+    {
+      lua_Integer val = va_arg(ap, int);
+      lua_pushinteger(m_lua_state, val);
+    }
+    else if ((*it) == "float")
+    {
+      lua_Number val = va_arg(ap, double);
+      lua_pushnumber(m_lua_state, val);
+    }
+    else if ((*it) == "string")
+    {
+      char * val = va_arg(ap, char *);
+      lua_pushlstring(m_lua_state, val, strlen(val));
+    }
+    it++;
 		count++;
 	}
 

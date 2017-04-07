@@ -10,8 +10,6 @@
 #include <unistd.h>
 
 typedef StringManager STR;
-//typedef char A[];
-//typedef char* A;
 
 void Log(const std::string& tag, const std::string& log)
 {
@@ -22,9 +20,6 @@ void Log(const std::string& tag, const std::string& log)
 
 int main()
 {
-  char b;
-  char *a = &b;
-  char **d = &a;
 	LogHandler::setLogEventCallback(Log);
   getcwd((char*)GC::getGlobalBuffer(), GC::getGlobalBufSize());
   printf((char*)GC::getGlobalBuffer(),0);
