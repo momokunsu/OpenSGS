@@ -7,8 +7,6 @@
 #include "BattleSystem.h"
 #include "ScriptEngine.h"
 
-#include <unistd.h>
-
 typedef StringManager STR;
 
 void Log(const std::string& tag, const std::string& log)
@@ -21,10 +19,8 @@ void Log(const std::string& tag, const std::string& log)
 int main()
 {
 	LogHandler::setLogEventCallback(Log);
-  getcwd((char*)GC::getGlobalBuffer(), GC::getGlobalBufSize());
-  printf((char*)GC::getGlobalBuffer(),0);
 	auto engine = new ScriptEngine();
-	engine->loadScriptFromFile("/Users/momo-su/Documents/OpenSGS/OpenSGS-Server/test.lua");
+	engine->loadScriptFromFile("test.lua");
 	engine->luaCall("test(bool string int)", true, "what the fuck!", 25);
 
 	auto size = ScriptEngine::getFileSize("/Users/momo-su/Documents/OpenSGS/OpenSGS-Server/test2.lua");
