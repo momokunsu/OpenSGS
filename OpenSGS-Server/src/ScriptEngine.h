@@ -38,8 +38,6 @@ class ScriptEngine : public GC
 		bool luaAssert(int res, int tindex, const char* tag, int lineNum);
 		bool luaGetTableToStackTop(const char *tableName);
 
-		static std::map<std::string, std::function<void(lua_State *, va_list *)>> m_push_lua_param;
-
 		lua_State * m_lua_state;
 		std::vector<uTypeUnion> m_retval_arr;
 		std::vector<std::string> m_retval_strings;

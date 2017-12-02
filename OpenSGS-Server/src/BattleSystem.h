@@ -39,7 +39,7 @@ class BattleSystem
 		void useCard(uchar userId, uint cardPos, uchar targetId = 0);
 		void useCard(uchar userId, Card* card, uchar targetId = 0, bool canThrow = true);
 		void throwCard(const std::vector<uint>& cards, eThrowCardType throwType = eThrowCardType::Used);
-    void handleUseCards();
+		void handleUseCards();
   
 		void skipThisTurn();
 		

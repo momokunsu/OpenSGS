@@ -1,4 +1,5 @@
 #include "libs/StringManager.h"
+#include "EventCenter.h"
 
 #include "def.h"
 #include "GameEvent.h"
@@ -7,7 +8,7 @@
 #include "BattleSystem.h"
 #include "ScriptEngine.h"
 
-typedef StringManager STR;
+typedef utli::StringManager STR;
 
 void Log(const std::string& tag, const std::string& log)
 {
@@ -16,8 +17,26 @@ void Log(const std::string& tag, const std::string& log)
 	printf("[%s:%d %-28s] %s\n", strs.back().c_str(), LogHandler::getCurLineNum(), tag.c_str(), log.c_str());
 }
 
+bool fun1(int event_id, void *data)
+{
+	return true;
+}
+
+bool fun2(int event_id, void *data)
+{
+	return false;
+}
+
 int main()
 {
+	for (int i = 0; i < 2; i++)
+	{
+		//utli::EventCenter::addListener(1, [](int event_id, void *data) -> bool
+		//{
+		//	return false;
+		//}, i);
+		utli::EventCenter::addListener(1, fun1, 0);
+	}
 	LogHandler::setLogEventCallback(Log);
 	auto engine = new ScriptEngine();
 	engine->loadScriptFromFile("test.lua");

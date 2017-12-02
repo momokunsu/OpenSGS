@@ -4,6 +4,7 @@
 #include <stdarg.h>
 
 using namespace std;
+using namespace utli;
 
 const char* StringManager::format(const char* str, ...)
 {

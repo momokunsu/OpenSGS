@@ -7,7 +7,7 @@
 #include <string>
 #include <algorithm>
 
-typedef StringManager STR;
+typedef utli::StringManager STR;
 
 using namespace std;
 

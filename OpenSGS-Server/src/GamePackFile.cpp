@@ -4,7 +4,7 @@
 #include "libs/StringManager.h"
 #include "def.h"
 
-typedef StringManager STR;
+typedef utli::StringManager STR;
 
 enum class ePackInfoIndex
 {

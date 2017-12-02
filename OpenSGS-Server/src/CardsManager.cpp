@@ -12,7 +12,7 @@
 #define XGAMEPICSPATH "xdata/pics/game/"
 #define XGENERALPICSPATH "xdata/pics/general/"
 
-typedef StringManager STR;
+typedef utli::StringManager STR;
 
 std::map<std::string, short> CardsManager::m_packname_buf;
 std::map<uint, Card*> CardsManager::m_id_cards;

@@ -7,21 +7,10 @@
 
 
 using namespace std;
-typedef StringManager STR;
-
-
-std::map<std::string, std::function<void(lua_State *, va_list *)>> ScriptEngine::m_push_lua_param;
+typedef utli::StringManager STR;
 
 ScriptEngine::ScriptEngine() 
 {
-	if (m_push_lua_param.empty())
-	{
-		m_push_lua_param["nil"] = [](lua_State * L, va_list *ap) { lua_pushnil(L); };
-		m_push_lua_param["bool"] = [](lua_State * L, va_list *ap) { int val = va_arg((*ap), bool); lua_pushboolean(L, val); };
-		m_push_lua_param["int"] = [](lua_State * L, va_list *ap) { lua_Integer val = va_arg((*ap), int); lua_pushinteger(L, val); };
-		m_push_lua_param["float"] = [](lua_State * L, va_list *ap) { lua_Number val = va_arg((*ap), double); lua_pushnumber(L, val); };
-		m_push_lua_param["string"] = [](lua_State * L, va_list *ap) { char * val = va_arg((*ap), char *); lua_pushlstring(L, val, strlen(val)); };
-	}
 	m_lua_state = luaL_newstate();
 	luaopen_base(m_lua_state);
 
@@ -37,8 +26,7 @@ ScriptEngine::~ScriptEngine()
 void ScriptEngine::init()
 {
 	// 创建表
-	lua_newtable(m_lua_state);
-	lua_setglobal(m_lua_state, "__Battle");
+	loadScript("__Battle = {}");
 
 	// 添加函数
 	lua_getglobal(m_lua_state, "__Battle");
@@ -91,7 +79,6 @@ bool ScriptEngine::luaCall(const char * funname, va_list ap)
 	int count = 0;
 	while (it != list.end())
 	{
-//    m_push_lua_param[it->c_str()](m_lua_state, (va_list*)&ap); it++;
     if((*it) == "nil")
     {
       lua_pushnil(m_lua_state);
@@ -267,7 +254,7 @@ bool ScriptEngine::luaGetTableToStackTop(const char * tableName)
 	lua_getglobal(m_lua_state, cur_table); it_ele++;
 	if (!lua_istable(m_lua_state, lua_gettop(m_lua_state)))
 	{
-		LogError("ScriptEngine::luaAddTable", STR::format("lua error: element \"%s\" is not a table!", cur_table));
+		LogError("ScriptEngine::luaGetTableToStackTop", STR::format("lua error: element \"%s\" is not a table!", cur_table));
 		lua_pop(m_lua_state, 1);
 		return false;
 	}
@@ -277,7 +264,7 @@ bool ScriptEngine::luaGetTableToStackTop(const char * tableName)
 		int cur_top = lua_gettop(m_lua_state);
 		if (!lua_istable(m_lua_state, cur_top))
 		{
-			LogError("ScriptEngine::luaAddTable", STR::format("lua error: element \"%s\" is not a table!", cur_table));
+			LogError("ScriptEngine::luaGetTableToStackTop", STR::format("lua error: element \"%s\" is not a table!", cur_table));
 			lua_pop(m_lua_state, cur_top - ret_index);
 			return false;
 		}

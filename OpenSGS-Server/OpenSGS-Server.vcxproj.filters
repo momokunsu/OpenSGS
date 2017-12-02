@@ -135,6 +135,9 @@
     <ClInclude Include="src\ScriptEngine.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\EventCenter.h">
+      <Filter>src\libs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -274,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="src\ScriptEngine.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventCenter.cpp">
+      <Filter>src\libs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
