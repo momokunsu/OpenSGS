@@ -16,14 +16,11 @@ enum class eCardType
 
 class Card : public GC
 {
+	Visitor(Id, m_id, ushort)
+	Visitor(Type, m_type, eCardType)
+
 	public:
 		static Card* create() { return new Card(); }
-
-		void setId(ushort id) { m_id = id; }
-		ushort getId() { return m_id; }
-
-		void setType(eCardType type) { m_type = type; }
-		eCardType getType() { return m_type; }
 
 		void setName(const char* name) { m_name = name; }
 		const char * getName(){ return m_name.c_str(); }
@@ -32,8 +29,8 @@ class Card : public GC
 		Card();
 		virtual ~Card() {}
 
-		ushort m_id;
-		eCardType m_type;
+		//ushort m_id;
+		//eCardType m_type;
 		std::string m_name;
 };
 

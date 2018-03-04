@@ -1,17 +1,21 @@
 #pragma once
+
 #include <list>
+#include <set>
+
+#include "../def.h"
 
 class GC
 {
 	public:
-		void retain() { m_ref_count++; }
-		void release();
-
-		int getRefCount() { return m_ref_count; }
+		GC();
+		virtual ~GC();
 
 		void addRef(GC* gc);
 		void removeRef(GC* gc);
-		void removeAllRef();
+		bool findRef(GC* gc);
+		void retain() { addRef(&m_root_ref); }
+		void release() { removeRef(&m_root_ref); }
 
 		static void recycle();
 
@@ -19,12 +23,12 @@ class GC
 		static int getGlobalBufSize();
 		static bool isRangeOfGlobalBuf(const void *buf);
 	protected:
-		GC();
-		virtual ~GC();
 
 		static char *m_global_buffer;
-		static std::list<GC*> m_garbage_que;
+		static std::set<GC*> m_garbage_pool;
+		static GC m_root_ref;
 
-		int m_ref_count;
-		std::list<GC*> m_ref_pool;
+		std::set<GC*> m_ref_pool;
 };
+
+#define GC_CREATE(c) inline c* create() { auto v = new c; m_garbage_pool.insert(v); return v; }

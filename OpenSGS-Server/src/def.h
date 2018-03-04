@@ -4,6 +4,8 @@
 #include <list>
 #include <algorithm>
 #include <stdlib.h>
+#include <memory>
+#include <functional>
 
 typedef unsigned char uchar;
 typedef unsigned short ushort;
@@ -28,6 +30,21 @@ typedef union
 } uTypeUnion;
 
 #pragma pack(pop)
+
+//智能指针
+#define UPtr(t) std::unique_ptr<t>
+#define UNew(t) std::unique_ptr<t>(new t)
+#define UNewArr(t, c) std::unique_ptr<t[]>(new t[c])
+#define SPtr(t) std::shared_ptr<t>
+#define SNew(t) std::shared_ptr<t>(new t)
+#define SNewArr(t, c) std::shared_ptr<t[]>(new t[c])
+#define MvPtr(p) std::move(p)
+
+// 属性访问器
+#define Getter(n, m, t) inline t get##n() { return m; } 
+#define Setter(n, m, t) inline void set##n(t p) { m = p; } 
+#define Visitor(n, m, t) private: t m;\
+												 public: Getter(n, m, t) Setter(n, m, t)
 
 template<class Tclass>
 void SuffleVector(std::vector<Tclass> &vec)

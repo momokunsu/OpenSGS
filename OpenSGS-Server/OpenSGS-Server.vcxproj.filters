@@ -1,165 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test2.lua" />
+    <None Include="test.lua" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
     <Filter Include="src">
-      <UniqueIdentifier>{a51c05ab-af18-4d65-8c5a-ee0d9aef53f8}</UniqueIdentifier>
+      <UniqueIdentifier>{b8e2580e-3c4b-44a8-93f0-2b8e622157ec}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\libs">
-      <UniqueIdentifier>{0de37cd5-fe0a-4363-a687-5f3af25a7285}</UniqueIdentifier>
+      <UniqueIdentifier>{de84341c-badc-428e-b458-c3a4defa6d62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\libs\sqlite3">
-      <UniqueIdentifier>{f28859c0-185b-4c0f-a60e-70cd06580161}</UniqueIdentifier>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{a3102a43-9e79-4766-bf2f-d63728fd9ce2}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\libs\lua-5.3.2">
-      <UniqueIdentifier>{b0200d71-eaa6-4c00-8b84-96936a526a56}</UniqueIdentifier>
+      <UniqueIdentifier>{df7f4220-462b-4183-ab46-18da0ec2dfa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\libs\sqlite3">
+      <UniqueIdentifier>{33da3819-883e-4a19-bb7e-29500dddf028}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\libs\sqlite3\sqlite3.h">
-      <Filter>src\libs\sqlite3</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\sqlite3\sqlite3ext.h">
-      <Filter>src\libs\sqlite3</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BattleSystem.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Player.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\LogHandler.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\def.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\StringManager.h">
-      <Filter>src\libs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lapi.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lauxlib.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lcode.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lctype.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\ldebug.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\ldo.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lfunc.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lgc.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\llex.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\llimits.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lmem.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lobject.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lopcodes.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lparser.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lprefix.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lstate.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lstring.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\ltable.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\ltm.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lua.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lua.hpp">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\luaconf.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lualib.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lundump.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lvm.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\lua-5.3.2\lzio.h">
-      <Filter>src\libs\lua-5.3.2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Cards.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GamePackFile.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\libs\GC.h">
-      <Filter>src\libs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CardsManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\NetPlayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ScriptEngine.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EventCenter.h">
-      <Filter>src\libs</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\BattleSystem.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Player.cpp">
+    <ClCompile Include="src\Cards.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\LogHandler.cpp">
+    <ClCompile Include="src\CardsManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventStack.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\GameEvent.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\libs\StringManager.cpp">
+    <ClCompile Include="src\GamePackFile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LogHandler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NetPlayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScriptEngine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\libs\GC.cpp">
       <Filter>src\libs</Filter>
     </ClCompile>
-    <ClCompile Include="src\libs\sqlite3\sqlite3.c">
-      <Filter>src\libs\sqlite3</Filter>
+    <ClCompile Include="src\libs\StringManager.cpp">
+      <Filter>src\libs</Filter>
     </ClCompile>
     <ClCompile Include="src\libs\lua-5.3.2\lapi.c">
       <Filter>src\libs\lua-5.3.2</Filter>
@@ -260,30 +172,142 @@
     <ClCompile Include="src\libs\lua-5.3.2\lzio.c">
       <Filter>src\libs\lua-5.3.2</Filter>
     </ClCompile>
-    <ClCompile Include="src\Cards.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\libs\sqlite3\sqlite3.c">
+      <Filter>src\libs\sqlite3</Filter>
     </ClCompile>
-    <ClCompile Include="src\GamePackFile.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\libs\GC.cpp">
-      <Filter>src\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CardsManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\NetPlayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ScriptEngine.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EventCenter.cpp">
-      <Filter>src\libs</Filter>
+    <ClCompile Include="src\utils\EventCenter.cpp">
+      <Filter>src\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test2.lua" />
-    <None Include="test.lua" />
+    <ClInclude Include="src\BattleSystem.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cards.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CardsManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\def.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventStack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEvent.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GamePackFile.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LogHandler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NetPlayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Player.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScriptEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\GC.h">
+      <Filter>src\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\StringManager.h">
+      <Filter>src\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lapi.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lauxlib.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lcode.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lctype.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\ldebug.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\ldo.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lfunc.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lgc.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\llex.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\llimits.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lmem.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lobject.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lopcodes.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lparser.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lprefix.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lstate.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lstring.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\ltable.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\ltm.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lua.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lua.hpp">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\luaconf.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lualib.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lundump.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lvm.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\lzio.h">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\lua-5.3.2\Makefile">
+      <Filter>src\libs\lua-5.3.2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\sqlite3\sqlite3.h">
+      <Filter>src\libs\sqlite3</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\sqlite3\sqlite3ext.h">
+      <Filter>src\libs\sqlite3</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\EventCenter.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

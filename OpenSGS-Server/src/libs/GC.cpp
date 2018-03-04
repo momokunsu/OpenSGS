@@ -6,61 +6,52 @@
 const int _buffer_size = 4 * 1024 * 1024; // 4MB
 
 char *GC::m_global_buffer = new char[_buffer_size];
-std::list<GC*> GC::m_garbage_que;
+std::set<GC*> GC::m_garbage_pool;
+GC GC::m_root_ref;
 
 GC::GC()
 {
-	retain();
-	release();
 }
 
 GC::~GC()
 {
-	removeAllRef();
-}
-
-void GC::release()
-{
-	m_ref_count--;
-	for (auto it : m_garbage_que)
-	{
-		if (it == this)
-			return;
-	}
-	if (m_ref_count < 1)
-		m_garbage_que.push_back(this);
 }
 
 void GC::addRef(GC * gc)
 {
-	gc->retain();
-	m_ref_pool.push_back(gc);
+	if(!this->findRef(gc)) 
+		this->m_ref_pool.insert(gc);
 }
 
 void GC::removeRef(GC * gc)
 {
-	gc->release();
-	m_ref_pool.remove(gc);
+	this->m_ref_pool.erase(gc);
+	if(this->m_ref_pool.empty())
+		m_garbage_pool.insert(this);
 }
 
-void GC::removeAllRef()
+bool GC::findRef(GC * gc)
 {
-	while (m_ref_pool.size() > 0)
+	if (m_ref_pool.find(gc) != m_ref_pool.end())
+		return true;
+
+	for (auto i : m_ref_pool)
 	{
-		m_ref_pool.front()->release();
-		m_ref_pool.pop_front();
+		if (i->findRef(gc))
+			return true;
 	}
+
+	return false;
 }
 
 void GC::recycle()
 {
-	while (m_garbage_que.size() > 0)
+	for (auto i : m_garbage_pool)
 	{
-		auto obj = m_garbage_que.front();
-		if (obj->m_ref_count < 1)
-			delete obj;
-		m_garbage_que.pop_front();
+		if (i->m_ref_pool.empty())
+			delete i;
 	}
+	m_garbage_pool.clear();
 }
 
 int GC::getGlobalBufSize()

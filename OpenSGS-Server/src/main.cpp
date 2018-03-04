@@ -1,7 +1,8 @@
 #include "libs/StringManager.h"
-#include "EventCenter.h"
+#include "utils/EventCenter.h"
 
 #include "def.h"
+#include "libs/GC.h"
 #include "GameEvent.h"
 #include "CardsManager.h"
 #include "LogHandler.h"
@@ -29,14 +30,9 @@ bool fun2(int event_id, void *data)
 
 int main()
 {
-	for (int i = 0; i < 2; i++)
-	{
-		//utli::EventCenter::addListener(1, [](int event_id, void *data) -> bool
-		//{
-		//	return false;
-		//}, i);
-		utli::EventCenter::addListener(1, fun1, 0);
-	}
+	auto a = UNew(int);
+	auto b = UNewArr(int, 3);
+
 	LogHandler::setLogEventCallback(Log);
 	auto engine = new ScriptEngine();
 	engine->loadScriptFromFile("test.lua");
