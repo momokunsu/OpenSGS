@@ -6,3 +6,8 @@
 /Release
 /Debug
 /x64
+/OpenSGS-Server/x64
+/OpenSGS-Server/Debug
+/OpenSGS-Server/Release
+/OpenSGS.VC.db
+/OpenSGS.VC.VC.opendb
