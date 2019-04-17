@@ -1,16 +1,17 @@
-#include "StringManager.h"
-#include "GC.h"
-
 #include <stdarg.h>
+
+#include "StringManager.h"
 
 using namespace std;
 using namespace utli;
 
+int StringManager::g_buffer_len = 4 * 1024;
+char* StringManager::g_buffer = new char[g_buffer_len];
+
 const char* StringManager::format(const char* str, ...)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
 	string strobj;
-	if (GC::isRangeOfGlobalBuf(str))
+	if (isRangeOfBuffer(str))
 	{
 		strobj = str;
 		str = strobj.c_str();
@@ -18,17 +19,16 @@ const char* StringManager::format(const char* str, ...)
 
 	va_list ap;
 	va_start(ap, str);
-	vsnprintf(pbuf, GC::getGlobalBufSize(), str, ap);
+	vsnprintf(g_buffer, g_buffer_len, str, ap);
 	va_end(ap);
 
-	return pbuf;
+	return g_buffer;
 }
 
 const char* StringManager::trimBegin(const char* str, va_list ap)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
 	string strobj;
-	if (GC::isRangeOfGlobalBuf(str))
+	if (isRangeOfBuffer(str))
 	{
 		strobj = str;
 		str = strobj.c_str();
@@ -36,9 +36,9 @@ const char* StringManager::trimBegin(const char* str, va_list ap)
 
 	while (str[0] && isContainsChar(str[0], ap))
 		str++;
-	strcpy(pbuf, str);
+	strcpy(g_buffer, str);
 
-	return pbuf;
+	return g_buffer;
 }
 
 const char* StringManager::trimBegin(const char* str, ...)
@@ -53,24 +53,23 @@ const char* StringManager::trimBegin(const char* str, ...)
 
 const char* StringManager::trimEnd(const char* str, va_list ap)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
 	string strobj;
-	if (GC::isRangeOfGlobalBuf(str))
+	if (isRangeOfBuffer(str))
 	{
 		strobj = str;
 		str = strobj.c_str();
 	}
 
-	strcpy(pbuf, str);
-	int n = (int)strlen(pbuf) - 1;
+	strcpy(g_buffer, str);
+	int n = (int)strlen(g_buffer) - 1;
 	for (int i = n; i > -1; i--)
 	{
 		if (!isContainsChar(str[i], ap))
 			break;
-		pbuf[i] = 0;
+		g_buffer[i] = 0;
 	}
 
-	return pbuf;
+	return g_buffer;
 }
 
 const char* StringManager::trimEnd(const char* str, ...)
@@ -85,9 +84,9 @@ const char* StringManager::trimEnd(const char* str, ...)
 
 const char* StringManager::replace(const char* str, char src, char dst)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
+	char* pbuf = g_buffer;
 	string strobj;
-	if (GC::isRangeOfGlobalBuf(str))
+	if (isRangeOfBuffer(str))
 	{
 		strobj = str;
 		str = strobj.c_str();
@@ -112,9 +111,9 @@ const char* StringManager::replace(const char* str, char src, char dst)
 
 const char* StringManager::replace(const char* str, const char* src, const char* dst)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
+	char* pbuf = g_buffer;
 	string strobj;
-	if (GC::isRangeOfGlobalBuf(str))
+	if (isRangeOfBuffer(str))
 	{
 		strobj = str;
 		str = strobj.c_str();
@@ -141,9 +140,9 @@ const char* StringManager::replace(const char* str, const char* src, const char*
 
 const void StringManager::split(std::vector<std::string>& arr, const char* str, va_list ap)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
+	char* pbuf = g_buffer;
 	string strobj;
-	if (GC::isRangeOfGlobalBuf(str))
+	if (isRangeOfBuffer(str))
 	{
 		strobj = str;
 		str = strobj.c_str();
@@ -274,19 +273,18 @@ int StringManager::endIndexOf(const char * str, char dst)
 
 const char * StringManager::subString(const char * str, int start_index, int len)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
 	string strobj;
-	if (GC::isRangeOfGlobalBuf(str))
+	if (isRangeOfBuffer(str))
 	{
 		strobj = str;
 		str = strobj.c_str();
 	}
-	strcpy(pbuf, str);
+	strcpy(g_buffer, str);
 
 	if (len > 0)
-		pbuf[start_index + len] = 0;
+		g_buffer[start_index + len] = 0;
 
-	return pbuf + start_index;
+	return g_buffer + start_index;
 }
 
 bool StringManager::isContainsChar(const char* str, va_list ap)
@@ -335,25 +333,22 @@ bool StringManager::isContainsChar(char cvar, ...)
 
 const char* StringManager::fromInt(long long n)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
 	string strobj;
-	snprintf(pbuf, GC::getGlobalBufSize(), "%lld", n);
-	return pbuf;
+	snprintf(g_buffer, g_buffer_len, "%lld", n);
+	return g_buffer;
 }
 
 const char* StringManager::fromUint(unsigned long long n)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
 	string strobj;
-	snprintf(pbuf, GC::getGlobalBufSize(), "%llu", n);
-	return pbuf;
+	snprintf(g_buffer, g_buffer_len, "%llu", n);
+	return g_buffer;
 }
 
 const char* StringManager::fromFloat(double n)
 {
-	char* pbuf = (char*)GC::getGlobalBuffer();
-	snprintf(pbuf, GC::getGlobalBufSize(), "%lf", n);
-	return pbuf;
+	snprintf(g_buffer, g_buffer_len, "%lf", n);
+	return g_buffer;
 }
 
 long long StringManager::toInt(const char* str)
@@ -380,7 +375,7 @@ const char* StringManager::UTF16LToUTF8(const wchar_t *str)
 {
 	wchar_t code;
 	int i = 0, j = 0;
-	char* pbuf = (char*)GC::getGlobalBuffer();
+	char* pbuf = g_buffer;
 
 	while (str[i])
 	{
@@ -415,7 +410,7 @@ const char* StringManager::UTF16LToUTF8(const wchar_t *str)
 const wchar_t* StringManager::UTF8ToUTF16L(const char *str)
 {
 	int i = 0, j = 0;
-	wchar_t* pbuf = (wchar_t*)GC::getGlobalBuffer();
+	wchar_t* pbuf = (wchar_t*)g_buffer;
 
 	while (str[j])
 	{

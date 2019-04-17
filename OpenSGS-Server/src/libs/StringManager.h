@@ -46,6 +46,25 @@ namespace utli
 			static const char* UTF16LToUTF8(const wchar_t *str);
 			static const wchar_t* UTF8ToUTF16L(const char *str);
 		private:
+			static char* g_buffer;
+			static int g_buffer_len;
+
+			inline static const char* getBuffer(int len)
+			{
+				if (len > g_buffer_len)
+				{
+					delete[] g_buffer;
+					while (len > g_buffer_len)
+						g_buffer_len += 4 * 1024;
+					g_buffer = new char[g_buffer_len];
+				}
+				return g_buffer;
+			}
+
+			inline static bool isRangeOfBuffer(const char* ptr)
+			{
+				return ptr >= g_buffer && ptr < g_buffer + g_buffer_len;
+			}
 	};
 };
 
